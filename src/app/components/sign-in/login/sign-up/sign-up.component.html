@@ -1,0 +1,68 @@
+<div class="right-side">
+  <form class="sign-up-form">
+      <h2>Sign up</h2>
+      <div class="form-group">
+          <label for="first-name">First name</label>
+          <input type="text" id="first-name" name="first-name" placeholder="Mala">
+      </div>
+      <div class="form-group">
+          <label for="last-name">Last name</label>
+          <input type="text" id="last-name" name="last-name" placeholder="Shamiyava">
+      </div>
+      <div class="form-group">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender">
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+          </select>
+      </div>
+      <div class="form-group">
+          <label for="phone-number">Phone number</label>
+          <div class="phone-input">
+              <input type="text" id="phone-country-code" value="+994" readonly>
+              <input type="text" id="phone-number" name="phone-number" placeholder="51 234 56 78">
+          </div>
+      </div>
+      <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="kinetic@gmail.com">
+          <span class="error">Please enter a valid email, e.g., example.com</span>
+      </div>
+      <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="******">
+          <ul class="password-criteria">
+              <li>At least 6 characters</li>
+              <li>One uppercase</li>
+              <li>One lowercase</li>
+              <li>One number</li>
+              <li>One special case character (!#$ etc.)</li>
+          </ul>
+      </div>
+      <div class="form-group">
+          <label for="repeat-password">Repeat password</label>
+          <input type="password" id="repeat-password" name="repeat-password" placeholder="******">
+      </div>
+      <div class="form-group">
+          <label for="country">Country</label>
+          <select id="country" name="country">
+              <option value="azerbaijan">Azerbaijan</option>
+              <option value="other">Other</option>
+          </select>
+      </div>
+      <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="Baku">
+      </div>
+      <div class="form-group">
+          <label for="postal-code">Postal code</label>
+          <input type="text" id="postal-code" name="postal-code" placeholder="AZ1000">
+      </div>
+      <div class="form-group">
+          <label for="address">Address</label>
+          <input type="text" id="address" name="address" placeholder="28 May 9">
+      </div>
+      <button type="submit">Sign up</button>
+      <p>Already have an account? <a href="#">Sign in</a></p>
+  </form>
+</div>
