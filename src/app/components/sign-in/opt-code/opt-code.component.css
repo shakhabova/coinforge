@@ -9,7 +9,7 @@ body {
   height: 100vh;
 }
 
-.modal-overlay {
+.custom-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -21,7 +21,7 @@ body {
   align-items: center;
 }
 
-.modal {
+.custom-modal {
   background: #fff;
   border-radius: 8px;
   padding: 20px;
@@ -40,13 +40,13 @@ body {
   cursor: pointer;
 }
 
-.modal-content h2 {
+.custom-modal-content h2 {
   margin-top: 0;
   font-size: 20px;
   margin-bottom: 10px;
 }
 
-.modal-content p {
+.custom-modal-content p {
   margin-bottom: 20px;
   font-size: 14px;
   color: #555;

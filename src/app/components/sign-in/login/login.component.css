@@ -1,10 +1,15 @@
+:host {
+  width: 456px;
+}
+
 h2 {
   font-size: 28px;
-  margin-bottom: 20px;
+  margin: 0;
+  margin-bottom: 48px;
 }
 
 .form-group {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   
 }
 
@@ -45,6 +50,7 @@ h2 {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  margin-top: 48px;
 }
 
 .sign-in-btn:hover {
@@ -80,3 +86,6 @@ h2 {
 .terms a:hover {
   text-decoration: underline;
 }
+
+
+

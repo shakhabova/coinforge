@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-opt-code',
@@ -8,5 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './opt-code.component.css'
 })
 export class OptCodeComponent {
+  private dialogRef = inject(MatDialogRef);
 
+  onClose() {
+    this.dialogRef.close();
+  }
 }
