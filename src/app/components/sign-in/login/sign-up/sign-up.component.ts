@@ -3,8 +3,10 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { passwordEqualsValidator } from '../../../../utils/validators';
 import { CommonModule } from '@angular/common';
 import { TuiInputModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { TuiDataList, TuiLabel, TuiTextfield } from '@taiga-ui/core';
+import { TuiDataList, TuiLabel, TuiScrollable, TuiScrollbar, TuiTextfield } from '@taiga-ui/core';
 import { TuiDataListWrapper } from '@taiga-ui/kit';
+import { COUNTRY_CODES } from '../../../../utils/constants';
+import { CdkFixedSizeVirtualScroll, CdkVirtualForOf, CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 type Gender = 'MALE' | 'FEMALE';
 
@@ -21,9 +23,14 @@ type Gender = 'MALE' | 'FEMALE';
     TuiSelectModule,
     TuiDataListWrapper,
     TuiDataList,
+    CdkVirtualScrollViewport,
+    TuiScrollable,
+    CdkFixedSizeVirtualScroll,
+    CdkVirtualForOf,
+    TuiScrollbar,
   ],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.css'
+  styleUrl: './sign-up.component.less'
 })
 export class SignUpComponent {
   private fb = inject(FormBuilder);
@@ -48,6 +55,8 @@ export class SignUpComponent {
     MALE: 'Male',
   }
 
+  countryCodes = COUNTRY_CODES;
+
   toGender(value: any): Gender {
     return value as Gender;
   }
@@ -55,5 +64,9 @@ export class SignUpComponent {
   onSubmit() {
     this.formGroup.updateValueAndValidity();
     console.log(this.formGroup)
+  }
+
+  getCountryIconLink(code: string): string {
+    return `https://s3-api.guavapay.com/public-icons/countries/1x1/zw.svg`;
   }
 }

@@ -1,9 +1,34 @@
+@import '@taiga-ui/core/styles/taiga-ui-local.less';
+ 
+
+
 :host {
   display: block;
   padding: 50px;
   overflow-y: auto;
   width: 100%;
 }
+
+.scroll {
+  .scrollbar-hidden();
+  height: 200px;
+}
+
+label {
+  color: var(--Secondary-text-color, #6F6F6F);
+
+  /* text-sm-400 */
+  font-family: "Nunito Sans";
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 21px; /* 150% */
+}
+
+// label > *:first-child {
+//   margin-top: 4px;
+// }
+
 .sign-up-form h2 {
   margin-bottom: 220px;
   font-size: 28px;
@@ -17,7 +42,6 @@
 }
 
 .form-group label {
-  display: block;
   flex-grow: 1;
 }
 
@@ -32,17 +56,15 @@
 
 .phone-input {
   display: flex;
+  gap: 24px;
 }
 
-.phone-input input:first-child {
-  width: 20%;
-  margin-right: 10px;
-  background-color: #f0f0f0;
-  border: 1px solid #ccc;
+.phone-input tui-select {
+  width: 216px;
 }
 
-.phone-input input:last-child {
-  flex: 1;
+.phone-input tui-input {
+  flex-grow: 1;
 }
 
 .error {
@@ -57,7 +79,7 @@
   margin-top: 10px;
   color: #777;
 }
-button {
+.sign-up-btn {
   width: 100%;
   padding: 15px;
   font-size: 18px;
@@ -69,7 +91,7 @@ button {
   transition: background-color 0.3s;
 }
 
-button:hover {
+.sign-up-btn:hover {
   background-color: #444;
 }
 

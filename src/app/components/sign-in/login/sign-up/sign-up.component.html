@@ -1,90 +1,158 @@
+<form class="sign-up-form" [formGroup]="formGroup" (submit)="onSubmit()">
+  <h2>Sign up</h2>
+  <div class="form-group">
+    <label tuiLabel>
+      First name
+      <tui-input
+        formControlName="firstName"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfieldLegacy />
+      </tui-input>
+    </label>
 
-  <form class="sign-up-form" [formGroup]="formGroup" (submit)="onSubmit()">
-      <h2>Sign up</h2>
-      <div class="form-group">
-          <label tuiLabel>
-            First name
-            <tui-input formControlName="firstName" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
-                <input tuiTextfieldLegacy>
-            </tui-input>
-          </label>
+    <label tuiLabel>
+      Last name
+      <tui-input
+        formControlName="lastName"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfieldLegacy />
+      </tui-input>
+    </label>
+  </div>
+  <label tuiLabel>
+    Gender
+    <tui-select
+      formControlName="gender"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+      [valueContent]="genderValueContent"
+    >
+      <input tuiTextfieldLegacy />
+      <tui-data-list-wrapper
+        *tuiDataList
+        [itemContent]="genderValueContent"
+        [items]="genders"
+      />
+      <ng-template #genderValueContent let-gender>
+        {{ genderLabels[toGender(gender)] }}
+      </ng-template>
+    </tui-select>
+  </label>
 
-          <label tuiLabel>
-            Last name
-            <tui-input formControlName="lastName" tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
-                <input tuiTextfieldLegacy>
-            </tui-input>
-          </label>
-      </div>
-          <label for="gender">
-            Gender
-            <tui-select
-                formControlName="gender"
-                tuiTextfieldSize="m"
-                [tuiTextfieldLabelOutside]="true"
-                [valueContent]="genderValueContent"
-            >
-                <input tuiTextfieldLegacy>
-                <tui-data-list-wrapper
-                    *tuiDataList
-                    [itemContent]="genderValueContent"
-                    [items]="genders"
-                />
-                <ng-template #genderValueContent let-gender>
-                    {{genderLabels[toGender(gender)]}}
-                </ng-template>
-        </tui-select>
-        </label>
-          
-      <div class="form-group">
-          <label for="phone-number">Phone number</label>
-          <div class="phone-input">
-              <select formControlName="phoneCountryCode" type="text" id="phone-country-code" value="+994" readonly>
-                <option value="+90">+90 Turkiye</option>
-              </select>
-              <input formControlName="phoneNumber" type="text" id="phone-number" name="phone-number" placeholder="51 234 56 78">
-          </div>
-      </div>
-      <div class="form-group">
-          <label for="email">Email</label>
-          <input formControlName="email" type="email" id="email" name="email" placeholder="kinetic@gmail.com">
-          <span class="error">Please enter a valid email, e.g., example.com</span>
-      </div>
-      <div class="form-group">
-          <label for="password">Password</label>
-          <input formControlName="password" type="password" id="password" name="password">
-          <ul class="password-criteria">
-              <li>At least 6 characters</li>
-              <li>One uppercase</li>
-              <li>One lowercase</li>
-              <li>One number</li>
-              <li>One special case character (!#$ etc.)</li>
-          </ul>
-      </div>
-      <div class="form-group">
-          <label for="repeat-password">Repeat password</label>
-          <input formControlName="repeatPassword" type="password" id="repeat-password" name="repeat-password" placeholder="******">
-      </div>
-      <div class="form-group">
-          <label for="country">Country</label>
-          <select formControlName="country" id="country" name="country">
-              <option value="azerbaijan">Azerbaijan</option>
-              <option value="other">Other</option>
-          </select>
-      </div>
-      <div class="form-group">
-          <label for="city">City</label>
-          <input formControlName="city" type="text" id="city" name="city" placeholder="Baku">
-      </div>
-      <div class="form-group">
-          <label for="postal-code">Postal code</label>
-          <input formControlName="zipCode" type="text" id="postal-code" name="postal-code" placeholder="AZ1000">
-      </div>
-      <div class="form-group">
-          <label for="address">Address</label>
-          <textarea formControlName="address" type="text" id="address" name="address" placeholder="28 May 9"></textarea>
-      </div>
-      <button type="submit">Sign up</button>
-      <p>Already have an account? <a href="#">Sign in</a></p>
-  </form>
+  <label class="phone-number">Phone number</label>
+  <div class="phone-input">
+    <tui-select
+      formControlName="phoneCountryCode"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <cdk-virtual-scroll-viewport
+        *tuiDataList
+        tuiScrollable
+        [itemSize]="44"
+        class="scroll"
+      >
+        <tui-data-list>
+          <button
+            *cdkVirtualFor="let item of countryCodes"
+            tuiOption
+            [value]="item"
+          >
+            <div>
+              <!-- <img [src]="getCountryIconLink(item.code)" /> -->
+              <span>{{ item.name }}</span>
+            </div>
+          </button>
+        </tui-data-list>
+      </cdk-virtual-scroll-viewport>
+    </tui-select>
 
+    <tui-input
+      formControlName="phoneNumber"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <input tuiTextfieldLegacy />
+    </tui-input>
+  </div>
+  <div class="form-group">
+    <label for="email">Email</label>
+    <input
+      formControlName="email"
+      type="email"
+      id="email"
+      name="email"
+      placeholder="kinetic@gmail.com"
+    />
+    <span class="error">Please enter a valid email, e.g., example.com</span>
+  </div>
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input
+      formControlName="password"
+      type="password"
+      id="password"
+      name="password"
+    />
+    <ul class="password-criteria">
+      <li>At least 6 characters</li>
+      <li>One uppercase</li>
+      <li>One lowercase</li>
+      <li>One number</li>
+      <li>One special case character (!#$ etc.)</li>
+    </ul>
+  </div>
+  <div class="form-group">
+    <label for="repeat-password">Repeat password</label>
+    <input
+      formControlName="repeatPassword"
+      type="password"
+      id="repeat-password"
+      name="repeat-password"
+      placeholder="******"
+    />
+  </div>
+  <div class="form-group">
+    <label for="country">Country</label>
+    <select formControlName="country" id="country" name="country">
+      <option value="azerbaijan">Azerbaijan</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+  <div class="form-group">
+    <label for="city">City</label>
+    <input
+      formControlName="city"
+      type="text"
+      id="city"
+      name="city"
+      placeholder="Baku"
+    />
+  </div>
+  <div class="form-group">
+    <label for="postal-code">Postal code</label>
+    <input
+      formControlName="zipCode"
+      type="text"
+      id="postal-code"
+      name="postal-code"
+      placeholder="AZ1000"
+    />
+  </div>
+  <div class="form-group">
+    <label for="address">Address</label>
+    <textarea
+      formControlName="address"
+      type="text"
+      id="address"
+      name="address"
+      placeholder="28 May 9"
+    ></textarea>
+  </div>
+  <button class="sign-up-btn" type="submit">Sign up</button>
+  <p>Already have an account? <a href="#">Sign in</a></p>
+</form>
