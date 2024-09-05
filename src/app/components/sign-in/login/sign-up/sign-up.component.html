@@ -49,6 +49,7 @@
       formControlName="phoneCountryCode"
       tuiTextfieldSize="m"
       [tuiTextfieldLabelOutside]="true"
+      [valueContent]="phoneCodeContent"
     >
       <cdk-virtual-scroll-viewport
         *tuiDataList
@@ -62,13 +63,20 @@
             tuiOption
             [value]="item"
           >
-            <div>
-              <!-- <img [src]="getCountryIconLink(item.code)" /> -->
-              <span>{{ item.name }}</span>
-            </div>
+            <ng-container
+              [ngTemplateOutlet]="phoneCodeContent"
+              [ngTemplateOutletContext]="{ $implicit: item }"
+            ></ng-container>
           </button>
         </tui-data-list>
       </cdk-virtual-scroll-viewport>
+
+      <ng-template #phoneCodeContent let-item>
+        <div>
+          <span>{{ item.code }}</span>
+          <span>{{ item.name }}</span>
+        </div>
+      </ng-template>
     </tui-select>
 
     <tui-input
@@ -79,43 +87,87 @@
       <input tuiTextfieldLegacy />
     </tui-input>
   </div>
-  <div class="form-group">
-    <label for="email">Email</label>
-    <input
+  <label tuiLabel>
+    Email
+    <tui-input
       formControlName="email"
-      type="email"
-      id="email"
-      name="email"
-      placeholder="kinetic@gmail.com"
-    />
-    <span class="error">Please enter a valid email, e.g., example.com</span>
-  </div>
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input
-      formControlName="password"
-      type="password"
-      id="password"
-      name="password"
-    />
-    <ul class="password-criteria">
-      <li>At least 6 characters</li>
-      <li>One uppercase</li>
-      <li>One lowercase</li>
-      <li>One number</li>
-      <li>One special case character (!#$ etc.)</li>
-    </ul>
-  </div>
-  <div class="form-group">
-    <label for="repeat-password">Repeat password</label>
-    <input
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <input tuiTextfieldLegacy />
+    </tui-input>
+
+    <tui-error
+      formControlName="email"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
+  <label tuiLabel>
+    Password
+    <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
+      <input formControlName="password" tuiInputPassword />
+    </tui-textfield>
+  </label>
+  <ul class="password-criteria">
+    <li>
+      <tui-icon
+        [icon]="passwordCriteriaIcons().length"
+        [style.color]="
+          passwordCriteriaPassed().length ? 'var(--tui-status-positive)' : ''
+        "
+      ></tui-icon>
+      <span>At least 6 characters</span>
+    </li>
+    <li>
+      <tui-icon
+        [icon]="passwordCriteriaIcons().uppercase"
+        [style.color]="
+          passwordCriteriaPassed().uppercase ? 'var(--tui-status-positive)' : ''
+        "
+      ></tui-icon>
+      <span>One uppercase</span>
+    </li>
+    <li>
+      <tui-icon
+        [icon]="passwordCriteriaIcons().lowercase"
+        [style.color]="
+          passwordCriteriaPassed().lowercase ? 'var(--tui-status-positive)' : ''
+        "
+      ></tui-icon>
+      <span>One lowercase</span>
+    </li>
+    <li>
+      <tui-icon
+        [icon]="passwordCriteriaIcons().number"
+        [style.color]="
+          passwordCriteriaPassed().number ? 'var(--tui-status-positive)' : ''
+        "
+      ></tui-icon>
+      <span>One number</span>
+    </li>
+    <li>
+      <tui-icon
+        [icon]="passwordCriteriaIcons().char"
+        [style.color]="
+          passwordCriteriaPassed().char ? 'var(--tui-status-positive)' : ''
+        "
+      ></tui-icon>
+      <span>One special case character (!#$ etc.)</span>
+    </li>
+  </ul>
+
+  <label for="repeat-password">
+    Repeat password
+    <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
+      <input formControlName="repeatPassword" tuiInputPassword />
+    </tui-textfield>
+    <tui-error
       formControlName="repeatPassword"
-      type="password"
-      id="repeat-password"
-      name="repeat-password"
-      placeholder="******"
-    />
-  </div>
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+
   <div class="form-group">
     <label for="country">Country</label>
     <select formControlName="country" id="country" name="country">
