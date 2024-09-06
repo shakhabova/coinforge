@@ -7,3 +7,23 @@ export function passwordEqualsValidator(control: AbstractControl): ValidationErr
   const password = control?.parent?.get('password')?.value;
   return value !== password ? { [PASSWORDS_NOT_EQUAL]: 'Passwords do not match' } : null;
 }
+
+export function firstNameValidator(minLength: number, maxLength: number): (control: AbstractControl) => ValidationErrors | null {
+  return (control) => {
+    if (!control?.value) {
+      return null;
+    }
+
+    return control?.value?.length < minLength || control?.value?.length > maxLength ? { firstName: 'Please enter a valid first name' } : null;
+  }
+}
+
+export function lastNameValidator(minLength: number, maxLength: number): (control: AbstractControl) => ValidationErrors | null {
+  return (control) => {
+    if (!control?.value) {
+      return null;
+    }
+    
+    return control?.value?.length < minLength || control?.value?.length > maxLength ? { lastName: 'Please enter a valid last name' } : null;
+  }
+}

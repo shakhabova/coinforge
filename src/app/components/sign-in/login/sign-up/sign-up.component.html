@@ -2,29 +2,40 @@
   <h2>Sign up</h2>
   <div class="form-group">
     <label tuiLabel>
-      First name
+      First name *
       <tui-input
         formControlName="firstName"
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
         <input tuiTextfieldLegacy />
+
       </tui-input>
+      <tui-error
+        formControlName="firstName"
+        [error]="[] | tuiFieldError | async"
+      >
+      </tui-error>
     </label>
 
     <label tuiLabel>
-      Last name
+      Last name *
       <tui-input
         formControlName="lastName"
         tuiTextfieldSize="m"
         [tuiTextfieldLabelOutside]="true"
       >
         <input tuiTextfieldLegacy />
+
       </tui-input>
+      <tui-error
+        formControlName="lastName"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
     </label>
   </div>
   <label tuiLabel>
-    Gender
+    Gender *
     <tui-select
       formControlName="gender"
       tuiTextfieldSize="m"
@@ -43,52 +54,20 @@
     </tui-select>
   </label>
 
-  <label class="phone-number">Phone number</label>
-  <div class="phone-input">
-    <tui-select
-      formControlName="phoneCountryCode"
-      tuiTextfieldSize="m"
-      [tuiTextfieldLabelOutside]="true"
-      [valueContent]="phoneCodeContent"
-    >
-      <cdk-virtual-scroll-viewport
-        *tuiDataList
-        tuiScrollable
-        [itemSize]="44"
-        class="scroll"
-      >
-        <tui-data-list>
-          <button
-            *cdkVirtualFor="let item of countryCodes"
-            tuiOption
-            [value]="item"
-          >
-            <ng-container
-              [ngTemplateOutlet]="phoneCodeContent"
-              [ngTemplateOutletContext]="{ $implicit: item }"
-            ></ng-container>
-          </button>
-        </tui-data-list>
-      </cdk-virtual-scroll-viewport>
-
-      <ng-template #phoneCodeContent let-item>
-        <div>
-          <span>{{ item.code }}</span>
-          <span>{{ item.name }}</span>
-        </div>
-      </ng-template>
-    </tui-select>
-
-    <tui-input
-      formControlName="phoneNumber"
-      tuiTextfieldSize="m"
-      [tuiTextfieldLabelOutside]="true"
-    >
-      <input tuiTextfieldLegacy />
-    </tui-input>
-  </div>
   <label tuiLabel>
-    Email
+    Phone number *
+    <tui-input-phone-international
+      tuiTextfieldSize="m"
+      formControlName="phoneNumber"
+      [countries]="(phoneCountries | tuiSortCountries | async) || []"
+      countryIsoCode="GB"
+      [tuiTextfieldLabelOutside]="true"
+    >
+    </tui-input-phone-international>
+  </label>
+
+  <label tuiLabel>
+    Email *
     <tui-input
       formControlName="email"
       tuiTextfieldSize="m"
@@ -104,7 +83,7 @@
   </label>
 
   <label tuiLabel>
-    Password
+    Password *
     <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
       <input formControlName="password" tuiInputPassword />
     </tui-textfield>
@@ -157,8 +136,8 @@
     </li>
   </ul>
 
-  <label for="repeat-password">
-    Repeat password
+  <label tuiLabel>
+    Repeat password *
     <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
       <input formControlName="repeatPassword" tuiInputPassword />
     </tui-textfield>
@@ -168,43 +147,73 @@
     ></tui-error>
   </label>
 
-  <div class="form-group">
-    <label for="country">Country</label>
-    <select formControlName="country" id="country" name="country">
-      <option value="azerbaijan">Azerbaijan</option>
-      <option value="other">Other</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label for="city">City</label>
-    <input
+  <label tuiLabel>
+    Country *
+    <tui-combo-box
+      formControlName="country"
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <ng-container *tuiDataList>
+        <!--48 = 44 height + 4 margin-->
+        <!--8 = data list padding-->
+        <cdk-virtual-scroll-viewport
+          *tuiLet="countries | tuiFilterByInput as items"
+          tuiScrollable
+          class="scroll"
+          [itemSize]="48"
+          [style.height.px]="items.length * 48 + 8"
+          (indexChange)="list.handleFocusLossIfNecessary()"
+        >
+          <tui-data-list #list>
+            <button *cdkVirtualFor="let item of items" tuiOption [value]="item">
+              {{ item }}
+            </button>
+          </tui-data-list>
+        </cdk-virtual-scroll-viewport>
+      </ng-container>
+    </tui-combo-box>
+  </label>
+  <label tuiLabel>
+    City *
+    <tui-input
       formControlName="city"
-      type="text"
-      id="city"
-      name="city"
-      placeholder="Baku"
-    />
-  </div>
-  <div class="form-group">
-    <label for="postal-code">Postal code</label>
-    <input
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <input tuiTextfieldLegacy />
+    </tui-input>
+
+    <tui-error
+      formControlName="city"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+  <label tuiLabel>
+    Postal code *
+    <tui-input
       formControlName="zipCode"
-      type="text"
-      id="postal-code"
-      name="postal-code"
-      placeholder="AZ1000"
-    />
-  </div>
-  <div class="form-group">
-    <label for="address">Address</label>
-    <textarea
+      tuiTextfieldSize="m"
+      [tuiTextfieldLabelOutside]="true"
+    >
+      <input tuiTextfieldLegacy />
+    </tui-input>
+
+    <tui-error
+      formControlName="zipCode"
+      [error]="[] | tuiFieldError | async"
+    ></tui-error>
+  </label>
+  <label tuiLabel>
+    Address
+    <tui-textarea
       formControlName="address"
-      type="text"
-      id="address"
-      name="address"
-      placeholder="28 May 9"
-    ></textarea>
-  </div>
+      [expandable]="true"
+      [tuiTextfieldLabelOutside]="true"
+      tuiTextfieldSize="m"
+    >
+    </tui-textarea>
+  </label>
   <button class="sign-up-btn" type="submit">Sign up</button>
   <p>Already have an account? <a href="#">Sign in</a></p>
 </form>

@@ -235,6 +235,12 @@
 
 body {
   margin: 0;
+  --tui-background-base: #F7F7FB;
+  --tui-font-text-s: normal 400 14px/21px "Nunito Sans";
 }
 html, body { height: 100%; }
 body { margin: 0; font-family: Switzer-Regular, Roboto, "Helvetica Neue", sans-serif; }
+
+[tuiWrapper][data-appearance=textfield], [tuiAppearance][data-appearance=textfield] {
+  box-shadow: unset;
+}
