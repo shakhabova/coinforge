@@ -39,6 +39,8 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TuiLet } from '@taiga-ui/cdk';
 import { defer } from 'rxjs';
+import { SignInComponent } from '../../sign-in.component';
+import { LoginComponent } from '../login.component';
 
 type Gender = 'MALE' | 'FEMALE';
 
@@ -55,6 +57,8 @@ interface PasswordCriteriaModel {
   standalone: true,
   imports: [
     CommonModule,
+    SignInComponent,
+    LoginComponent,
     ReactiveFormsModule,
     TuiTextfieldControllerModule,
     TuiInputModule,
