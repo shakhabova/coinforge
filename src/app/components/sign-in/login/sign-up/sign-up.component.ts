@@ -1,5 +1,5 @@
-import { Component, computed, inject, Signal } from '@angular/core';
-import { FormBuilder, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, computed, DestroyRef, inject, Signal } from '@angular/core';
+import { FormBuilder, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstNameValidator, lastNameValidator, passwordEqualsValidator } from '../../../../utils/validators';
 import { CommonModule } from '@angular/common';
 import {
@@ -36,13 +36,12 @@ import {
   CdkVirtualForOf,
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { TuiLet } from '@taiga-ui/cdk';
-import { defer } from 'rxjs';
+import { defer, switchMap, take } from 'rxjs';
 import { SignInComponent } from '../../sign-in.component';
 import { LoginComponent } from '../login.component';
-
-type Gender = 'MALE' | 'FEMALE';
+import { CreateUserRequest, Gender, SignUpApiService } from '../../../../services/sign-up-api.service';
 
 interface PasswordCriteriaModel {
   length: boolean;
@@ -106,7 +105,10 @@ interface PasswordCriteriaModel {
   ],
 })
 export class SignUpComponent {
-  private fb = inject(FormBuilder);
+  private fb = inject(NonNullableFormBuilder);
+  private signUpApiService = inject(SignUpApiService);
+  private destroyRef = inject(DestroyRef);
+
   formGroup = this.fb.group({
     firstName: [
       '',
@@ -180,16 +182,60 @@ export class SignUpComponent {
 
   countries = COUNTRY_CODES.map(({ name }) => name);
 
+  private userWasCreated = false;
+
   toGender(value: any): Gender {
     return value as Gender;
   }
 
   onSubmit() {
-    this.formGroup.updateValueAndValidity();
-    console.log(this.formGroup);
-  }
+    // TODO user was created already, display OTP modal
+    if (this.userWasCreated) {
+      // TODO display OTP modal
+      
+      return;
+    }
 
-  getCountryIconLink(code: string): string {
-    return `https://s3-api.guavapay.com/public-icons/countries/1x1/zw.svg`;
+    this.formGroup.updateValueAndValidity();
+    if (!this.formGroup.valid) {
+      return;
+    }
+    
+    const formValue = this.formGroup.getRawValue();
+    this.signUpApiService.generateVerifierAndSalt(formValue.email!)
+      .pipe(
+        switchMap(res => {
+          const userCreateRequest: CreateUserRequest = {
+            ...formValue,
+            verifier: res.b,
+            salt: res.salt,
+            address: formValue.address || undefined
+          };
+
+          return this.signUpApiService.createUser(userCreateRequest);
+        }),
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe({
+        next: user => {
+          // TODO display OTP modal
+
+          this.userWasCreated = true;
+          this.formGroup.valueChanges
+            .pipe(
+              take(1),
+              takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(() => this.userWasCreated = false);
+        },
+        error: err => {
+          switch(err.status) {
+            case 'user_already_exists':
+              // TODO display user already exists modal
+              break;
+            case ''
+          }
+        }
+      })
   }
 }
