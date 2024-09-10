@@ -1,0 +1,12 @@
+<div class="otp-inputs">
+  @for (i of [0, 1, 2, 3, 4, 5]; track $index) {
+  <input
+    [(ngModel)]="otpCodeArray[i]"
+    (ngModelChange)="onCodeChange()"
+    maxlength="1"
+    (input)="onFieldInput(i)"
+    id="otp-code-input-{{ i }}"
+    (paste)="onInputPaste(toClipboardEvent($event))"
+  />
+  }
+</div>

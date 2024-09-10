@@ -1,4 +1,4 @@
-import { Component, computed, DestroyRef, inject, Signal } from '@angular/core';
+import { Component, computed, DestroyRef, inject, INJECTOR, Signal } from '@angular/core';
 import { FormBuilder, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { firstNameValidator, lastNameValidator, passwordEqualsValidator } from '../../../../utils/validators';
 import { CommonModule } from '@angular/common';
@@ -11,6 +11,7 @@ import {
 } from '@taiga-ui/legacy';
 import {
   TuiDataList,
+  TuiDialogService,
   TuiError,
   TuiIcon,
   TuiLabel,
@@ -28,7 +29,7 @@ import {
   tuiInputPhoneInternationalOptionsProvider,
   TuiSortCountriesPipe,
 } from '@taiga-ui/kit';
-import type {TuiCountryIsoCode} from '@taiga-ui/i18n';
+import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
 import {getCountries} from 'libphonenumber-js';
 import { COUNTRY_CODES } from '../../../../utils/constants';
 import {
@@ -41,7 +42,9 @@ import { TuiLet } from '@taiga-ui/cdk';
 import { defer, switchMap, take } from 'rxjs';
 import { SignInComponent } from '../../sign-in.component';
 import { LoginComponent } from '../login.component';
-import { CreateUserRequest, Gender, SignUpApiService } from '../../../../services/sign-up-api.service';
+import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from '../../../../services/sign-up-api.service';
+import { DialogService } from '../../../../services/dialog.service';
+import { OptCodeComponent } from '../../opt-code/opt-code.component';
 
 interface PasswordCriteriaModel {
   length: boolean;
@@ -108,6 +111,11 @@ export class SignUpComponent {
   private fb = inject(NonNullableFormBuilder);
   private signUpApiService = inject(SignUpApiService);
   private destroyRef = inject(DestroyRef);
+  private dialogService = inject(DialogService);
+  private readonly dialogs = inject(TuiDialogService);
+  private readonly injector = inject(INJECTOR);
+
+  
 
   formGroup = this.fb.group({
     firstName: [
@@ -183,16 +191,19 @@ export class SignUpComponent {
   countries = COUNTRY_CODES.map(({ name }) => name);
 
   private userWasCreated = false;
+  private userCreationResponse?: CreateUserResponse;
 
   toGender(value: any): Gender {
     return value as Gender;
   }
 
   onSubmit() {
-    // TODO user was created already, display OTP modal
-    if (this.userWasCreated) {
-      // TODO display OTP modal
-      
+    // TODO remove next lines
+    this.showOTPModal(null);
+    return;
+
+    if (this.userWasCreated && this.userCreationResponse) {
+      this.showOTPModal(this.userCreationResponse);
       return;
     }
 
@@ -218,24 +229,52 @@ export class SignUpComponent {
       )
       .subscribe({
         next: user => {
-          // TODO display OTP modal
+          if (user.status !== 'EMAIL_NOT_CONFIRMED') {
+            throw user;
+          }
+
+          this.showOTPModal(user);
 
           this.userWasCreated = true;
+          this.userCreationResponse = user;
           this.formGroup.valueChanges
             .pipe(
               take(1),
               takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(() => this.userWasCreated = false);
+            .subscribe(() => {
+              this.userWasCreated = false;
+              this.userCreationResponse = undefined;
+            });
         },
         error: err => {
           switch(err.status) {
             case 'user_already_exists':
-              // TODO display user already exists modal
+              this.dialogService.showMessage(
+                'Email already exists. Please log in with your existing account or use a different email to sign up',
+                'Error',
+                'Back to sign up'
+              );
               break;
-            case ''
+            default:
+              this.dialogService.showMessage(
+                'An unexpected error has appeared. Please try again later',
+                'Error',
+                'Back to sign up'
+              );
           }
         }
-      })
+      });
+  }
+
+  private showOTPModal(user?: CreateUserResponse | null): void {
+    const otpDialog = this.dialogs.open(
+      new PolymorpheusComponent(OptCodeComponent, this.injector),
+      {
+        data: user,
+      }
+    );
+
+    otpDialog.subscribe();
   }
 }

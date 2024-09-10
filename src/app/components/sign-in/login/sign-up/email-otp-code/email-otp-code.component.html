@@ -1,0 +1,27 @@
+<div class="title">
+  Verification code
+</div>
+
+<div class="subtitle">
+  Enter verification code  we sent to the email address {{email}}.
+</div>
+
+<app-otp-code-input [(otpCode)]="otpCode" [length]="8"></app-otp-code-input>
+
+@if (message || errorMessage) {
+  <div class="message" [class.error]="errorMessage">
+    {{ message || errorMessage }}
+  </div>
+}
+
+@if (!codeExpired) {
+  <button class="confirm-button" [disabled]="isConfirmDisabled">Confirm</button>
+} @else {
+  <a class="resend-link">Resend code</a>
+}
+
+@if (!codeExpired) {
+  <div class="expires">
+    Verification code expires in {{expiresTimer}}
+  </div>
+}

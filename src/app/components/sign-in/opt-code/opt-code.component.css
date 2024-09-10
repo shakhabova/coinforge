@@ -56,29 +56,9 @@
   margin-bottom: 32px;/* 150% */
 }
 
-.otp-inputs {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 20px;
-  gap: var(--Spacing-Spacing-Spacing-xs, 8px);
-}
 
-.otp-inputs input {
-  width: 40px;
-  height: 40px;
-  display: flex;
-  padding: var(--Spacing-Spacing-Spacing-xxs, 4px)
-    var(--Spacing-Spacing-Spacing-none, 0px)
-    var(--Spacing-Spacing-Spacing-xxs, 4px)
-    var(--Spacing-Spacing-Spacing-sm, 12px);
-  align-items: center;
-  gap: var(--Spacing-Spacing-Spacing-xs, 8px);
-  flex: 1 0 0;
-  align-self: stretch;
-  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
-  border: 1px solid var(--System-color-light-purple, #eceaef);
-  background: var(--Neutral100, #f7f7fb);
-}
+
+
 
 .recover-link {
   display: block;
