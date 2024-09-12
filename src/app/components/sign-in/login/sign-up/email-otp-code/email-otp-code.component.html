@@ -6,22 +6,22 @@
   Enter verification code  we sent to the email address {{email}}.
 </div>
 
-<app-otp-code-input [(otpCode)]="otpCode" [length]="8"></app-otp-code-input>
+<app-otp-code-input [(otpCode)]="otpCode" [length]="codeLength"></app-otp-code-input>
 
-@if (message || errorMessage) {
-  <div class="message" [class.error]="errorMessage">
-    {{ message || errorMessage }}
+@if (message() || errorMessage()) {
+  <div class="message" [class.error]="!!errorMessage()">
+    {{ message() || errorMessage() }}
   </div>
 }
 
-@if (!codeExpired) {
-  <button class="confirm-button" [disabled]="isConfirmDisabled">Confirm</button>
+@if (!codeExpired()) {
+  <button class="confirm-button app-btn-default" [disabled]="isConfirmDisabled()">Confirm</button>
 } @else {
   <a class="resend-link">Resend code</a>
 }
 
-@if (!codeExpired) {
+@if (!codeExpired()) {
   <div class="expires">
-    Verification code expires in {{expiresTimer}}
+    Verification code expires in <span class="time">{{expiresTimer$ | async}}</span>
   </div>
 }

@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 export class OtpCodeInputComponent {
   otpCode = model('');
   length = input(6);
+  error = input(false);
 
   otpCodeArray = new Array(this.length()).fill(null);
 

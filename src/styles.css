@@ -244,3 +244,32 @@ body { margin: 0; font-family: Switzer-Regular, Roboto, "Helvetica Neue", sans-s
 [tuiWrapper][data-appearance=textfield], [tuiAppearance][data-appearance=textfield] {
   box-shadow: unset;
 }
+
+.app-btn-default {
+  display: flex;
+  color: var(--Secondary500, #FEDD2D);
+  text-align: center;
+  font-family: Switzer-Regular;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.16px;
+  padding: var(--Spacing-Spacing-Spacing-sm, 12px) 32px;
+  justify-content: center;
+  align-items: center;
+  align-self: stretch;
+  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
+  border: 1px solid var(--Primary500, #1C1C1C);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.00) 100%), var(--Primary500, #1C1C1C);
+  box-shadow: 0px -1px 0.5px 1px rgba(0, 0, 0, 0.32) inset, 0px 6px 4px -4px rgba(255, 255, 255, 0.32) inset, 0px 1px 0px 1px rgba(255, 255, 255, 0.40) inset;
+}
+
+.app-btn-default[disabled] {
+  color: var(--Neutral300, #B6B6B6);
+  
+  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
+  border: 1px solid var(--Neutral200, #E0DFDF);
+  background: linear-gradient(180deg, rgba(26, 26, 26, 0.06) 0%, rgba(26, 26, 26, 0.00) 100%), var(--Neutral0, #FFF);
+  box-shadow: 0px 1px 0px 1px rgba(255, 255, 255, 0.80) inset, 0px 6px 4px -4px rgba(255, 255, 255, 0.80) inset, 0px -2px 2px 0px rgba(18, 18, 18, 0.24) inset;
+}

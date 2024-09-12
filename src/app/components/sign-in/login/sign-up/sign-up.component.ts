@@ -45,6 +45,7 @@ import { LoginComponent } from '../login.component';
 import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from '../../../../services/sign-up-api.service';
 import { DialogService } from '../../../../services/dialog.service';
 import { OptCodeComponent } from '../../opt-code/opt-code.component';
+import { EmailOtpCodeComponent } from './email-otp-code/email-otp-code.component';
 
 interface PasswordCriteriaModel {
   length: boolean;
@@ -269,7 +270,7 @@ export class SignUpComponent {
 
   private showOTPModal(user?: CreateUserResponse | null): void {
     const otpDialog = this.dialogs.open(
-      new PolymorpheusComponent(OptCodeComponent, this.injector),
+      new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
       {
         data: user,
       }
