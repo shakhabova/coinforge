@@ -24,7 +24,7 @@ export class EmailOtpCodeComponent implements OnInit {
   readonly codeLength = 8;
 
   message = signal('');
-  errorMessage = signal('');
+  errorMessage = signal('hehe');
   codeExpired = signal(false);
   expiresTimer$!: Observable<string>;
   isConfirmDisabled = computed(() => this.otpCode().length < this.codeLength);

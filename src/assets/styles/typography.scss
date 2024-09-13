@@ -1,0 +1,62 @@
+:root {
+  --Primary-text-color: #272828;
+  --Secondary-text-color: #6F6F6F;
+}
+
+.h1-heading {
+  color: var(--Primary-text-color, #272828);
+  /* Switzer/H1 */
+  font-family: Switzer;
+  font-size: 68px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 80px;
+}
+
+.h5-heading {
+  color: var(--Primary-text-color, #272828);
+  /* Switzer/H5 */
+  font-family: Switzer-Variable;
+  font-size: 18px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.text {
+  color: var(--Primary-text-color, #272828);
+  font-family: "Nunito Sans";
+  font-style: normal;
+
+  &-l {
+    font-size: 18px;
+    line-height: 24px;
+  }
+
+  &-m {
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  &-sm {
+    font-size: 14px;
+    line-height: 21px;
+  }
+
+  &-xs {
+    font-size: 12px;
+    line-height: 16px;
+  }
+
+  &.w600 {
+    font-weight: 600;
+  }
+
+  &.w400 {
+    font-weight: 400;
+  }
+
+  &.w300 {
+    font-weight: 300;
+  }
+}

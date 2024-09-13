@@ -1,0 +1,23 @@
+@import 'assets/fonts/fonts';
+@import 'assets/styles/typography';
+@import 'assets/styles/button';
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Switzer-Variable, Roboto, "Helvetica Neue", sans-serif;
+  color: var(--Primary-text-color, #272828);
+
+  --tui-background-base: #F7F7FB;
+  --tui-font-text-s: normal 400 14px/21px "Nunito Sans";
+}
+html, body { height: 100%; }
+
+[tuiWrapper][data-appearance=textfield], [tuiAppearance][data-appearance=textfield] {
+  box-shadow: unset;
+}
+
+
