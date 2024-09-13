@@ -1,6 +1,6 @@
 import { Component, computed, DestroyRef, inject, INJECTOR, Signal } from '@angular/core';
 import { FormBuilder, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstNameValidator, lastNameValidator, passwordEqualsValidator } from '../../../../utils/validators';
+import { firstNameValidator, lastNameValidator, passwordEqualsValidator } from 'utils/validators';
 import { CommonModule } from '@angular/common';
 import {
   TuiComboBoxModule,
@@ -31,7 +31,7 @@ import {
 } from '@taiga-ui/kit';
 import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
 import {getCountries} from 'libphonenumber-js';
-import { COUNTRY_CODES } from '../../../../utils/constants';
+import { COUNTRY_CODES } from 'utils/constants';
 import {
   CdkFixedSizeVirtualScroll,
   CdkVirtualForOf,
@@ -40,11 +40,8 @@ import {
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { TuiLet } from '@taiga-ui/cdk';
 import { defer, switchMap, take } from 'rxjs';
-import { SignInComponent } from '../../sign-in.component';
-import { LoginComponent } from '../login.component';
-import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from '../../../../services/sign-up-api.service';
-import { DialogService } from '../../../../services/dialog.service';
-import { OptCodeComponent } from '../../opt-code/opt-code.component';
+import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from 'services/sign-up-api.service';
+import { DialogService } from 'services/dialog.service';
 import { EmailOtpCodeComponent } from './email-otp-code/email-otp-code.component';
 
 interface PasswordCriteriaModel {
@@ -60,8 +57,6 @@ interface PasswordCriteriaModel {
   standalone: true,
   imports: [
     CommonModule,
-    SignInComponent,
-    LoginComponent,
     ReactiveFormsModule,
     TuiTextfieldControllerModule,
     TuiInputModule,

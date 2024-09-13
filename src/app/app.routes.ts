@@ -1,24 +1,25 @@
 import { Routes } from '@angular/router';
-import { SignInComponent } from './components/sign-in/sign-in.component';
-import { LoginComponent } from './components/sign-in/login/login.component';
-import { SignUpComponent } from './components/sign-in/login/sign-up/sign-up.component';
-import { TwoFactorAuthComponent } from './components/sign-in/two-factor-auth/two-factor-auth.component';
+import { AuthComponent } from './components/auth/auth.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 export const routes: Routes = [
-  { 
-    path: 'sign-in', 
-    component: SignInComponent, 
-    title: 'Sign in', 
+  {
+    path: '',
+    component: LayoutComponent,
     children: [
-      { path: 'login', component: LoginComponent },
-      { path: 'sign-up', component: SignUpComponent},
-      { path: 'two-factor-auth', component:TwoFactorAuthComponent},
-      { path: 'dashboard', component: DashboardComponent}
+      { path: 'dashboard', component: DashboardComponent},
+      {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: '/dashboard'
+      }
     ]
   },
-  {
-    path: '**',
-    redirectTo: '/sign-in/login'
+  { 
+    path: 'auth', 
+    component: AuthComponent, 
+    title: 'Sign in', 
+    loadChildren: () => import('./components/auth/auth.routes').then(m => m.routes)
   }
 ];

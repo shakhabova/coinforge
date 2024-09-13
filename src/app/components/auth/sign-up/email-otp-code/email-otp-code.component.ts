@@ -1,8 +1,8 @@
 import { Component, computed, DestroyRef, inject, model, OnInit, signal } from '@angular/core';
 import {injectContext} from '@taiga-ui/polymorpheus';
-import { OtpCodeInputComponent } from '../../../otp-code-input/otp-code-input.component';
+import { OtpCodeInputComponent } from '../../otp-code-input/otp-code-input.component';
 import { TuiDialogContext } from '@taiga-ui/core';
-import { CreateUserResponse } from '../../../../../services/sign-up-api.service';
+import { CreateUserResponse } from 'services/sign-up-api.service';
 import { interval, map, Observable, share, startWith, take, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -24,7 +24,7 @@ export class EmailOtpCodeComponent implements OnInit {
   readonly codeLength = 8;
 
   message = signal('');
-  errorMessage = signal('hehe');
+  errorMessage = signal('');
   codeExpired = signal(false);
   expiresTimer$!: Observable<string>;
   isConfirmDisabled = computed(() => this.otpCode().length < this.codeLength);
