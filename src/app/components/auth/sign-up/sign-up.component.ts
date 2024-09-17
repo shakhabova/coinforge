@@ -194,10 +194,6 @@ export class SignUpComponent {
   }
 
   onSubmit() {
-    // TODO remove next lines
-    this.showOTPModal(null);
-    return;
-
     if (this.userWasCreated && this.userCreationResponse) {
       this.showOTPModal(this.userCreationResponse);
       return;
@@ -263,7 +259,7 @@ export class SignUpComponent {
       });
   }
 
-  private showOTPModal(user?: CreateUserResponse | null): void {
+  private showOTPModal(user: CreateUserResponse | null): void {
     const otpDialog = this.dialogs.open(
       new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
       {

@@ -1,0 +1,45 @@
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f4f4f4;
+  align-items: center;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.top-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  app-total-balance,
+  app-wallets {
+    flex: 1;
+  }
+}
+
+.bottom-section {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+
+  app-market-info,
+  app-transactions {
+    flex: 1;
+  }
+}
+
+.banner {
+  height: 204px;
+}
+
+.row-wrapper {
+  display: flex;
+  gap: 24px;
+}
