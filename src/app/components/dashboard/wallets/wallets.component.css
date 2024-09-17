@@ -5,15 +5,9 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 744px;
 
-  h2 {
-    color: var(--Primary-text-color, #272828);
-
-    /* Switzer/H5 */
-    font-family: Switzer;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px; /* 133.333% */
+  .wallet {
+    margin-top: 24px;
+    margin-bottom: 24px;
   }
 
   .wallet-list {
