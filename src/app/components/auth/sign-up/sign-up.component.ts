@@ -28,6 +28,8 @@ import {
   TuiInputPhoneInternational,
   tuiInputPhoneInternationalOptionsProvider,
   TuiSortCountriesPipe,
+  TuiStringifyContentPipe,
+  TuiStringifyPipe,
 } from '@taiga-ui/kit';
 import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
 import {getCountries} from 'libphonenumber-js';
@@ -38,11 +40,13 @@ import {
   CdkVirtualScrollViewport,
 } from '@angular/cdk/scrolling';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { TuiLet } from '@taiga-ui/cdk';
-import { defer, switchMap, take } from 'rxjs';
+import { TuiLet, TuiStringMatcher } from '@taiga-ui/cdk';
+import { catchError, defer, of, switchMap, take } from 'rxjs';
 import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from 'services/sign-up-api.service';
 import { DialogService } from 'services/dialog.service';
 import { EmailOtpCodeComponent } from './email-otp-code/email-otp-code.component';
+import { COUNTRIES } from 'utils/countries';
+import { CountriesComponent } from './countries/countries.component';
 
 interface PasswordCriteriaModel {
   length: boolean;
@@ -81,6 +85,8 @@ interface PasswordCriteriaModel {
     TuiInputPhoneInternational,
     TuiSortCountriesPipe,
     FormsModule,
+    TuiStringifyContentPipe,
+    CountriesComponent,
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.less',
@@ -184,7 +190,7 @@ export class SignUpComponent {
     };
   });
 
-  countries = COUNTRY_CODES.map(({ name }) => name);
+  countries = COUNTRIES.map(country => country.countryCodeAlpha3);
 
   private userWasCreated = false;
   private userCreationResponse?: CreateUserResponse;
@@ -200,9 +206,9 @@ export class SignUpComponent {
     }
 
     this.formGroup.updateValueAndValidity();
-    if (!this.formGroup.valid) {
-      return;
-    }
+    // if (!this.formGroup.valid) {
+    //   return;
+    // }
     
     const formValue = this.formGroup.getRawValue();
     this.signUpApiService.generateVerifierAndSalt(formValue.email!)
@@ -214,14 +220,24 @@ export class SignUpComponent {
             salt: res.salt,
             address: formValue.address || undefined
           };
-
+          //TODO remove
+          console.log(userCreateRequest);
           return this.signUpApiService.createUser(userCreateRequest);
         }),
+        // catchError((err: unknown, caught) => {
+        //   console.log(err);
+        //   this.dialogService.showMessage(
+        //     'An unexpected error has appeared. Please try again later',
+        //     'Error',
+        //     'Back to sign up'
+        //   );
+        //   return of(null);
+        // }),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe({
         next: user => {
-          if (user.status !== 'EMAIL_NOT_CONFIRMED') {
+          if (user?.status !== 'EMAIL_NOT_CONFIRMED') {
             throw user;
           }
 
@@ -258,6 +274,8 @@ export class SignUpComponent {
         }
       });
   }
+
+  protected readonly stringify = (code: string): string => !code ? '' : COUNTRIES.find(country => country.countryCodeAlpha3 === code)!.name;
 
   private showOTPModal(user: CreateUserResponse | null): void {
     const otpDialog = this.dialogs.open(
