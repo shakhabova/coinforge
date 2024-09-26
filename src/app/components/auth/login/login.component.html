@@ -1,5 +1,5 @@
 <h2>Sign in</h2>
-    <form (submit)="onSubmit()">
+    <form (submit)="onSubmit()" [formGroup]="formGroup">
       <label tuiLabel>
         Email *
         <tui-input

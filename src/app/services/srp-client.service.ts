@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import * as thinbusSRP from 'thinbus-srp/client.js';
+import thinbusSRP from 'thinbus-srp/client.js';
 import { environment } from "../../environment/environment";
 
 @Injectable({

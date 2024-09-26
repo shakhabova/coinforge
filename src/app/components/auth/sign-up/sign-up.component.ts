@@ -47,14 +47,7 @@ import { DialogService } from 'services/dialog.service';
 import { EmailOtpCodeComponent } from './email-otp-code/email-otp-code.component';
 import { COUNTRIES } from 'utils/countries';
 import { CountriesComponent } from './countries/countries.component';
-
-interface PasswordCriteriaModel {
-  length: boolean;
-  uppercase: boolean;
-  lowercase: boolean;
-  number: boolean;
-  char: boolean;
-}
+import { PasswordCriteriaComponent } from 'components/shared/password-criteria/password-criteria.component';
 
 @Component({
   selector: 'app-sign-up',
@@ -87,6 +80,7 @@ interface PasswordCriteriaModel {
     FormsModule,
     TuiStringifyContentPipe,
     CountriesComponent,
+    PasswordCriteriaComponent,
   ],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.less',
@@ -158,37 +152,6 @@ export class SignUpComponent {
   };
 
   protected readonly phoneCountries = getCountries();
-
-  private passwordSignal = toSignal(
-    this.formGroup.controls.password.valueChanges
-  );
-  passwordCriteriaPassed: Signal<PasswordCriteriaModel> = computed(() => {
-    const password = this.passwordSignal();
-    return {
-      length: password ? password.length > 5 : false,
-      uppercase: password
-        ? password.split('').some((l) => l === l.toUpperCase())
-        : false,
-      lowercase: password
-        ? password.split('').some((l) => l === l.toLowerCase())
-        : false,
-      number: new RegExp(/\d/).test(password ?? ''),
-      char: new RegExp(/[#?!@$%^&*-]/).test(password ?? ''),
-    };
-  });
-  passwordCriteriaIcons: Signal<{
-    [key in keyof PasswordCriteriaModel]: string;
-  }> = computed(() => {
-    const criteria = this.passwordCriteriaPassed();
-    const icons = ['@tui.check', '@tui.dot'];
-    return {
-      length: criteria.length ? icons[0] : icons[1],
-      uppercase: criteria.uppercase ? icons[0] : icons[1],
-      lowercase: criteria.lowercase ? icons[0] : icons[1],
-      number: criteria.number ? icons[0] : icons[1],
-      char: criteria.char ? icons[0] : icons[1],
-    };
-  });
 
   countries = COUNTRIES.map(country => country.countryCodeAlpha3);
 

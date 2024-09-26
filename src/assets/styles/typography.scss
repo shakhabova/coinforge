@@ -33,6 +33,16 @@
   line-height: 40px;
   }
 
+.h4-heading {
+  color: var(--Neutrals---primary-text-color, #272828);
+  /* Switzer/H4 */
+  font-family: Switzer-Variable;
+  font-size: 26px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 40px; /* 153.846% */
+}
+
 .h5-heading {
   color: var(--Primary-text-color, #272828);
   /* Switzer/H5 */

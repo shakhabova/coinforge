@@ -6,10 +6,11 @@ import {
 import { OptCodeComponent } from '../opt-code/opt-code.component';
 import { LoginApiService } from 'services/login-api.service';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TuiError, TuiLabel } from '@taiga-ui/core';
+import { TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { TuiFieldErrorPipe, TuiInputPassword } from '@taiga-ui/kit';
 import { AsyncPipe } from '@angular/common';
+import { ForcePasswordChangeComponent } from './force-password-change/force-password-change.component';
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,8 @@ import { AsyncPipe } from '@angular/common';
     TuiError,
     TuiFieldErrorPipe,
     AsyncPipe,
-    TuiInputPassword
+    TuiInputPassword,
+    TuiTextfield,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
@@ -32,6 +34,7 @@ export class LoginComponent {
   private dialog = inject(MatDialog);
   private loginService = inject(LoginApiService);
   private fb = inject(NonNullableFormBuilder);
+  private loginApiService = inject(LoginApiService);
 
   protected formGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -47,16 +50,19 @@ export class LoginComponent {
             return;
           }
 
-          switch(response.mfaStatus) {
-            case 'PENDING':
-              // TODO ask if user wants to activate google auth
-              break;
-            case 'ACTIVATED':
-              // TODO display google otp code input
-              break;
-            case 'REJECTED':
-              this.authorize();
-              break;
+          if (response.userStatus === 'ACTIVE') {
+            switch(response.mfaStatus) {
+              case 'PENDING':
+                // TODO ask if user wants to activate google auth
+                this.askForMfa();
+                break;
+              case 'ACTIVATED':
+                // TODO display google otp code input
+                break;
+              case 'REJECTED':
+                this.authorize();
+                break;
+            }
           }
         },
         error: err => {
@@ -92,6 +98,11 @@ export class LoginComponent {
 
   private forceChangePass() {
     // TODO open change password modal
+    this.dialog.open(ForcePasswordChangeComponent);
+  }
+
+  private askForMfa() {
+
   }
 
   private authorize() {
