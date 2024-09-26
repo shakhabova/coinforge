@@ -1,20 +1,29 @@
 <h2>Sign in</h2>
-    <form>
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input
-          type="email"
-          id="email"
-          name="email"
-          value="kinetic@gmail.com"
-          required
-        />
-      </div>
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input type="password" id="password" name="password" required />
-      </div>
-      <button type="submit" class="sign-in-btn" (click)="signIn()">Sign in</button>
+    <form (submit)="onSubmit()">
+      <label tuiLabel>
+        Email *
+        <tui-input
+          formControlName="email"
+          tuiTextfieldSize="m"
+          [tuiTextfieldLabelOutside]="true"
+        >
+          <input tuiTextfieldLegacy />
+        </tui-input>
+    
+        <tui-error
+          formControlName="email"
+          [error]="[] | tuiFieldError | async"
+        ></tui-error>
+      </label>
+      
+      <label tuiLabel>
+        Password *
+        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
+          <input formControlName="password" tuiInputPassword />
+        </tui-textfield>
+      </label>
+      
+      <button type="submit" class="sign-in-btn">Sign in</button>
     </form>
     <div class="form-footer">
       <p>Don't you have an account? <a href="#">Sign up</a></p>

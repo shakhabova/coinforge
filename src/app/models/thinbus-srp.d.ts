@@ -1,0 +1,1 @@
+declare module 'thinbus-srp/client.js';
