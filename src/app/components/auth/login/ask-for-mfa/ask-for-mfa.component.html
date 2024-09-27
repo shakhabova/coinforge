@@ -1,31 +1,20 @@
-<mat-dialog-content>
-  <div class="title-wrapper mb-32">
-    <div class="h4-heading">Enable Two Factor Authentification</div>
-
-    <button class="close-btn" (click)="closeModal()">
-      <tui-icon
-        [icon]="'@tui.x'"
-        [style.width.px]="'20'"
-        [style.height.px]="'20'"
-      ></tui-icon>
-    </button>
+<div class="wrapper">
+  <h1>Two-Factor Authentication (2FA)</h1>
+  <div class="info">
+    <img src="assets/info-circle.svg" />
+    <div class="info-text-wrapper">
+      <div class="info-title">For extra layer of security, you can use 2FA.</div>
+      <div class="info-subtitle">
+        If you don't want to set up right now, you can skip it and set it up
+        later.
+      </div>
+    </div>
   </div>
-
-  <div>Do you want to enable two-factor authentication?</div>
-  
-  <div class="actions-wrapper">
-    <button 
-      class="confirm-button button primary m mt-32"
-      (click)="enable()"
-    >
-      Yes
-    </button>
-
-    <button 
-      class="confirm-button button primary m mt-32"
-      (click)="discard()"
-    >
-      Not Now
-    </button>
+  <div class="illustration">
+    <img src="assets/2_factor.png" alt="2FA illustration" />
   </div>
-</mat-dialog-content>
+  <div class="buttons">
+    <button class="setup-button" (click)="enable()">Start 2FA set up</button>
+    <button class="skip-button" (click)="discard()">Not now</button>
+  </div>
+</div>
