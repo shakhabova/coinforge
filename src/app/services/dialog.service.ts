@@ -3,6 +3,12 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { TuiDialogService } from '@taiga-ui/core';
 import { ErrorModalComponent } from 'components/shared/error-modal/error-modal.component';
 
+export interface DialogMessageModel {
+  title: string;
+  message: string;
+  buttonText?: string;
+}
+
 @Injectable({providedIn: 'root'})
 export class DialogService {
   private readonly dialogs = inject(TuiDialogService);
@@ -16,7 +22,8 @@ export class DialogService {
     }).subscribe();
   }
 
-  showErrorMessage() {
+  showErrorMessage(message: DialogMessageModel) {
+    const buttonText = message.buttonText ?? 'Ok';
     return this.materialDialog.open(ErrorModalComponent);
   }
 }

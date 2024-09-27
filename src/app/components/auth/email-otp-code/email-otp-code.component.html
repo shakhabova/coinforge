@@ -19,6 +19,7 @@
     class="confirm-button button primary m"
     [class.secondary]="isConfirmDisabled()"
     [disabled]="isConfirmDisabled()"
+    (click)="confirm()"
   >
     Confirm
   </button>

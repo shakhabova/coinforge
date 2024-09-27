@@ -44,7 +44,7 @@ import { TuiLet, TuiStringMatcher } from '@taiga-ui/cdk';
 import { catchError, defer, of, switchMap, take } from 'rxjs';
 import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from 'services/sign-up-api.service';
 import { DialogService } from 'services/dialog.service';
-import { EmailOtpCodeComponent } from './email-otp-code/email-otp-code.component';
+import { EmailOtpCodeComponent } from '../email-otp-code/email-otp-code.component';
 import { COUNTRIES } from 'utils/countries';
 import { CountriesComponent } from './countries/countries.component';
 import { PasswordCriteriaComponent } from 'components/shared/password-criteria/password-criteria.component';
@@ -244,7 +244,7 @@ export class SignUpComponent {
     const otpDialog = this.dialogs.open(
       new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
       {
-        data: user,
+        data: { email: user?.email, submitUrl: '' }, // TODO submit url
       }
     );
 

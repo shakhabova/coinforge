@@ -1,0 +1,31 @@
+<mat-dialog-content>
+  <div class="title-wrapper mb-32">
+    <div class="h4-heading">Enable Two Factor Authentification</div>
+
+    <button class="close-btn" (click)="closeModal()">
+      <tui-icon
+        [icon]="'@tui.x'"
+        [style.width.px]="'20'"
+        [style.height.px]="'20'"
+      ></tui-icon>
+    </button>
+  </div>
+
+  <div>Do you want to enable two-factor authentication?</div>
+  
+  <div class="actions-wrapper">
+    <button 
+      class="confirm-button button primary m mt-32"
+      (click)="enable()"
+    >
+      Yes
+    </button>
+
+    <button 
+      class="confirm-button button primary m mt-32"
+      (click)="discard()"
+    >
+      Not Now
+    </button>
+  </div>
+</mat-dialog-content>
