@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject } from '@angular/core';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { LoginApiService } from 'services/login-api.service';
+import { AuthenticateResponse, LoginApiService } from 'services/login-api.service';
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
@@ -14,6 +14,7 @@ import { ForcePasswordChangeComponent } from './force-password-change/force-pass
 import { MfaApiService } from 'services/mfa-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
+import { MfaOtpCodeComponent } from '../mfa-otp-code/mfa-otp-code.component';
 
 @Component({
   selector: 'app-login',
@@ -37,8 +38,6 @@ export class LoginComponent {
   private dialog = inject(MatDialog);
   private loginService = inject(LoginApiService);
   private fb = inject(NonNullableFormBuilder);
-  private loginApiService = inject(LoginApiService);
-  private mfaApiService = inject(MfaApiService);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
 
@@ -49,6 +48,8 @@ export class LoginComponent {
 
   onSubmit() {
     const email = this.formGroup.value.email!;
+    this.sendMfaOtpCode(email);
+    return;
 
     this.loginService
       .login(this.formGroup.getRawValue())
@@ -56,7 +57,7 @@ export class LoginComponent {
       .subscribe({
         next: (response) => {
           if (response.userStatus === 'FORCE_PASSWORD_CHANGE') {
-            this.forceChangePass();
+            this.forceChangePass(email);
             return;
           }
 
@@ -66,10 +67,10 @@ export class LoginComponent {
                 this.askForMfa(email);
                 break;
               case 'ACTIVATED':
-                // TODO display google otp code input
+                this.sendMfaOtpCode(email);
                 break;
               case 'REJECTED':
-                this.authorize();
+                this.authorize(response);
                 break;
             }
           }
@@ -101,15 +102,29 @@ export class LoginComponent {
       });
   }
 
-  private forceChangePass() {
-    this.dialog.open(ForcePasswordChangeComponent);
+  private sendMfaOtpCode(email: string) {
+    const dialogRef = this.dialog.open(MfaOtpCodeComponent, { data: { email }});
+
+    dialogRef.afterClosed()
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+      )
+      .subscribe(response => {
+        if (response) {
+          this.authorize(response);
+        }
+      })
+  }
+
+  private forceChangePass(email: string) {
+    this.router.navigateByUrl('/auth/force-change-password', { state: { email }});
   }
 
   private askForMfa(email: string) {
     this.router.navigate(['/auth/two-factor-auth'], { state: { email } });
   }
 
-  private authorize() {
+  private authorize(response: AuthenticateResponse) {
     // TODO naviage to dashboard
   }
 }

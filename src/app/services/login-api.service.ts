@@ -37,7 +37,6 @@ export class LoginApiService {
   private configService = inject(ConfigService);
   private srpClient = inject(SrpClientService).srpClient;
 
-  
   public generateVerifierAndSalt(email: string): Observable<LoginChallengeResponse> {
     return this.httpClient.post<LoginChallengeResponse>(`${this.configService.serverUrl}/v1/custody/auth/srp/challenge`, { email });
   }
@@ -55,4 +54,20 @@ export class LoginApiService {
       );
   }
 
+  public forceChangePassword(email: string, password: string): Observable<{ data: string }> {
+    return this.generateVerifierAndSalt(email)
+      .pipe(
+        switchMap(challenge => {
+          this.srpClient.step1(email, password);
+          const {A, M1} = this.srpClient.step2(challenge.salt, challenge.b);
+
+          const request = { a: A, m1: M1, email };
+          return this.httpClient.post<{ data: string}>(`${this.configService.serverUrl}/v1/auth/srp/force-change-password`, request);
+        })
+      );
+  }
+
+  public sendMfaOtpCode(otp: string, email: string): Observable<AuthenticateResponse> {
+    return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/custody/auth/srp/check-mfa`, { otp, email });
+  }
 }

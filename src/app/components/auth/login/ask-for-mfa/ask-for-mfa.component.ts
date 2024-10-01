@@ -22,8 +22,14 @@ export class AskForMfaComponent {
   private router = inject(Router);
 
   private email = this.router.getCurrentNavigation()?.extras.state?.['email'];
+  private mfaQR = this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
 
   enable() {
+    if (this.mfaQR) {
+      this.goToMfaConnect(this.mfaQR);
+      return;
+    }
+
     this.mfaApiService
       .resetMfa(this.email)
       .pipe(takeUntilDestroyed(this.destroyRef))
@@ -40,7 +46,7 @@ export class AskForMfaComponent {
   }
 
   private showOTPModal(): void {
-    const otpDialog = this.tuiDialogs.open<unknown>(
+    const otpDialog = this.tuiDialogs.open<{data: string}>(
       new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
       {
         data: { email: this.email, submitUrl: '/v1/auth/srp/reset-mfa/submit' },
@@ -52,11 +58,15 @@ export class AskForMfaComponent {
         return;
       }
 
-      // TODO navigate to google auth page
+      this.goToMfaConnect(result.data);
     });
   }
 
   private goToDashboard() {
     this.router.navigateByUrl('/dashboard');
+  }
+
+  private goToMfaConnect(mfaQR: string) {
+    this.router.navigateByUrl('/auth/mfa-connect', { state: { mfaQR } });
   }
 }
