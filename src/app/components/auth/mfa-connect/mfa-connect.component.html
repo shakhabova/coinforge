@@ -1,4 +1,5 @@
-<div class="title">Two-Factor Authentication (2FA)</div>
+<div class="wrapper">
+<h1>Two-Factor Authentication (2FA)</h1>
 
 @if (isMobileAppsPage()) {
   <div class="subtitle">Scan the QR code and install<br>the Google Authenticator app</div>
@@ -19,7 +20,7 @@
 
   <img class="mfa-qr" src="assets/images/android-mfa-qr.png">
 
-  <label tuiLabel>
+  <label tuiLabel class="mt-32">
     <input [(ngModel)]="mfaAdded" tuiCheckbox type="checkbox">
 
     I have added this account to Google Authenticator.
@@ -49,3 +50,4 @@
     (click)="goBack()"
   >Back</button> 
 }
+</div>
