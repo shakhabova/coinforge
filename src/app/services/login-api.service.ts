@@ -38,7 +38,7 @@ export class LoginApiService {
   private srpClient = inject(SrpClientService).srpClient;
 
   public generateVerifierAndSalt(email: string): Observable<LoginChallengeResponse> {
-    return this.httpClient.post<LoginChallengeResponse>(`${this.configService.serverUrl}/v1/custody/auth/srp/challenge`, { email });
+    return this.httpClient.post<LoginChallengeResponse>(`${this.configService.serverUrl}/v1/auth/srp/challenge`, { email });
   }
 
   public login(value: LoginModel): Observable<AuthenticateResponse> {
@@ -49,7 +49,7 @@ export class LoginApiService {
           const {A, M1} = this.srpClient.step2(challenge.salt, challenge.b);
 
           const request = { a: A, m1: M1, email: value.email };
-          return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/custody/auth/srp/authenticate`, request);
+          return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/auth/srp/authenticate`, request);
         }),
       );
   }
@@ -68,6 +68,6 @@ export class LoginApiService {
   }
 
   public sendMfaOtpCode(otp: string, email: string): Observable<AuthenticateResponse> {
-    return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/custody/auth/srp/check-mfa`, { otp, email });
+    return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/auth/srp/check-mfa`, { otp, email });
   }
 }

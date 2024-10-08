@@ -15,6 +15,7 @@ import { MfaApiService } from 'services/mfa-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { MfaOtpCodeComponent } from '../mfa-otp-code/mfa-otp-code.component';
+import { AuthService } from 'services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -40,6 +41,7 @@ export class LoginComponent {
   private fb = inject(NonNullableFormBuilder);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
+  private authService = inject(AuthService);
 
   protected formGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -48,8 +50,7 @@ export class LoginComponent {
 
   onSubmit() {
     const email = this.formGroup.value.email!;
-    this.sendMfaOtpCode(email);
-    return;
+ 
 
     this.loginService
       .login(this.formGroup.getRawValue())
@@ -125,6 +126,7 @@ export class LoginComponent {
   }
 
   private authorize(response: AuthenticateResponse) {
-    // TODO naviage to dashboard
+    this.authService.saveToken(response.accessToken!, response.refreshToken!);
+    this.router.navigateByUrl('/dashboard');
   }
 }
