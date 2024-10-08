@@ -1,12 +1,19 @@
+.currency-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.currency-icon {
+  width: 40px;
+  height: 40px;
+}
+
 .title {
   margin-bottom: 24px;
 }
 
 .total-balance {
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: 360px;
 
   h2 {

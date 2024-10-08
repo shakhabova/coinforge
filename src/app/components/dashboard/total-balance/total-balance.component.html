@@ -1,17 +1,24 @@
-<div class="total-balance">
+<div class="total-balance dashboard-card">
   <div class="h5-heading title">Total Balance</div>
 
   <div class="block">
-    <img src="assets/icons/euro.svg">
-    <p class="balance h3-heading">5,709.00 EUR</p>
+    <div class="currency-wrapper">
+      <img class="currency-icon" [src]="currencyIconLinks[currency()]">
+
+      <button class="round-btn" (click)="chooseCurrency()">
+        <tui-icon icon="@tui.chevron-down"></tui-icon>
+      </button>
+    </div>
+
+    <p class="balance h3-heading">{{ balance() | currency : currency() : '' }} {{ currency() }}</p>
     <div class="actions">
-      <button class="button primary s">
+      <button class="button primary s" (click)="topUp()">
         <tui-icon
           icon="@tui.arrow-down"
         ></tui-icon>
           Top-up
       </button>
-      <button class="button primary s">
+      <button class="button primary s" (click)="withdraw()">
         <tui-icon
           icon="@tui.arrow-up"
         ></tui-icon>
