@@ -9,7 +9,7 @@ export class SrpClientService {
   public readonly srpClient;
 
   constructor() {
-    const SrpClientConstructor = thinbusSRP(environment.N_base10, environment.g_base10, environment.k_base16);
+    const SrpClientConstructor = thinbusSRP(environment.srp6.N_base10, environment.srp6.g_base10, environment.srp6.k_base16);
     this.srpClient = new SrpClientConstructor();
   }
 }

@@ -1,0 +1,26 @@
+.status-chip {
+  display: inline-flex;
+  padding: var(--Spacing-Spacing-Spacing-xxs, 4px) var(--Spacing-Spacing-Spacing-sm, 12px);
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 32px;
+}
+
+.status-chip.ACTIVE {
+  border: 1px solid #98EB9B;
+  background: var(--System-color-light-green, #E9FFF4);
+  color: #048D09;
+}
+
+.status-chip.CUSTOMER_BLOCKED {
+  border: 1px solid #EA847E;
+  background: var(--System-color-light-red, #FFF0F0);
+  color: var(--System-color-red, #E7170B);
+}
+
+.status-chip.DEACTIVATED {
+  border: 1px solid var(--Neutral200, #E0DFDF);
+  background: var(----system-color-bg, #F9F9F9);
+  color: var(----secondary-text-color, #6F6F6F);
+}
