@@ -13,7 +13,7 @@ export class BalanceService {
   private configService = inject(ConfigService);
 
   getBalance(currency: TotalBalanceCurrency): Observable<number> {
-    return of(7509); // TODO remove temp code
+    return of(currency === 'EUR' ? 6555 : 7509); // TODO remove temp code
     // return this.httpClient.get<number>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/total-balance`, { params: { currency } });
   }
 }

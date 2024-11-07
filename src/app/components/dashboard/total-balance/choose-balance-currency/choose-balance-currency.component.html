@@ -8,7 +8,7 @@
     <div class="currency-item" [class.active]="selected() === 'EUR'" (click)="selected.set('EUR')">
       <img src="assets/icons/euro.svg" alt="EUR currency icon" class="currency-icon">
 
-      <div class="currency-balance text m w600">{{ balances().EUR | currency : 'EUR' : '' }} EUR</div>
+      <div class="currency-balance text-m w600">{{ balances().EUR | currency : 'EUR' : '' }} EUR</div>
 
       <img class="active-mark" [src]="radioIcons.get(selected() === 'EUR')">
     </div>

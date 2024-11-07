@@ -44,13 +44,6 @@ export class WalletsComponent implements OnInit {
     return this.sliceStart() + 4;
   });
 
-  constructor() {
-    effect(() => {
-      console.log(this.sliceStart())
-      console.log(this.sliceEnd())
-    })
-  }
-
   ngOnInit(): void {
     this.loadWallets();
   }
@@ -70,6 +63,7 @@ export class WalletsComponent implements OnInit {
       .subscribe({
         next: wallets => this.wallets.set(wallets),
         error: err => {
+          // TODO check wallets error and empty
           this.hasError.set(true);
           console.error(err);
         }
