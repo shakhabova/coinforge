@@ -1,0 +1,11 @@
+{
+  "/api": {
+    "target": "https://crp-custody-dev.apps.ocp-dev.gps.local",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "info",
+    "pathRewrite": {
+      "^/api": ""
+    }
+  }
+}

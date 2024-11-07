@@ -6,7 +6,7 @@ import { map, Observable, shareReplay } from 'rxjs';
 export interface CurrencyDto {
   cryptoCurrency: string;
   cryptoCurrencyName: string;
-  logUrl: string;
+  logoUrl: string;
   shortName: string;
   scanUrl: string;
 }
@@ -35,7 +35,7 @@ export class CurrenciesService {
   getCurrencyLinkUrl(currency: string): Observable<string> {
     return this.getCryptoInfo(currency)
       .pipe(
-        map(info => `${this.configService.s3BucketLink}${info?.logUrl}`)
+        map(info => `${this.configService.s3BucketLink}${info?.logoUrl}`)
       );
   }
 

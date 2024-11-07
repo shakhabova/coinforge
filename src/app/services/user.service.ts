@@ -29,6 +29,6 @@ export class UserService {
   constructor() { }
 
   getInfo(): Observable<UserInfoDto> {
-    return this.httpClient.get<UserInfoDto>(`${this.configService.serverUrl}/v1/users/current`);
+    return this.httpClient.get<UserInfoDto>(`/api/v1/users/current`);
   }
 }
