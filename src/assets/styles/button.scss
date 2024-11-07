@@ -87,3 +87,20 @@
     }
   }
 }
+
+.fab {
+  display: flex;
+  width: 40px;
+  height: 40px;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  background-color: #1c1c1c;
+  cursor: pointer;
+  border: none;
+
+  &.default {
+    background: var(--Text-White-Primary, #FFF);
+  }
+}

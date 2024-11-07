@@ -8,11 +8,10 @@
 
 body {
   margin: 0;
-  font-family: Switzer-Variable, Roboto, "Helvetica Neue", sans-serif;
   color: var(--Primary-text-color, #272828);
 
   --tui-background-base: #F7F7FB;
-  --tui-font-text-s: normal 400 14px/21px "Nunito Sans";
+  --tui-font-text-s: normal 400 14px/21px "Switzer-Variable";
 }
 html, body { height: 100%; }
 
@@ -22,7 +21,7 @@ html, body { height: 100%; }
 
 .dashboard-card {
   background-color: #fff;
-  padding: 20px;
+  padding: 24px;
   border-radius: 10px;
 }
 

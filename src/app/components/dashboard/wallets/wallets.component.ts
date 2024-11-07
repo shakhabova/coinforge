@@ -1,26 +1,62 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { finalize } from 'rxjs';
 import { WalletDto, WalletsService } from 'services/wallets.service';
 import { WalletCardComponent } from "./wallet-card/wallet-card.component";
+import { TuiIcon } from '@taiga-ui/core';
+import { SlicePipe } from '@angular/common';
 
 @Component({
   selector: 'app-wallets',
   standalone: true,
-  imports: [WalletCardComponent],
+  imports: [
+    WalletCardComponent,
+    TuiIcon,
+    SlicePipe
+  ],
   templateUrl: './wallets.component.html',
-  styleUrl: './wallets.component.css'
+  styleUrl: './wallets.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletsComponent implements OnInit {
   private walletsService = inject(WalletsService);
   private destroyRef = inject(DestroyRef);
 
-  wallets: WalletDto[] = [];
+  wallets: WritableSignal<WalletDto[]> = signal([]);
   isLoading = signal(false);
   hasError = signal(false);
+  step = signal(0);
+  maxPages = computed(() => Math.floor(this.wallets().length / 4));
+  showNextStepBtn = computed(() => this.sliceEnd() < this.wallets().length);
+
+  sliceStart = computed(() =>{
+    if (this.step() === 0) {
+      return 0;
+    }
+    return this.step() * 4 - 1;
+  });
+
+  sliceEnd = computed(() => {
+    if (this.step() === 0) {
+      return 3;
+    }
+
+    return this.sliceStart() + 4;
+  });
+
+  constructor() {
+    effect(() => {
+      console.log(this.sliceStart())
+      console.log(this.sliceEnd())
+    })
+  }
 
   ngOnInit(): void {
     this.loadWallets();
+  }
+
+  seeAll() {
+    // TODO see all
   }
 
   private loadWallets() {
@@ -32,7 +68,7 @@ export class WalletsComponent implements OnInit {
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: wallets => this.wallets = wallets,
+        next: wallets => this.wallets.set(wallets),
         error: err => {
           this.hasError.set(true);
           console.error(err);

@@ -1,8 +1,43 @@
 <div class="wallets dashboard-card">
-  <h5 class="wallet h5-heading">Wallets</h5>
-  <div class="wallet-list">
-    @for (wallet of wallets; track wallet.id) {
-      <app-wallet-card [wallet]="wallet"></app-wallet-card>
-    }
+  <div class="title-wrapper">
+    <h5 class="h5-heading">Wallets</h5>
+    <div class="see-all" (click)="seeAll()">See all</div>
   </div>
+
+  @if (wallets().length) {
+    <div class="wallet-list">
+      @if (step() > 0) {
+        <button class="paginator-btn fab default" (click)="step.set(step() - 1)">
+          <tui-icon
+            icon="@tui.chevron-left"
+          ></tui-icon>
+        </button>
+      }
+
+      @if (step() === 0) {
+        <div class="create-wallet-card">
+          <button class="fab">
+            <tui-icon 
+              icon="@tui.plus"
+              [style.color]="'#FEDD2D'"
+            ></tui-icon>
+          </button>
+          <div class="create-wallet-card-text">Create wallet</div>
+          <div class="text-xs w600">Shortest way</div>
+        </div>
+      }
+
+      @for (wallet of wallets() | slice : sliceStart() : sliceEnd() ; track wallet.id) {
+        <app-wallet-card [wallet]="wallet"></app-wallet-card>
+      }
+
+      @if (showNextStepBtn()) {
+        <button class="paginator-btn fab default" (click)="step.set(step() + 1)">
+          <tui-icon
+            icon="@tui.chevron-right"
+          ></tui-icon>
+        </button>
+      }
+    </div>
+  }
 </div>

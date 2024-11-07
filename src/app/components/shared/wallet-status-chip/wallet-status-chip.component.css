@@ -1,6 +1,8 @@
 .status-chip {
   display: inline-flex;
   padding: var(--Spacing-Spacing-Spacing-xxs, 4px) var(--Spacing-Spacing-Spacing-sm, 12px);
+  padding-top: 5px;
+  padding-bottom: 3px;
   justify-content: center;
   align-items: center;
   gap: 8px;

@@ -1,6 +1,6 @@
 :root {
   --Primary-text-color: #272828;
-  --Secondary-text-color: #6F6F6F;
+  --Secondary-text-color: #6f6f6f;
 }
 
 .h1-heading {
@@ -25,13 +25,13 @@
 
 .h3-heading {
   color: var(--Neutrals---primary-text-color, #272828);
-/* Switzer/H3 */
+  /* Switzer/H3 */
   font-family: Switzer-Variable;
   font-size: 36px;
   font-style: normal;
   font-weight: 700;
   line-height: 40px;
-  }
+}
 
 .h4-heading {
   color: var(--Neutrals---primary-text-color, #272828);
@@ -53,43 +53,45 @@
   line-height: 24px;
 }
 
-.text {
+@mixin text {
   color: var(--Primary-text-color, #272828);
   font-family: "Nunito Sans";
   font-style: normal;
+}
 
+.text {
   &-l {
+    @include text;
     font-size: 18px;
     line-height: 24px;
   }
 
   &-m {
+    @include text;
     font-size: 16px;
     line-height: 24px;
   }
 
   &-sm {
+    @include text;
     font-size: 14px;
     line-height: 21px;
   }
 
   &-xs {
+    @include text;
     font-size: 12px;
     line-height: 16px;
-    color: var(--Primary-text-color, #272828);
-  font-family: "Nunito Sans";
-  font-style: normal;
   }
+}
+.w600 {
+  font-weight: 600;
+}
 
-  &.w600 {
-    font-weight: 600;
-  }
+.w400 {
+  font-weight: 400;
+}
 
-  &.w400 {
-    font-weight: 400;
-  }
-
-  &.w300 {
-    font-weight: 300;
-  }
+.w300 {
+  font-weight: 300;
 }
