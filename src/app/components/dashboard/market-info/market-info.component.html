@@ -1,18 +1,12 @@
 <div class="market-info dashboard-card">
-  <h2>Market Info</h2>
-  <ul>
-    <li>
-      <p>BTC</p>
-      <span>2.456978</span>
-    </li>
-    <li>
-      <p>ETH</p>
-      <span>6.320343</span>
-    </li>
-    <li>
-      <p>USDT</p>
-      <span>9.445817</span>
-    </li>
-  </ul>
+  <div class="h5-heading title">Market Info</div>
+
+  @for (info of infos; track $index) {
+    <app-market-info-item [info]="info"></app-market-info-item>
+
+    @if (!$last) {
+      <div class="siz"></div>
+    }
+  }
 </div>
 

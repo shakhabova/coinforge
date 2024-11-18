@@ -2,27 +2,21 @@
   width: 360px;
   height: 416px;
 
-  h2 {
-    font-size: 20px;
-    font-weight: bold;
-  }
+  display: flex;
+  flex-direction: column;
+}
 
-  ul {
-    list-style-type: none;
-    padding: 0;
+.market-info .title {
+  margin-bottom: 28px;
+  margin-top: 0;
+}
 
-    li {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
+.siz {
+  width: 260px;
+  height: 1px;
+  background-color: #F7F7FB;
+  align-self: flex-end;
 
-      p {
-        font-size: 16px;
-      }
-
-      span {
-        font-weight: bold;
-      }
-    }
-  }
+  margin-top: 12px;
+  margin-bottom: 16px;
 }

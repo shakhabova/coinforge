@@ -5,6 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TuiIcon } from '@taiga-ui/core';
 import { BalanceService, TotalBalanceCurrency } from 'services/balance.service';
 import { ChooseBalanceCurrencyComponent, ChooseBalanceDialogResultData } from './choose-balance-currency/choose-balance-currency.component';
+import { CurrentCurrencyService } from 'services/current-currency.service';
 
 @Component({
   selector: 'app-total-balance',
@@ -18,11 +19,12 @@ import { ChooseBalanceCurrencyComponent, ChooseBalanceDialogResultData } from '.
 })
 export class TotalBalanceComponent implements OnInit {
   private balanceService = inject(BalanceService);
+  private currentCurrencyService = inject(CurrentCurrencyService);
   private destroyRef = inject(DestroyRef);
   private dialog = inject(MatDialog);
 
   balance = signal(0);
-  currency = signal<TotalBalanceCurrency>(this.getCurrencyFromStorage() || 'EUR');
+  currency = this.currentCurrencyService.currentCurrency;
 
   currencyIconLinks: Record<TotalBalanceCurrency, string> = {
     EUR: 'assets/icons/euro.svg',
@@ -59,7 +61,7 @@ export class TotalBalanceComponent implements OnInit {
       .subscribe(currency => {
         if (currency) {
           this.currency.set(currency.currency);
-          this.saveCurrencyToStorage();
+          this.currentCurrencyService.setCurrentCurrency(currency.currency);
 
           this.balance.set(currency.balance);
         }
@@ -77,10 +79,6 @@ export class TotalBalanceComponent implements OnInit {
           // TODO handle load balances error
         }
       });
-  }
-
-  private saveCurrencyToStorage(): void {
-    localStorage.setItem('TOTAL_BALANCE_CURRENCY', this.currency());
   }
 
   private getCurrencyFromStorage(): TotalBalanceCurrency {

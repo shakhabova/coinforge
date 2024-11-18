@@ -1,0 +1,15 @@
+<div class="left-side">
+  <img [src]="cryptoIcon()" alt="Crypto Icon" />
+  <div class="name-wrapper">
+    <div class="h5-heading">{{ shortName() }}</div>
+    <div class="text-sm w400 subtitle">{{ fullName() }}</div>
+  </div>
+</div>
+
+<div class="right-side">
+  <div class="h5-heading">
+    {{ balance() | currency : currentCurrency() : ''  }} {{ currentCurrency() }}
+  </div>
+
+  <div class="text-sm w400 subtitle">{{ rate() }}</div>
+</div>
