@@ -31,6 +31,7 @@ export class MarketInfoComponent {
       )
       .subscribe({
         next: ratesDto => {
+          this.infos = [];
           MARKET_INFO_COINS.forEach(coin => {
             this.infos.push({
               shortName: coin,

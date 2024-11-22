@@ -23,3 +23,7 @@
 .subtitle {
   color: #6F6F6F;
 }
+
+.subtitle.rate {
+  text-wrap-mode: nowrap;
+}

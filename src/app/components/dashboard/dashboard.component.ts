@@ -41,7 +41,7 @@ export class DashboardComponent implements OnInit {
 
     forkJoin([
       this.userService.getInfo(),
-      this.currenciesService.getCurrencies(),
+      this.currenciesService.getCurrenciesRequest,
     ])
       .pipe(
         finalize(() => this.isLoading.set(false)),

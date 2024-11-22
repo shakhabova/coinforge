@@ -18,7 +18,9 @@ export class CurrenciesService {
   private httpClient = inject(HttpClient);
   private configService = inject(ConfigService);
 
-  getCurrencies(): Observable<CurrencyDto[]> {
+  public getCurrenciesRequest = this.getCurrencies();
+
+  private getCurrencies(): Observable<CurrencyDto[]> {
     return this.httpClient.get<CurrencyDto[]>(`${this.configService.serverUrl}/v1/bff-custody/dict/currencies`)
       .pipe(
         shareReplay({ bufferSize: 1, refCount: true })
@@ -26,7 +28,7 @@ export class CurrenciesService {
   }
 
   getCryptoInfo(crypto: string): Observable<CurrencyDto | undefined> {
-    return this.getCurrencies()
+    return this.getCurrenciesRequest
       .pipe(
         map(currencies => currencies.find(curr => curr.cryptoCurrency === crypto))
       );

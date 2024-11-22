@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { AsyncPipe, CurrencyPipe } from '@angular/common';
 import { Component, computed, inject, input, signal } from '@angular/core';
 import { CurrenciesService } from 'services/currencies.service';
 import { CurrentCurrencyService } from 'services/current-currency.service';
@@ -14,6 +14,7 @@ export interface MarketInfoItemModel {
   standalone: true,
   imports: [
     CurrencyPipe,
+    AsyncPipe,
   ],
   templateUrl: './market-info-item.component.html',
   styleUrl: './market-info-item.component.css'
@@ -34,5 +35,5 @@ export class MarketInfoItemComponent {
   protected currentCurrency = this.currentCurrencyService.currentCurrency;
 
   // TODO rework rate
-  protected rate = computed(() => `1 ${this.currentCurrency()} = ${this.invertedBalance()} ${this.shortName()}`);
+  protected rate = computed(() => `1 ${this.currentCurrency()} = ${this.invertedBalance().toFixed(7)} ${this.shortName()}`);
 }

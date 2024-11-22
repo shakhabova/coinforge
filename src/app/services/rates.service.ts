@@ -23,6 +23,6 @@ export class RatesService {
   private configService = inject(ConfigService);
 
   ratesBulk(): Observable<RatesBulkDto> {
-    return this.httpClient.get<RatesBulkDto>(`${this.configService.serverUrl}/v1/bff-custody/rates/bulk?from=BTC,ETH,USDC,USDT,EUR,GBP&to=BTC,ETH,USDC,USDT,EUR,GBP`);
+    return this.httpClient.get<RatesBulkDto>(`${this.configService.serverUrl}/v1/bff-custody/exchange/rates/bulk?from=BTC,ETH,USDC,USDT,EUR,GBP&to=BTC,ETH,USDC,USDT,EUR,GBP`);
   }
 }
