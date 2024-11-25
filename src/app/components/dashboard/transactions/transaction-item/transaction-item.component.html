@@ -1,0 +1,15 @@
+<div class="left-side">
+  <div class="icon-wrapper">
+    <tui-icon [icon]="typeIcon()" class="type-icon"></tui-icon>
+  </div>
+
+  <div class="info-wrapper">
+    <div class="h5-heading">{{ transaction().type }}</div>
+    <div class="text-m w600 time">{{ transaction().createdAt | date : 'hh:mm' }}</div>
+    <div class="status {{transaction().oprStatus}} text-xs w600">{{ oprStatus() }}</div>
+  </div>
+</div>
+
+<div class="right-side">
+  {{ amount() }}
+</div>

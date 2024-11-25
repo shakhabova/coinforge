@@ -1,21 +1,26 @@
 <div class="transactions dashboard-card">
-  <h2>Transactions</h2>
-  <ul>
-    <li>
-      <p>IN</p>
-      <span>20.02.24, 05:15</span>
-      <strong>+0.00393 BTC</strong>
-    </li>
-    <li>
-      <p>IN</p>
-      <span>20.02.24, 05:15</span>
-      <strong>+0.00393 BTC</strong>
-    </li>
-    <li>
-      <p>IN</p>
-      <span>20.02.24, 05:15</span>
-      <strong>+0.00393 BTC</strong>
-    </li>
-  </ul>
+  <div class="h5-heading title">Transactions</div>
+  
+  @if (!hasError() && !displayEmpty()) {
+    @for (group of daysGroups; track $index) {
+      <div class="text-m w600 day-group-title">{{ group.title }}</div>
+
+      @for (item of group.items; track item.id) {
+        <app-transaction-item [transaction]="item"></app-transaction-item>
+
+        @if (!$last) {
+          <div class="line"></div>
+        }
+      }
+    }
+  }
+
+  @if (displayEmpty()) {
+    <div class="empty-wrapper">
+      <img src="/assets/icons/empty-icon.png" class="empty-icon" />
+
+      <div class="empty-desc text-sm w600">No transactions in your history? Your transaction history can be made today.</div>
+    </div>
+  }
 </div>
 
