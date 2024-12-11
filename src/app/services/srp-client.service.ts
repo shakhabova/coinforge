@@ -1,15 +1,19 @@
 import { Injectable } from "@angular/core";
-import thinbusSRP from 'thinbus-srp/client.js';
+import thinbusSRP from 'thinbus-srp/browser.js';
 import { environment } from "../../environment/environment";
+import { Buffer } from 'buffer';
+
+// @ts-ignore
+window.Buffer = Buffer;
 
 @Injectable({
   providedIn: 'root'
 })
 export class SrpClientService {
-  public readonly srpClient;
 
-  constructor() {
+  public srpClient() {
     const SrpClientConstructor = thinbusSRP(environment.srp6.N_base10, environment.srp6.g_base10, environment.srp6.k_base16);
-    this.srpClient = new SrpClientConstructor();
+    const client = new SrpClientConstructor();
+    return client;
   }
 }

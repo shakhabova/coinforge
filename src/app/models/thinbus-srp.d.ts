@@ -1,1 +1,1 @@
-declare module 'thinbus-srp/client.js';
+declare module 'thinbus-srp/browser.js';

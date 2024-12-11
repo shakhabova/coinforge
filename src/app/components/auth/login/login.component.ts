@@ -97,6 +97,7 @@ export class LoginComponent {
               // TODO display conf email modal
               break;
             default:
+              console.error(err);
             // TODO dispaly unexpected error modal;
           }
         },

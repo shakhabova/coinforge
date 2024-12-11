@@ -169,9 +169,9 @@ export class SignUpComponent {
     }
 
     this.formGroup.updateValueAndValidity();
-    // if (!this.formGroup.valid) {
-    //   return;
-    // }
+    if (!this.formGroup.valid) {
+      return;
+    }
     
     const formValue = this.formGroup.getRawValue();
     this.signUpApiService.generateVerifierAndSalt(formValue.email!)

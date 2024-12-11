@@ -54,11 +54,11 @@ export class SignUpApiService {
   ) { }
   
   generateVerifierAndSalt(email: string): Observable<ChallengeResponse> {
-    // return this.httpClient.post<ChallengeResponse>(`${this.configService.serverUrl}/v1/auth/srp/challenge`, { email });
-    return of({
-      salt: '36b8d1940b799bd942e77bedb5dc2dab02dba0a82c21df01ad5060ab72431236',
-      b: '41d723c013b0f5b4657ca8be531e08c32c3c1acfc2f2166b28830f017fa1e41a264fdc48d185d3565faae146205dfbfbe9942c18d0ed970d530262d2b89ff9fcd4f3c1510396010508d656e319befef6b82598af630fdbc22a0daec5453738216f311b621d936d92e68c1a5dc57525df1ce3f572dd3be30b757b7b19b151ed020ab013aed998a0c0936882ad2e40d3c89735feb23c074fff392e5780626833da5cd30a0f03ce409b66cdccd1eb9140cb92bf45e279c4638d8bd69b75a962a3d318ce462fa8c9897cb1c959e12f2e02a05ee38cb13aca5c13649632dd5ff5d2a550c1901bc6c838c5407b7cddd6b03f590aef2267c08d9e510d5132ddc8b2f84d'
-    })
+    return this.httpClient.post<ChallengeResponse>(`${this.configService.serverUrl}/v1/auth/srp/challenge`, { email });
+    // return of({
+    //   salt: '36b8d1940b799bd942e77bedb5dc2dab02dba0a82c21df01ad5060ab72431236',
+    //   b: '41d723c013b0f5b4657ca8be531e08c32c3c1acfc2f2166b28830f017fa1e41a264fdc48d185d3565faae146205dfbfbe9942c18d0ed970d530262d2b89ff9fcd4f3c1510396010508d656e319befef6b82598af630fdbc22a0daec5453738216f311b621d936d92e68c1a5dc57525df1ce3f572dd3be30b757b7b19b151ed020ab013aed998a0c0936882ad2e40d3c89735feb23c074fff392e5780626833da5cd30a0f03ce409b66cdccd1eb9140cb92bf45e279c4638d8bd69b75a962a3d318ce462fa8c9897cb1c959e12f2e02a05ee38cb13aca5c13649632dd5ff5d2a550c1901bc6c838c5407b7cddd6b03f590aef2267c08d9e510d5132ddc8b2f84d'
+    // })
   }
 
   createUser(user: CreateUserRequest): Observable<CreateUserResponse> {

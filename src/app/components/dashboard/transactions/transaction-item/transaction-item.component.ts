@@ -40,5 +40,3 @@ export class TransactionItemComponent {
   private amountCurr = computed(() => this.isPositiveOpr() ? this.transaction().currencyTo : this.transaction().currencyFrom);
   amount = computed(() => `${this.isPositiveOpr() ? '+' : '-'} ${this.amountSum()} ${this.amountCurr()}`);
 }
-
-

@@ -35,7 +35,7 @@ export type MfaStatus = 'REJECTED' | 'PENDING' | 'ACTIVATED';
 export class LoginApiService {
   private httpClient = inject(HttpClient);
   private configService = inject(ConfigService);
-  private srpClient = inject(SrpClientService).srpClient;
+  private srpClientService = inject(SrpClientService);
 
   public generateVerifierAndSalt(email: string): Observable<LoginChallengeResponse> {
     return this.httpClient.post<LoginChallengeResponse>(`${this.configService.serverUrl}/v1/auth/srp/challenge`, { email });
@@ -45,8 +45,9 @@ export class LoginApiService {
     return this.generateVerifierAndSalt(value.email)
       .pipe(
         switchMap(challenge => {
-          this.srpClient.step1(value.email, value.password);
-          const {A, M1} = this.srpClient.step2(challenge.salt, challenge.b);
+          const srpClient = this.srpClientService.srpClient();
+          srpClient.step1(value.email, value.password);
+          const {A, M1} = srpClient.step2(challenge.salt, challenge.b);
 
           const request = { a: A, m1: M1, email: value.email };
           return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/auth/srp/authenticate`, request);
@@ -58,8 +59,9 @@ export class LoginApiService {
     return this.generateVerifierAndSalt(email)
       .pipe(
         switchMap(challenge => {
-          this.srpClient.step1(email, password);
-          const {A, M1} = this.srpClient.step2(challenge.salt, challenge.b);
+          const srpClient = this.srpClientService.srpClient();
+          srpClient.step1(email, password);
+          const {A, M1} = srpClient.step2(challenge.salt, challenge.b);
 
           const request = { a: A, m1: M1, email };
           return this.httpClient.post<{ data: string}>(`${this.configService.serverUrl}/v1/auth/srp/force-change-password`, request);
