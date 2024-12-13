@@ -8,7 +8,15 @@ export const routes: Routes = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: 'dashboard', component: DashboardComponent},
+      { 
+        path: 'dashboard', 
+        loadComponent: () => import('./components/dashboard/dashboard.component').then(m => m.DashboardComponent),
+        title: 'Dashboard',
+      },
+      {
+        path: 'wallets',
+        loadChildren: () => import('./components/wallets-page/wallets-page.routes').then(m => m.routes),
+      },
       {
         path: '',
         pathMatch: 'full',
