@@ -194,5 +194,5 @@ const MOCK_WALLETS = {
   ],
   pageNumber: 0,
   pageSize: 10,
-  totalElements: 1,
+  totalElements: 8,
 };

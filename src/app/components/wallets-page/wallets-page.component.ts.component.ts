@@ -16,7 +16,7 @@ import {
   TuiIcon,
   TuiSelect,
 } from '@taiga-ui/core';
-import { TuiSelectModule } from '@taiga-ui/legacy';
+import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { filter, finalize, Observable, takeUntil } from 'rxjs';
 import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
 import { WalletDto, WalletsService } from 'services/wallets.service';
@@ -25,6 +25,8 @@ import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe } from '@angular/common';
 import { WalletStatusChipComponent } from "../shared/wallet-status-chip/wallet-status-chip.component";
 import { tuiPure } from '@taiga-ui/cdk';
+import { WalletItemOptionComponent } from "./wallet-item-option/wallet-item-option.component";
+import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 
 @Component({
   selector: 'app-wallets-page.component.ts',
@@ -34,11 +36,13 @@ import { tuiPure } from '@taiga-ui/cdk';
     TuiIcon,
     FormsModule,
     TuiTable,
-    TuiButton,
+    TuiTextfieldControllerModule,
     TuiDropdown,
     TuiDataList,
     WalletStatusChipComponent,
     AsyncPipe,
+    WalletItemOptionComponent,
+    PaginatorModule,
 ],
   templateUrl: './wallets-page.component.ts.component.html',
   styleUrl: './wallets-page.component.ts.component.css',
@@ -53,7 +57,7 @@ export class WalletsPageComponentTsComponent implements OnInit {
   protected selectedCurrency = model<CurrencyDto | null>(null);
   protected isLoading = signal(false);
   protected page = signal(0);
-  private totalElements = signal(0);
+  protected totalElements = signal(0);
 
   protected wallets = signal<WalletDto[]>([]);
   protected columns = ['trxAddress', 'availableOprBalance', 'walletStatus', 'actions'];
@@ -80,20 +84,18 @@ export class WalletsPageComponentTsComponent implements OnInit {
     return this.cryptocurrenciesService.getCurrencyLinkUrl(crypto);
   }
 
-  copy(address: string): void {
-    navigator.clipboard.writeText(address);
+  async copy(address: string) {
+    await navigator.clipboard.writeText(address);
     // TODO display copy success message
   }
 
-  deactivateWallet(wallet: WalletDto) {
-    throw new Error('Method not implemented.');
+  onPageChange(state: PaginatorState) {
+    if (state.page) {
+      this.page.set(state.page);
+      this.loadWallets();
+    }
   }
-  unblockWallet(wallet: WalletDto) {
-    throw new Error('Method not implemented.');
-  }
-  blockWallet(wallet: WalletDto) {
-    throw new Error('Method not implemented.');
-  }
+
   private loadWallets() {
     this.isLoading.set(true);
     this.walletsService
@@ -111,6 +113,7 @@ export class WalletsPageComponentTsComponent implements OnInit {
         next: (walletsResponse) => {
           this.wallets.set(walletsResponse.data);
           this.totalElements.set(walletsResponse.totalElements);
+          console.log(walletsResponse);
         },
         error: (err) => {
           console.error(err);

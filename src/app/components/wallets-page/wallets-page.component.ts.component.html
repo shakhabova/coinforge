@@ -2,11 +2,11 @@
   <div class="h3-heading">Wallets</div>
 
   <div class="header-actions">
-    <tui-select [(ngModel)]="selectedCurrency">
+    <tui-select [(ngModel)]="selectedCurrency" tuiTextfieldSize="m" class="crypto-select">
       Cryptocurrency
       <tui-data-list-wrapper
         *tuiDataList
-        size="m"
+        size="s"
         [itemContent]="content"
         [items]="cryptocurrencies()"
       />
@@ -36,12 +36,12 @@
   <tbody tuiTbody [data]="wallets()">
     @for (wallet of wallets(); track wallet.id) {
     <tr tuiTr>
-      <td *tuiCell="'trxAddress'" tuiTd>
+      <td *tuiCell="'trxAddress'" tuiTd class="text-m w600">
         {{ wallet.trxAddress }}
-        <tui-icon icon="@tui.copy" (click)="copy(wallet.trxAddress)"></tui-icon>
+        <tui-icon icon="@tui.clipboard-copy" (click)="copy(wallet.trxAddress)" class="copy-icon"></tui-icon>
       </td>
 
-      <td *tuiCell="'availableOprBalance'" tuiTd>
+      <td *tuiCell="'availableOprBalance'" tuiTd class="text-m w600">
         {{ wallet.availableOprBalance }} {{ getCryptoIcon(wallet.cryptocurrency) | async }}
       </td>
 
@@ -50,56 +50,24 @@
       </td>
 
       <td *tuiCell="'actions'" tuiTd>
-        @if(wallet.walletStatus !== 'DEACTIVATED') {
-          <button
-            appearance="secondary-destructive"
-            iconStart="@tui.more"
-            size="m"
-            tuiIconButton
-            type="button"
-            [style.border-radius.%]="100"
-            [tuiAppearanceState]="open ? 'active' : null"
-            [tuiDropdown]="dropdown"
-            [tuiDropdownSided]="true"
-            [(tuiDropdownOpen)]="open"
-          >
-            More
-          </button>
-        }
-        <ng-template #dropdown let-close>
-          <tui-data-list>
-            @if (wallet.walletStatus === 'ACTIVE') {
-              <button
-                tuiOption
-                type="button"
-                (click)="blockWallet(wallet)"
-              >
-                <tui-icon icon="@tui.lock"></tui-icon>
-                Block wallet
-              </button>
-            } @else if (wallet.walletStatus === 'CUSTOMER_BLOCKED') {
-              <button
-                tuiOption
-                type="button"
-                (click)="unblockWallet(wallet)"
-              >
-                <tui-icon icon="@tui.unlock"></tui-icon>
-                Unblock wallet
-              </button>
-            }
-  
-            <button
-                tuiOption
-                type="button"
-                (click)="deactivateWallet(wallet)"
-              >
-                <tui-icon icon="@tui.deactivate"></tui-icon>
-                Deactivate wallet
-              </button>
-          </tui-data-list>
-        </ng-template>
+        <app-wallet-item-option [wallet]="wallet" />
       </td>
     </tr>
     }
   </tbody>
 </table>
+<p-paginator
+  class="paginator"
+  [totalRecords]="totalElements()"
+  [rows]="3"
+  (onPageChange)="onPageChange($event)"
+  [showFirstLastIcon]="false"
+  [showPageLinks]="true"
+>
+  <ng-template #previouspagelinkicon>
+    <button class="button secondary m">
+      <tui-icon icon="@tui.chevron-left"></tui-icon>
+      Back
+    </button>
+  </ng-template>
+</p-paginator>

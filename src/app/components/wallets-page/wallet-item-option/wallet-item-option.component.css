@@ -1,0 +1,9 @@
+tui-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.wallet-option {
+  justify-content: flex-start;
+  gap: 8px;
+}

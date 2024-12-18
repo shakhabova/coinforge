@@ -1,0 +1,68 @@
+:host {
+  width: 1128px;
+  display: block;
+  margin: 0 auto;
+
+  --p-paginator-background: white;
+  --p-paginator-color: black;
+  --p-paginator-border-radius: 0;
+  --p-paginator-nav-button-border-radius: 10px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 36px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.crypto-select {
+  width: 300px;
+}
+
+table[tuiTable] {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th {
+  background-color: #f9f9f9;
+}
+
+td {
+  background-color: white;
+}
+
+td, th {
+  border: none;
+}
+
+tr {
+  border: 1px solid var(--tui-border-normal);
+  height: 70px;
+}
+
+tui-icon {
+  width: 20px;
+  height: 20px;
+}
+
+.copy-icon {
+  cursor: pointer;
+  margin-left: 8px;
+}
+
+.button {
+  cursor: pointer;
+}
+
+::ng-deep .paginator .p-paginator {
+  border: 1px solid var(--tui-border-normal);
+  border-top: none;
+}
