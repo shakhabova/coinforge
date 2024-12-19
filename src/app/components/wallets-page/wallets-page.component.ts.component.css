@@ -2,11 +2,20 @@
   width: 1128px;
   display: block;
   margin: 0 auto;
+  margin-top: 24px;
 
   --p-paginator-background: white;
   --p-paginator-color: black;
   --p-paginator-border-radius: 0;
+  
   --p-paginator-nav-button-border-radius: 10px;
+  --p-paginator-nav-button-background: #fff;
+  --p-paginator-nav-button-color: #1c1c1c;
+  --p-paginator-nav-button-hover-background: #EDEDED;
+  --p-paginator-nav-button-hover-color: var(--p-paginator-nav-button-color);
+
+  --p-paginator-nav-button-selected-background: #EDEDED;
+  --p-paginator-nav-button-selected-color: var(--p-paginator-nav-button-color);
 }
 
 .header {
@@ -65,4 +74,12 @@ tui-icon {
 ::ng-deep .paginator .p-paginator {
   border: 1px solid var(--tui-border-normal);
   border-top: none;
+  justify-content: flex-end;
+}
+
+.paginator-button {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }

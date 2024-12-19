@@ -1,6 +1,6 @@
 .header {
   display: flex;
-  align-items: center;
+  align-items: stretch;
   justify-content: space-between;
   background-color: black;
   padding: 0px 20px;
@@ -15,7 +15,6 @@
 .header__nav {
   display: flex;
   gap: 20px;
-  height: 100%;
 }
 
 .nav-link {
@@ -23,8 +22,10 @@
   color: #ffffff;
   font-size: 14px;
   font-weight: 600;
-  height: 100%;
-  display: block;
+  height: calc(100% - 2px);
+  display: flex;
+  align-items: center;
+  box-sizing: content-box;
 }
 
 

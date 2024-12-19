@@ -50,7 +50,12 @@
       </td>
 
       <td *tuiCell="'actions'" tuiTd>
-        <app-wallet-item-option [wallet]="wallet" />
+        <app-wallet-item-option 
+          [wallet]="wallet"
+          (block)="onBlock(wallet)"
+          (unblock)="onUnblock(wallet)"
+          (deactivate)="onDeactivate(wallet)"
+        />
       </td>
     </tr>
     }
@@ -65,9 +70,16 @@
   [showPageLinks]="true"
 >
   <ng-template #previouspagelinkicon>
-    <button class="button secondary m">
+    <span class="paginator-button">
       <tui-icon icon="@tui.chevron-left"></tui-icon>
       Back
-    </button>
+    </span>
+  </ng-template>
+
+  <ng-template #nextpagelinkicon>
+    <span class="paginator-button">
+      Next
+      <tui-icon icon="@tui.chevron-right"></tui-icon>
+    </span>
   </ng-template>
 </p-paginator>

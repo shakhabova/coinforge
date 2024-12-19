@@ -90,10 +90,26 @@ export class WalletsPageComponentTsComponent implements OnInit {
   }
 
   onPageChange(state: PaginatorState) {
-    if (state.page) {
+    if (state.page != null) {
       this.page.set(state.page);
       this.loadWallets();
     }
+  }
+
+  onBlock(wallet: WalletDto): void {
+    // TODO use actual code
+    wallet.walletStatus = 'CUSTOMER_BLOCKED';
+    // this.walletsService.blockWallet(wallet);
+  }
+
+  onUnblock(wallet: WalletDto): void {
+    wallet.walletStatus = 'ACTIVE';
+    // this.walletsService.unblockWallet(wallet);
+  }
+
+  onDeactivate(wallet: WalletDto): void {
+    wallet.walletStatus = 'DEACTIVATED';
+    // this.walletsService.deactivateWallet(wallet);
   }
 
   private loadWallets() {

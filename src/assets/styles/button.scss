@@ -104,3 +104,15 @@
     background: var(--Text-White-Primary, #FFF);
   }
 }
+
+.modal-close-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #F2F2F2;
+  border: none;
+  cursor: pointer;
+}

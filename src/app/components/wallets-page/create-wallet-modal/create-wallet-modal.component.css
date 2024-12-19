@@ -1,0 +1,51 @@
+:host {
+  width: 504px;
+  display: block;
+  padding: 32px;
+}
+
+.title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.crypto-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.crypto-item {
+  cursor: pointer;
+  height: 52px;
+  padding: 10px 12px;
+
+  display: flex;
+  gap: 8px;
+  align-items: center;
+
+  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
+  background: var(--System-color-bg, #F9F9F9);
+}
+
+.crypto-icon {
+  width: 28px;
+  height: 28px;
+}
+
+.crypto-item.active {
+  outline: 1px solid var(--Primary500, #1C1C1C);
+  background: #EDEDED;
+}
+
+.crypto-list .active-mark {
+  width: 24px;
+  height: 24px;
+}
+
+.confirm-btn {
+  width: 100%;
+}

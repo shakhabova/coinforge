@@ -1,1 +1,32 @@
-<p>create-wallet-modal works!</p>
+<div class="title">
+  <div class="h4-heading">Create wallet</div>
+
+  <button class="modal-close-btn" (click)="closeModal()">
+    <tui-icon
+      [icon]="'@tui.x'"
+      [style.width.px]="'20'"
+      [style.height.px]="'20'"
+    ></tui-icon>
+  </button>
+</div>
+
+<div class="crypto-list">
+  @for (crypto of cryptos$ | async; track crypto?.shortName) {
+    <div 
+      class="crypto-item" 
+      [class.active]="selected() === crypto?.shortName"
+      (click)="selectCrypto(crypto)"
+    >
+      <img class="crypto-icon" [src]="getCryptoIcon(crypto?.shortName) | async" />
+
+      <div class="crypto-name-wrapper">
+        <div class="text-m w600">{{ crypto?.cryptoCurrencyName }}</div>
+        <div class="text-xs w400">{{ crypto?.cryptoCurrency }}</div>
+      </div>
+
+      <img class="active-mark" [src]="radioIcons.get(selected() === 'EUR')">
+    </div>
+  }
+</div>
+
+<button class="button primary m confirm-btn" (click)="confirm()" [disabled]="!selected()">Confirm</button>

@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { TuiButton, TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
 import { WalletDto, WalletStatus } from 'services/wallets.service';
 
@@ -17,18 +17,21 @@ import { WalletDto, WalletStatus } from 'services/wallets.service';
 })
 export class WalletItemOptionComponent {
   wallet = input.required<WalletDto>();
+  block = output();
+  unblock = output();
+  deactivate = output();
 
   protected open = false;
   
   deactivateWallet() {
-    throw new Error('Method not implemented.');
+    this.deactivate.emit();
   }
 
   unblockWallet() {
-    throw new Error('Method not implemented.');
+    this.unblock.emit();
   }
 
   blockWallet() {
-    throw new Error('Method not implemented.');
+    this.block.emit();
   }
 }
