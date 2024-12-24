@@ -83,3 +83,11 @@ tui-icon {
   align-items: center;
   gap: 4px;
 }
+
+.address-wrapper {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  width: 370px;
+}

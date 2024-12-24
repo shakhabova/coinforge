@@ -48,8 +48,8 @@ export class CreateWalletModalComponent {
 
   selectCrypto(crypto?: CurrencyDto): void {
     if (!crypto) return;
-    
-    this.selected.set(crypto.shortName);
+
+    this.selected.set(crypto.cryptoCurrency);
   }
 
   closeModal(): void {

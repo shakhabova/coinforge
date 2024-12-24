@@ -7,7 +7,7 @@ export const routes: Route[] = [
     title: 'Wallets',
   },
   {
-    path: ':id',
+    path: ':address',
     loadComponent: () => import('./wallet-info/wallet-info.component').then(m => m.WalletInfoComponent),
     title: 'Wallet Info',
   },

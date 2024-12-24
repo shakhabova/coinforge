@@ -1,6 +1,7 @@
 import {
   Component,
   DestroyRef,
+  effect,
   inject,
   model,
   OnInit,
@@ -16,10 +17,10 @@ import {
   TuiIcon,
   TuiSelect,
 } from '@taiga-ui/core';
-import { TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { filter, finalize, Observable, takeUntil } from 'rxjs';
+import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { filter, finalize, Observable, takeUntil, tap } from 'rxjs';
 import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
-import { WalletDto, WalletsService } from 'services/wallets.service';
+import { GetWalletsParams, WalletDto, WalletsService } from 'services/wallets.service';
 import { CreateWalletModalComponent } from './create-wallet-modal/create-wallet-modal.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe } from '@angular/common';
@@ -27,11 +28,14 @@ import { WalletStatusChipComponent } from "../shared/wallet-status-chip/wallet-s
 import { tuiPure } from '@taiga-ui/cdk';
 import { WalletItemOptionComponent } from "./wallet-item-option/wallet-item-option.component";
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { TuiFilterByInputPipe } from '@taiga-ui/kit';
+import { RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-wallets-page.component.ts',
   standalone: true,
   imports: [
+    TuiComboBoxModule,
     TuiSelectModule,
     TuiIcon,
     FormsModule,
@@ -43,6 +47,8 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
     AsyncPipe,
     WalletItemOptionComponent,
     PaginatorModule,
+    TuiFilterByInputPipe,
+    RouterModule,
 ],
   templateUrl: './wallets-page.component.ts.component.html',
   styleUrl: './wallets-page.component.ts.component.css',
@@ -63,8 +69,14 @@ export class WalletsPageComponentTsComponent implements OnInit {
   protected columns = ['trxAddress', 'availableOprBalance', 'walletStatus', 'actions'];
   protected open: boolean = false;
 
+  constructor() {
+    effect(() => {
+      this.loadWallets(this.selectedCurrency()?.cryptoCurrency);
+    }, { allowSignalWrites: true });
+  }
+
   ngOnInit() {
-    this.loadWallets();
+    // this.loadWallets();
     this.loadCurrencies();
   }
 
@@ -74,9 +86,12 @@ export class WalletsPageComponentTsComponent implements OnInit {
       .afterClosed()
       .pipe(
         filter((toUpdate) => !!toUpdate),
+        tap(console.log),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => this.loadWallets());
+      .subscribe(() => {
+        this.loadWallets()
+      });
   }
 
   @tuiPure
@@ -112,15 +127,28 @@ export class WalletsPageComponentTsComponent implements OnInit {
     // this.walletsService.deactivateWallet(wallet);
   }
 
-  private loadWallets() {
+  stringifyCryptoSelectItem(item: CurrencyDto): string {
+    return item.cryptoCurrencyName;
+  }
+
+  currencyMatcher(item: CurrencyDto, search: string): boolean {
+    return item.cryptoCurrency.toLowerCase().includes(search.toLowerCase()) || item.cryptoCurrencyName.toLowerCase().includes(search.toLowerCase());
+  }
+
+  private loadWallets(selectedCurrency?: string) {
     this.isLoading.set(true);
+    const params: GetWalletsParams = {
+      statusIn: ['ACTIVE', 'CUSTOMER_BLOCKED', 'DEACTIVATED'],
+      page: this.page(),
+      size: 10,
+      sort: 'id,desc',
+    };
+    if (selectedCurrency) {
+      params.cryptocurrency = selectedCurrency;
+    }
+
     this.walletsService
-      .getWallets({
-        statusIn: ['ACTIVE', 'CUSTOMER_BLOCKED', 'DEACTIVATED'],
-        page: this.page(),
-        size: 10,
-        sort: 'id,desc',
-      })
+      .getWallets(params)
       .pipe(
         finalize(() => this.isLoading.set(false)),
         takeUntilDestroyed(this.destroyRef)

@@ -9,6 +9,7 @@ export interface GetWalletsParams {
   size: number;
   page: number;
   sort: string;
+  cryptocurrency?: string;
 }
 
 export type WalletStatus = 'ACTIVE' | 'CUSTOMER_BLOCKED' | 'DEACTIVATED';
@@ -47,7 +48,6 @@ export class WalletsService {
   private currenciesService = inject(CurrenciesService);
 
   getWallets(params: GetWalletsParams): Observable<WalletsPageableDto> {
-    console.log(params);
     return of(MOCK_WALLETS);
     // return this.httpClient.get<WalletsPageableDto>(
     //   `${this.configService.serverUrl}/v1/bff-custody/wallets/customer`,
@@ -60,6 +60,11 @@ export class WalletsService {
     //     }
     //   }
     // );
+  }
+
+  getWalletInfo(trxAddress: string): Observable<WalletDto | null> {
+    // TODO get wallet info by ID
+    return of(MOCK_WALLETS.data.find(w => w.trxAddress === trxAddress) ?? null);
   }
 
   getWalletsForDashboard(): Observable<WalletDto[]> {
@@ -84,7 +89,7 @@ export class WalletsService {
   }
 
   getEligibleCryptos(): Observable<{ cryptocurrency: string }[]> {
-    return this.currenciesService.getCurrenciesRequest.pipe(map(infos => infos.map(info => ({cryptocurrency: info.})))
+    return this.currenciesService.getCurrenciesRequest.pipe(map(infos => infos.map(info => ({cryptocurrency: info.cryptoCurrency}))));
     // return this.httpClient.get<{ cryptocurrency: string }[]>(`${this.configService.serverUrl}/v1/bff-custody/wallets/eligible-cryptocurrencies`);
   }
 
@@ -104,7 +109,7 @@ const MOCK_WALLETS = {
       walletStatus: 'CUSTOMER_BLOCKED' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
       cryptocurrency: 'BTC',
       oprBalance: 0,
-      availableOprBalance: 0,
+      availableOprBalance: 5709.23094234,
       trxBalance: 0,
       nativeTokenBalance: null,
       createdAt: '2024-09-26T11:29:23.366437',

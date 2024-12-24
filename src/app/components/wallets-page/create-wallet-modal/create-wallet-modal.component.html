@@ -11,20 +11,20 @@
 </div>
 
 <div class="crypto-list">
-  @for (crypto of cryptos$ | async; track crypto?.shortName) {
+  @for (crypto of cryptos$ | async; track crypto?.cryptoCurrency) {
     <div 
       class="crypto-item" 
-      [class.active]="selected() === crypto?.shortName"
+      [class.active]="selected() === crypto?.cryptoCurrency"
       (click)="selectCrypto(crypto)"
     >
-      <img class="crypto-icon" [src]="getCryptoIcon(crypto?.shortName) | async" />
+      <img class="crypto-icon" [src]="getCryptoIcon(crypto?.cryptoCurrency) | async" />
 
       <div class="crypto-name-wrapper">
         <div class="text-m w600">{{ crypto?.cryptoCurrencyName }}</div>
-        <div class="text-xs w400">{{ crypto?.cryptoCurrency }}</div>
+        <div class="text-xs w400">{{ crypto?.shortName }}</div>
       </div>
 
-      <img class="active-mark" [src]="radioIcons.get(selected() === 'EUR')">
+      <img class="active-mark" [src]="radioIcons.get(selected() === crypto?.cryptoCurrency)">
     </div>
   }
 </div>
