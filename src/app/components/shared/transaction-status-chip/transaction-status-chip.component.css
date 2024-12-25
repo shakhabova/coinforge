@@ -1,0 +1,14 @@
+.status.REJECTED {
+  border: 1px solid #fddcda;
+  background: var(--System-color-light-red, #fff0f0);
+}
+
+.status.CONFIRMED {
+  border: 1px solid #cffcc7;
+  background: var(--System-color-light-red, #e9fff4);
+}
+
+.status.REFUNDED {
+  border: 1px solid rgba(65, 102, 230, 0.12);
+  background: rgba(65, 102, 230, 0.12);
+}

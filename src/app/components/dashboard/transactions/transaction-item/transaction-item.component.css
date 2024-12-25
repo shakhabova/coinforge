@@ -5,16 +5,6 @@
   margin: 16px 0;
 }
 
-.icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #F2F2F2;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-}
-
 .left-side {
   display: flex;
   gap: 12px;
@@ -33,17 +23,3 @@
   border-radius: 32px;
 }
 
-.info-wrapper .status.REJECTED {
-  border: 1px solid #FDDCDA;
-  background: var(--System-color-light-red, #FFF0F0);
-}
-
-.info-wrapper .status.CONFIRMED {
-  border: 1px solid #CFFCC7;
-  background: var(--System-color-light-red, #E9FFF4);
-}
-
-.info-wrapper .status.REFUNDED {
- border: 1px solid rgba(65, 102, 230, 0.12);
-  background: rgba(65, 102, 230, 0.12);
-}

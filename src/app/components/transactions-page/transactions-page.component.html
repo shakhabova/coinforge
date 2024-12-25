@@ -1,0 +1,105 @@
+<div class="header">
+  <div class="h3-heading">Transactions</div>
+
+  <div class="header-actions">
+    <app-top-up-withdraw-buttons />
+  </div>
+</div>
+
+<div class="filters-wrapper">
+  <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m" class="search-input text-m w400">
+    <input
+      [(ngModel)]="search"
+      placeholder="Search by transaction hash..."
+      tuiTextfield
+      size="m"
+    />
+  </tui-textfield>
+
+  <button 
+    tuiButton
+    appearance="secondary-grayscale"
+    type="button"
+    size="m"
+  >
+    <tui-icon icon="@tui.filter"></tui-icon>
+  </button>
+</div>
+
+<table tuiTable [columns]="columns">
+  <thead>
+    <tr tuiThGroup>
+      <th tuiTh>Time</th>
+      <th tuiTh>Transaction hash</th>
+      <th tuiTh>Wallet address</th>
+      <th tuiTh>Amount</th>
+      <th tuiTh>Status</th>
+      <th tuiTh>Type</th>
+    </tr>
+  </thead>
+
+  <tbody tuiTbody [data]="transactions()">
+    @for (transaction of transactions(); track transaction.id) {
+    <tr tuiTr>
+      <td *tuiCell="'createdAt'" tuiTd>
+        <div class="text-m w600">{{ transaction.createdAt | date : 'dd.MM.yyyy' }}</div>
+        <div class="transaction-time">{{ transaction.createdAt | date : 'hh:mm' }}</div>
+      </td>
+
+      <td *tuiCell="'transactionHash'" tuiTd class="text-m w600">
+        <div class="u-row-middle">
+          <span class="hash">{{ transaction.transactionHash }}</span>
+          <app-copy-icon [text]="transaction.transactionHash" />
+        </div>
+      </td>
+
+      <td *tuiCell="'address'" tuiTd class="text-m w600">
+        <div class="u-row-middle">
+          <span class="address-wrapper">{{ getAddress(transaction) }}</span>
+          <app-copy-icon [text]="getAddress(transaction)" />
+        </div>
+      </td>
+
+      <td *tuiCell="'amount'" tuiTd class="text-m w600">
+        <div class="u-row-middle u-g-12">
+          {{ getAmountPrefix(transaction) }}&nbsp;
+          {{ getAmount(transaction) | number : '.0-2' }} 
+          <img [src]="getCryptoIcon(transaction) | async" width="24" class="u-mar-left-12" />
+        </div>
+      </td>
+
+      <td *tuiCell="'status'" tuiTd>
+        <app-transaction-status-chip [status]="transaction.oprStatus" />
+      </td>
+
+      <td *tuiCell="'type'" tuiTd>
+        <app-transaction-type-icon [type]="transaction.type" />
+
+        <span class="u-mar-left-12">{{ transaction.type }}</span>
+      </td>
+    </tr>
+    }
+  </tbody>
+</table>
+<p-paginator
+  class="paginator"
+  [totalRecords]="totalElements()"
+  [rows]="3"
+  (onPageChange)="onPageChange($event)"
+  [showFirstLastIcon]="false"
+  [showPageLinks]="true"
+>
+  <ng-template #previouspagelinkicon>
+    <span class="paginator-button">
+      <tui-icon icon="@tui.chevron-left"></tui-icon>
+      Back
+    </span>
+  </ng-template>
+
+  <ng-template #nextpagelinkicon>
+    <span class="paginator-button">
+      Next
+      <tui-icon icon="@tui.chevron-right"></tui-icon>
+    </span>
+  </ng-template>
+</p-paginator>

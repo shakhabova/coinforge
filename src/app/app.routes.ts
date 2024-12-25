@@ -18,6 +18,10 @@ export const routes: Routes = [
         loadChildren: () => import('./components/wallets-page/wallets-page.routes').then(m => m.routes),
       },
       {
+        path: 'transactions',
+        loadComponent: () => import('./components/transactions-page/transactions-page.component').then(m => m.TransactionsPageComponent),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: '/dashboard'

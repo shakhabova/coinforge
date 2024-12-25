@@ -23,7 +23,7 @@ import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
 import { GetWalletsParams, WalletDto, WalletsService } from 'services/wallets.service';
 import { CreateWalletModalComponent } from './create-wallet-modal/create-wallet-modal.component';
 import { TuiTable } from '@taiga-ui/addon-table';
-import { AsyncPipe } from '@angular/common';
+import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { WalletStatusChipComponent } from "../shared/wallet-status-chip/wallet-status-chip.component";
 import { tuiPure } from '@taiga-ui/cdk';
 import { WalletItemOptionComponent } from "./wallet-item-option/wallet-item-option.component";
@@ -49,6 +49,7 @@ import { RouterModule } from '@angular/router';
     PaginatorModule,
     TuiFilterByInputPipe,
     RouterModule,
+    DecimalPipe,
 ],
   templateUrl: './wallets-page.component.ts.component.html',
   styleUrl: './wallets-page.component.ts.component.css',

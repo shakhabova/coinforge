@@ -60,7 +60,7 @@
 
       <td *tuiCell="'availableOprBalance'" tuiTd class="text-m w600">
         <div class="u-row-middle u-g-12">
-          {{ wallet.availableOprBalance }} 
+          {{ wallet.availableOprBalance | number : '.0-2' }} 
           <img [src]="getCryptoIcon(wallet.cryptocurrency) | async" width="24" />
         </div>
       </td>
