@@ -3,14 +3,14 @@ import { TuiIcon } from '@taiga-ui/core';
 import { TransactionDto } from 'services/transactions.service';
 
 const ICON_TYPE_MAP: Record<TransactionDto['type'], string> = {
-  IN: '@tui.chevron-down',
-  F2C: '@tui.chevron-down',
-  C2C: '@tui.chevron-down',
-  CSTD_IN: '@tui.chevron-down',
+  IN: '@tui.arrow-down',
+  F2C: '@tui.arrow-down',
+  C2C: '@tui.arrow-down',
+  CSTD_IN: '@tui.arrow-down',
 
-  OUT: '@tui.chevron-up',
-  C2F: '@tui.chevron-up',
-  CSTD_OUT: '@tui.chevron-up',
+  OUT: '@tui.arrow-up',
+  C2F: '@tui.arrow-up',
+  CSTD_OUT: '@tui.arrow-up',
 };
 
 @Component({

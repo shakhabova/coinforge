@@ -53,6 +53,15 @@
   line-height: 24px;
 }
 
+.h6-heading {
+  color: var(--Primary-text-color, #272828);
+  font-family: Switzer-Variable;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 21px;
+}
+
 @mixin text {
   color: var(--Primary-text-color, #272828);
   font-family: "Nunito Sans";

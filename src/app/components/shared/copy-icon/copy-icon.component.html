@@ -1,5 +1,11 @@
-<tui-icon icon="@tui.clipboard-copy" (click)="copy()" class="copy-icon"></tui-icon>
+<tui-icon
+  icon="@tui.clipboard-copy"
+  (click)="copy()"
+  class="copy-icon"
+  [style.width.px]="width()"
+  [style.height.px]="height()"
+></tui-icon>
 
 @if (displaySuccess()) {
-  <div class="success-message text-xs w600">Copied!</div>
+<div class="success-message text-xs w600">Copied!</div>
 }

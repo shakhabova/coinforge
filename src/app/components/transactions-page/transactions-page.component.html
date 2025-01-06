@@ -6,7 +6,7 @@
   </div>
 </div>
 
-<div class="filters-wrapper">
+<div class="filters-wrapper u-mar-bottom-24">
   <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m" class="search-input text-m w400">
     <input
       [(ngModel)]="search"
@@ -29,12 +29,12 @@
 <table tuiTable [columns]="columns">
   <thead>
     <tr tuiThGroup>
-      <th tuiTh>Time</th>
-      <th tuiTh>Transaction hash</th>
-      <th tuiTh>Wallet address</th>
-      <th tuiTh>Amount</th>
-      <th tuiTh>Status</th>
-      <th tuiTh>Type</th>
+      <th tuiTh class="h6-heading">Time</th>
+      <th tuiTh class="h6-heading">Transaction hash</th>
+      <th tuiTh class="h6-heading">Wallet address</th>
+      <th tuiTh class="h6-heading">Amount</th>
+      <th tuiTh class="h6-heading">Status</th>
+      <th tuiTh class="h6-heading">Type</th>
     </tr>
   </thead>
 
@@ -43,28 +43,28 @@
     <tr tuiTr>
       <td *tuiCell="'createdAt'" tuiTd>
         <div class="text-m w600">{{ transaction.createdAt | date : 'dd.MM.yyyy' }}</div>
-        <div class="transaction-time">{{ transaction.createdAt | date : 'hh:mm' }}</div>
+        <div class="transaction-time text-xs w400">{{ transaction.createdAt | date : 'hh:mm' }}</div>
       </td>
 
-      <td *tuiCell="'transactionHash'" tuiTd class="text-m w600">
+      <td *tuiCell="'transactionHash'" tuiTd>
         <div class="u-row-middle">
-          <span class="hash">{{ transaction.transactionHash }}</span>
+          <span class="hash text-m w600">{{ transaction.transactionHash }}</span>
           <app-copy-icon [text]="transaction.transactionHash" />
         </div>
       </td>
 
-      <td *tuiCell="'address'" tuiTd class="text-m w600">
+      <td *tuiCell="'address'" tuiTd>
         <div class="u-row-middle">
-          <span class="address-wrapper">{{ getAddress(transaction) }}</span>
+          <span class="address-wrapper text-m w600">{{ getAddress(transaction) }}</span>
           <app-copy-icon [text]="getAddress(transaction)" />
         </div>
       </td>
 
-      <td *tuiCell="'amount'" tuiTd class="text-m w600">
-        <div class="u-row-middle u-g-12">
+      <td *tuiCell="'amount'" tuiTd>
+        <div class="u-row-middle u-g-12 text-m w600">
           {{ getAmountPrefix(transaction) }}&nbsp;
           {{ getAmount(transaction) | number : '.0-2' }} 
-          <img [src]="getCryptoIcon(transaction) | async" width="24" class="u-mar-left-12" />
+          <img [src]="getCryptoIcon(transaction) | async" width="24" />
         </div>
       </td>
 
@@ -73,9 +73,10 @@
       </td>
 
       <td *tuiCell="'type'" tuiTd>
-        <app-transaction-type-icon [type]="transaction.type" />
-
-        <span class="u-mar-left-12">{{ transaction.type }}</span>
+        <span class="u-row-middle">
+          <app-transaction-type-icon [type]="transaction.type" />
+          <span class="u-mar-left-12">{{ transaction.type }}</span>
+        </span>
       </td>
     </tr>
     }

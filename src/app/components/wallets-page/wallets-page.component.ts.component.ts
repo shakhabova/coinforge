@@ -158,7 +158,6 @@ export class WalletsPageComponentTsComponent implements OnInit {
         next: (walletsResponse) => {
           this.wallets.set(walletsResponse.data);
           this.totalElements.set(walletsResponse.totalElements);
-          console.log(walletsResponse);
         },
         error: (err) => {
           console.error(err);

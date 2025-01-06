@@ -1,17 +1,19 @@
-import { Component, inject, model, signal } from '@angular/core';
-import { TopUpWithdrawButtonsComponent } from "../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component";
+import { Component, DestroyRef, inject, model, signal } from '@angular/core';
+import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
 import { TuiButton, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { FormsModule } from '@angular/forms';
-import { TransactionStatusChipComponent } from "../shared/transaction-status-chip/transaction-status-chip.component";
-import { TransactionTypeIconComponent } from "../shared/transaction-type-icon/transaction-type-icon.component";
-import { TransactionDto } from 'services/transactions.service';
+import { TransactionStatusChipComponent } from '../shared/transaction-status-chip/transaction-status-chip.component';
+import { TransactionTypeIconComponent } from '../shared/transaction-type-icon/transaction-type-icon.component';
+import { TransactionDto, TransactionsService } from 'services/transactions.service';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
-import { CopyIconComponent } from "../shared/copy-icon/copy-icon.component";
+import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { tuiPure } from '@taiga-ui/cdk';
-import { Observable } from 'rxjs';
+import { finalize, Observable } from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
+import { PageableParams } from 'models/pageable.model';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -45,17 +47,33 @@ import { CurrenciesService } from 'services/currencies.service';
     DatePipe,
     DecimalPipe,
     AsyncPipe,
-],
+  ],
   templateUrl: './transactions-page.component.html',
-  styleUrl: './transactions-page.component.css'
+  styleUrl: './transactions-page.component.css',
 })
 export class TransactionsPageComponent {
   private cryptocurrenciesService = inject(CurrenciesService);
+  private transactionService = inject(TransactionsService);
+  private destroyRef = inject(DestroyRef);
 
-  protected columns = ['createdAt', 'transactionHash', 'address', 'amount', 'status', 'type'];
+  protected isLoading = signal(false);
+  protected page = signal(0);
+
+  protected columns = [
+    'createdAt',
+    'transactionHash',
+    'address',
+    'amount',
+    'status',
+    'type',
+  ];
   protected transactions = signal<TransactionDto[]>([]);
   protected search = model<string | null>(null);
   protected totalElements = signal(0);
+
+  ngOnInit() {
+    this.loadTransactions();
+  }
 
   @tuiPure
   getAddress(transaction: TransactionDto) {
@@ -87,20 +105,49 @@ export class TransactionsPageComponent {
   @tuiPure
   getCryptoIcon(transaction: TransactionDto): Observable<string> {
     if (this.isTransactionIn(transaction.type)) {
-      return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
+      return this.cryptocurrenciesService.getCurrencyLinkUrl(
+        transaction.currencyTo
+      );
     }
 
-    return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyFrom);
+    return this.cryptocurrenciesService.getCurrencyLinkUrl(
+      transaction.currencyFrom
+    );
   }
 
   onPageChange(state: PaginatorState): void {
-    // TODO make transactions pagination
+    if (state.page) {
+      this.page.set(state.page);
+      this.loadTransactions();
+    }
   }
 
   private isTransactionIn(type: TransactionDto['type']): boolean {
     return ['IN', 'F2C', 'C2C', 'CSTD_IN'].includes(type);
   }
 
-  // private isTransactionOut(type: TransactionDto['type']): boolean {
-  // }
+  private loadTransactions() {
+    this.isLoading.set(true);
+    const params: PageableParams = {
+      size: 10,
+      sort: 'id,desc',
+      page: this.page(),
+    };
+
+    this.transactionService.getTransactions(params)
+      .pipe(
+        finalize(() => this.isLoading.set(false)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        next: res => {
+          this.transactions.set(res.data);
+          this.totalElements.set(res.totalElements);
+        },
+        error: err => {
+          // TODO handle error
+          console.error(err);
+        }
+      })
+  }
 }

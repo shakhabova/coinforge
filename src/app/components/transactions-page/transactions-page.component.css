@@ -28,6 +28,11 @@
   justify-content: flex-end;
 }
 
+th[tuiTh] {
+  font: var(--tui-font-h6-heading);
+  color: #272828;
+}
+
 .paginator-button {
   padding: 8px 12px;
   display: flex;
@@ -54,7 +59,7 @@ td, th {
 
 tr {
   border: 1px solid var(--tui-border-normal);
-  height: 70px;
+  height: 60px;
 }
 
 .header {
@@ -92,4 +97,8 @@ tr {
 .copy-icon {
   cursor: pointer;
   margin-left: 8px;
+}
+
+.transaction-time {
+  color: #6f6f6f;
 }
