@@ -43,6 +43,10 @@ export interface TransactionDto {
   updatedAt: string;
 }
 
+export interface TransactionPageableParams extends PageableParams {
+  transactionHash?: string;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -51,7 +55,7 @@ export class TransactionsService {
   private configService = inject(ConfigService);
 
   getTransactions(
-    params: PageableParams
+    params: TransactionPageableParams
   ): Observable<PageableResponse<TransactionDto>> {
     return of({
       data: mockData,

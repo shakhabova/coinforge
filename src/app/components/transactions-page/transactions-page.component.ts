@@ -1,19 +1,35 @@
 import { Component, DestroyRef, inject, model, signal } from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
 import { TuiButton, TuiIcon, TuiTextfield } from '@taiga-ui/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormControl,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { TransactionStatusChipComponent } from '../shared/transaction-status-chip/transaction-status-chip.component';
 import { TransactionTypeIconComponent } from '../shared/transaction-type-icon/transaction-type-icon.component';
-import { TransactionDto, TransactionsService } from 'services/transactions.service';
+import {
+  TransactionDto,
+  TransactionPageableParams,
+  TransactionsService,
+} from 'services/transactions.service';
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { tuiPure } from '@taiga-ui/cdk';
-import { finalize, Observable } from 'rxjs';
+import {
+  debounce,
+  debounceTime,
+  filter,
+  finalize,
+  from,
+  Observable,
+} from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
 import { PageableParams } from 'models/pageable.model';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -47,6 +63,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     DatePipe,
     DecimalPipe,
     AsyncPipe,
+    ReactiveFormsModule,
   ],
   templateUrl: './transactions-page.component.html',
   styleUrl: './transactions-page.component.css',
@@ -68,8 +85,21 @@ export class TransactionsPageComponent {
     'type',
   ];
   protected transactions = signal<TransactionDto[]>([]);
-  protected search = model<string | null>(null);
+  protected search = new FormControl<string | null>(null, [
+    Validators.minLength(64),
+    Validators.pattern(/^[a-fA-F0-9x]+$/),
+  ]);
   protected totalElements = signal(0);
+
+  constructor() {
+    this.search.valueChanges
+      .pipe(
+        filter(val => this.search.valid),
+        debounceTime(300),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.loadTransactions());
+  }
 
   ngOnInit() {
     this.loadTransactions();
@@ -127,27 +157,30 @@ export class TransactionsPageComponent {
   }
 
   private loadTransactions() {
+    console.log('hehe');
     this.isLoading.set(true);
-    const params: PageableParams = {
+    const params: TransactionPageableParams = {
       size: 10,
       sort: 'id,desc',
       page: this.page(),
+      transactionHash: this.search.value || undefined,
     };
 
-    this.transactionService.getTransactions(params)
+    this.transactionService
+      .getTransactions(params)
       .pipe(
         finalize(() => this.isLoading.set(false)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: res => {
+        next: (res) => {
           this.transactions.set(res.data);
           this.totalElements.set(res.totalElements);
         },
-        error: err => {
+        error: (err) => {
           // TODO handle error
           console.error(err);
-        }
-      })
+        },
+      });
   }
 }

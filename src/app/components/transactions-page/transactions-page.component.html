@@ -9,7 +9,7 @@
 <div class="filters-wrapper u-mar-bottom-24">
   <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m" class="search-input text-m w400">
     <input
-      [(ngModel)]="search"
+      [formControl]="search"
       placeholder="Search by transaction hash..."
       tuiTextfield
       size="m"
@@ -29,12 +29,12 @@
 <table tuiTable [columns]="columns">
   <thead>
     <tr tuiThGroup>
-      <th tuiTh class="h6-heading">Time</th>
-      <th tuiTh class="h6-heading">Transaction hash</th>
-      <th tuiTh class="h6-heading">Wallet address</th>
-      <th tuiTh class="h6-heading">Amount</th>
-      <th tuiTh class="h6-heading">Status</th>
-      <th tuiTh class="h6-heading">Type</th>
+      <th tuiTh>Time</th>
+      <th tuiTh>Transaction hash</th>
+      <th tuiTh>Wallet address</th>
+      <th tuiTh>Amount</th>
+      <th tuiTh>Status</th>
+      <th tuiTh>Type</th>
     </tr>
   </thead>
 
