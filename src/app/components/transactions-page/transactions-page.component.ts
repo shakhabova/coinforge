@@ -1,6 +1,6 @@
-import { Component, DestroyRef, inject, model, signal } from '@angular/core';
+import { Component, DestroyRef, inject, Injector, model, signal } from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
-import { TuiButton, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { TuiButton, TuiDialog, TuiDialogService, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import {
   FormControl,
   FormsModule,
@@ -30,6 +30,9 @@ import {
 import { CurrenciesService } from 'services/currencies.service';
 import { PageableParams } from 'models/pageable.model';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { MatDialog } from '@angular/material/dialog';
+import { TransactionsFilterModalComponent } from './transactions-filter-modal/transactions-filter-modal.component';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -72,6 +75,8 @@ export class TransactionsPageComponent {
   private cryptocurrenciesService = inject(CurrenciesService);
   private transactionService = inject(TransactionsService);
   private destroyRef = inject(DestroyRef);
+  private dialogService = inject(TuiDialogService);
+  private injector = inject(Injector);
 
   protected isLoading = signal(false);
   protected page = signal(0);
@@ -150,6 +155,10 @@ export class TransactionsPageComponent {
       this.page.set(state.page);
       this.loadTransactions();
     }
+  }
+
+  openFilters(){
+    this.dialogService.open(new PolymorpheusComponent(TransactionsFilterModalComponent, this.injector)).subscribe();
   }
 
   private isTransactionIn(type: TransactionDto['type']): boolean {
