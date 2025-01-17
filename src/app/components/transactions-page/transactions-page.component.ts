@@ -1,6 +1,21 @@
-import { Component, DestroyRef, inject, Injector, model, signal } from '@angular/core';
+import {
+  Component,
+  DestroyRef,
+  inject,
+  Injector,
+  input,
+  model,
+  signal,
+} from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
-import { TuiButton, TuiDialog, TuiDialogService, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import {
+  TuiButton,
+  TuiDialog,
+  TuiDialogOptions,
+  TuiDialogService,
+  TuiIcon,
+  TuiTextfield,
+} from '@taiga-ui/core';
 import {
   FormControl,
   FormsModule,
@@ -18,7 +33,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
-import { tuiPure } from '@taiga-ui/cdk';
+import { TuiDay, tuiPure } from '@taiga-ui/cdk';
 import {
   debounce,
   debounceTime,
@@ -31,8 +46,12 @@ import { CurrenciesService } from 'services/currencies.service';
 import { PageableParams } from 'models/pageable.model';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
-import { TransactionsFilterModalComponent } from './transactions-filter-modal/transactions-filter-modal.component';
+import {
+  TransactionFilterModel,
+  TransactionsFilterModalComponent,
+} from './transactions-filter-modal/transactions-filter-modal.component';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { format } from 'date-fns';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -77,9 +96,13 @@ export class TransactionsPageComponent {
   private destroyRef = inject(DestroyRef);
   private dialogService = inject(TuiDialogService);
   private injector = inject(Injector);
+  
+  trxWalletAddress = input<string>();
 
   protected isLoading = signal(false);
   protected page = signal(0);
+  private filters?: TransactionFilterModel;
+
 
   protected columns = [
     'createdAt',
@@ -99,7 +122,7 @@ export class TransactionsPageComponent {
   constructor() {
     this.search.valueChanges
       .pipe(
-        filter(val => this.search.valid),
+        filter((val) => this.search.valid),
         debounceTime(300),
         takeUntilDestroyed(this.destroyRef)
       )
@@ -150,6 +173,9 @@ export class TransactionsPageComponent {
     );
   }
 
+  hasFilters(): boolean {
+    return !!this.filters && Object.keys(this.filters).length > 0;
+  }
   onPageChange(state: PaginatorState): void {
     if (state.page) {
       this.page.set(state.page);
@@ -157,8 +183,22 @@ export class TransactionsPageComponent {
     }
   }
 
-  openFilters(){
-    this.dialogService.open(new PolymorpheusComponent(TransactionsFilterModalComponent, this.injector)).subscribe();
+  openFilters() {
+    this.dialogService
+      .open<TransactionFilterModel>(
+        new PolymorpheusComponent(
+          TransactionsFilterModalComponent,
+          this.injector
+        ),
+        {
+          data: this.filters
+        }
+      )
+      .pipe(filter((val) => !!val))
+      .subscribe((filters) => {
+        this.filters = filters;
+        this.loadTransactions()
+      });
   }
 
   private isTransactionIn(type: TransactionDto['type']): boolean {
@@ -173,7 +213,13 @@ export class TransactionsPageComponent {
       sort: 'id,desc',
       page: this.page(),
       transactionHash: this.search.value || undefined,
+    
     };
+    if (this.filters?.dateFrom) params.dateFrom = this.formatDate(this.filters.dateFrom.toLocalNativeDate());
+    if (this.filters?.dateTo) params.dateTo = this.formatDate(this.filters.dateTo.toLocalNativeDate());
+    if (this.filters?.cryptocurrency) params.cryptocurrency = this.filters.cryptocurrency.cryptoCurrency;
+    if (this.filters?.statuses) params.statuses = this.filters.statuses;
+    if (this.trxWalletAddress()) params.trxWalletAddress = this.trxWalletAddress();
 
     this.transactionService
       .getTransactions(params)
@@ -191,5 +237,9 @@ export class TransactionsPageComponent {
           console.error(err);
         },
       });
+  }
+
+  private formatDate(date: Date): string {
+    return format(date, 'yyyy-MM-dd+HH:mm');
   }
 }

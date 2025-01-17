@@ -77,6 +77,10 @@ tr {
   gap: 16px;
 }
 
+button.active {
+  background: var(--Secondary500, #FEDD2D) !important;
+}
+
 .search-input {
   width: 500px;
 }

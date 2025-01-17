@@ -9,6 +9,8 @@ import { CurrenciesService } from 'services/currencies.service';
 import { tuiPure } from '@taiga-ui/cdk';
 import { WalletStatusChipComponent } from "../../shared/wallet-status-chip/wallet-status-chip.component";
 import { WalletItemOptionComponent } from "../wallet-item-option/wallet-item-option.component";
+import { TransactionsComponent } from "../../dashboard/transactions/transactions.component";
+import { TransactionsPageComponent } from "../../transactions-page/transactions-page.component";
 
 @Component({
   selector: 'app-wallet-info',
@@ -18,7 +20,9 @@ import { WalletItemOptionComponent } from "../wallet-item-option/wallet-item-opt
     AsyncPipe,
     DecimalPipe,
     WalletStatusChipComponent,
-    WalletItemOptionComponent
+    WalletItemOptionComponent,
+    TransactionsComponent,
+    TransactionsPageComponent
 ],
   templateUrl: './wallet-info.component.html',
   styleUrl: './wallet-info.component.css'

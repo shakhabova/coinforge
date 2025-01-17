@@ -2,7 +2,9 @@
   <div class="h3-heading">Transactions</div>
 
   <div class="header-actions">
-    <app-top-up-withdraw-buttons />
+    @if(!trxWalletAddress()){
+      <app-top-up-withdraw-buttons />
+    }
   </div>
 </div>
 
@@ -22,6 +24,7 @@
     type="button"
     size="m"
     (click)="openFilters()"
+    [class.active]="hasFilters()"
   >
     <tui-icon icon="@tui.filter"></tui-icon>
   </button>

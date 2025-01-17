@@ -45,6 +45,11 @@ export interface TransactionDto {
 
 export interface TransactionPageableParams extends PageableParams {
   transactionHash?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  cryptocurrency?: string;
+  statuses?: string;
+  trxWalletAddress?: string;
 }
 
 @Injectable({
