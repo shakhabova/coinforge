@@ -2,7 +2,10 @@
   display: flex;
   align-items: center;
 }
-
+.u-text-center {
+  display: flex;
+  justify-content: center;
+}
 .u-space-between {
   justify-content: space-between;
 }

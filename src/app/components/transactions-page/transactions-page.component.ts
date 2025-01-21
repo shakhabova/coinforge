@@ -52,6 +52,7 @@ import {
 } from './transactions-filter-modal/transactions-filter-modal.component';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { format } from 'date-fns';
+import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -199,6 +200,16 @@ export class TransactionsPageComponent {
         this.filters = filters;
         this.loadTransactions()
       });
+  }
+
+  openDetails(transaction: TransactionDto) {
+    this.dialogService.open(
+      new PolymorpheusComponent(TransactionDetailsComponent, this.injector),
+      {
+        data: transaction
+      }
+
+    ).subscribe()
   }
 
   private isTransactionIn(type: TransactionDto['type']): boolean {

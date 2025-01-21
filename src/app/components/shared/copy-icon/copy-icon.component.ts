@@ -16,7 +16,9 @@ export class CopyIconComponent {
   height = input(20);
   displaySuccess = signal(false);
 
-  async copy() {
+  async copy(event: Event) {
+    event.preventDefault()
+    event.stopPropagation()
     if (this.text()) {
       await navigator.clipboard.writeText(this.text()!);
 

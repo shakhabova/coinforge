@@ -44,7 +44,7 @@
 
   <tbody tuiTbody [data]="transactions()">
     @for (transaction of transactions(); track transaction.id) {
-    <tr tuiTr>
+    <tr tuiTr (click)="openDetails(transaction)">
       <td *tuiCell="'createdAt'" tuiTd>
         <div class="text-m w600">{{ transaction.createdAt | date : 'dd.MM.yyyy' }}</div>
         <div class="transaction-time text-xs w400">{{ transaction.createdAt | date : 'hh:mm' }}</div>

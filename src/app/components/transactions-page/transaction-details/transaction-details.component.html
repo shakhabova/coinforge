@@ -1,0 +1,72 @@
+<div class="h4-heading u-mar-bottom-32">Transaction details</div>
+<div class="u-text-center"><app-transaction-type-icon
+  [type]="transaction().type"
+></app-transaction-type-icon></div>
+@if(transaction().type === 'CSTD_OUT'){
+<div class="u-text-center">
+  -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
+</div>
+<div class="u-row-middle u-space-between">
+  <div>Status</div>
+  <app-transaction-status-chip
+    [status]="transaction().oprStatus"
+  ></app-transaction-status-chip>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>From wallet</div>
+  <div>
+    <a [href]="scanUrl() + transaction().fromTrxAddress">{{
+      transaction().fromTrxAddress
+    }}</a>
+    <app-copy-icon [text]="transaction().fromTrxAddress"></app-copy-icon>
+  </div>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>To wallet</div>
+  <div>
+    <a [href]="scanUrl() + transaction().toTrxAddress">{{
+      transaction().toTrxAddress
+    }}</a>
+    <app-copy-icon [text]="transaction().toTrxAddress"></app-copy-icon>
+  </div>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>Transaction hash</div>
+  <div>
+    <a [href]="scanUrl() + transaction().transactionHash">{{
+      transaction().transactionHash
+    }}</a>
+    <app-copy-icon [text]="transaction().transactionHash"></app-copy-icon>
+  </div>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>Transaction ID</div>
+  <div>
+    {{ transaction().id }}
+  </div>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>Sending amount</div>
+  <div>
+    -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
+  </div>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>Recieving amount</div>
+  <div>+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
+</div>
+<div class="u-row-middle u-space-between">
+  <div>Transaction date</div>
+  <div>{{ transaction().createdAt }}</div>
+</div>
+}
+@if(transaction().type === 'CSTD_IN'){
+  <div>+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
+
+  <div>
+    <div>Status</div>
+    <app-transaction-status-chip
+      [status]="transaction().oprStatus"
+    ></app-transaction-status-chip>
+  </div>
+}

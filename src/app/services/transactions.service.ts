@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { Observable, of } from 'rxjs';
+import { map, Observable, of } from 'rxjs';
 import { PageableParams, PageableResponse } from 'models/pageable.model';
 
 export interface TransactionDto {
@@ -70,7 +70,13 @@ export class TransactionsService {
     });
     // return this.httpClient.get<PageableResponse<TransactionDto>>(`${this.configService.serverUrl}/v1/bff-custody/transactions`, { params: params as HttpParams });
   }
+  getSingleTransaction(
+    id: string
+  ): Observable<TransactionDto>{
+    return this.httpClient.get<PageableResponse<TransactionDto>>(`${this.configService.serverUrl}/v1/bff-custody/transactions?ids=${id}`).pipe(map(transactions => transactions.data[0]));
+  }
 }
+
 
 const mockData: TransactionDto[] = [
   {
@@ -104,7 +110,7 @@ const mockData: TransactionDto[] = [
     statusDescription: null,
     cryptocurrency: 'ARB',
     oprStatus: 'CONFIRMED' as 'REJECTED' | 'CONFIRMED' | 'REFUNDED',
-    type: 'OUT',
+    type: 'CSTD_OUT',
     category: 'TRANSACTION',
     commissionIsTransferred: null,
     provider: null,
