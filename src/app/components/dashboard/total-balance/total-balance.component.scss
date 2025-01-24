@@ -95,3 +95,9 @@ tui-icon {
   width: 20px;
   height: 20px;
 }
+
+@media only screen and (max-width: 575px) {
+  .total-balance {
+    width: 100%;
+  }
+}

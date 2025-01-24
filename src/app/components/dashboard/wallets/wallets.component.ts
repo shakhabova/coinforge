@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, computed, DestroyRef, effect, inject, OnInit, signal, WritableSignal } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { finalize } from 'rxjs';
+import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
+import { finalize, from } from 'rxjs';
 import { WalletDto, WalletsService } from 'services/wallets.service';
 import { WalletCardComponent } from "./wallet-card/wallet-card.component";
 import { TuiIcon } from '@taiga-ui/core';
 import { SlicePipe } from '@angular/common';
+import { ConfigService } from 'services/config.service';
 
 @Component({
   selector: 'app-wallets',
@@ -21,28 +22,38 @@ import { SlicePipe } from '@angular/common';
 export class WalletsComponent implements OnInit {
   private walletsService = inject(WalletsService);
   private destroyRef = inject(DestroyRef);
+  private configService = inject(ConfigService);
 
+  pageSize = computed(() => this.configService.isMobile() ? 2 : 4);
   wallets: WritableSignal<WalletDto[]> = signal([]);
   isLoading = signal(false);
   hasError = signal(false);
   step = signal(0);
-  maxPages = computed(() => Math.floor(this.wallets().length / 4));
+  maxPages = computed(() => Math.floor(this.wallets().length / this.pageSize()));
   showNextStepBtn = computed(() => this.sliceEnd() < this.wallets().length);
 
   sliceStart = computed(() =>{
     if (this.step() === 0) {
       return 0;
     }
-    return this.step() * 4 - 1;
+    return this.step() * this.pageSize() - 1;
   });
 
   sliceEnd = computed(() => {
     if (this.step() === 0) {
-      return 3;
+      return this.configService.isMobile() ? 1 : 3;
     }
 
-    return this.sliceStart() + 4;
+    return this.sliceStart() + this.pageSize();
   });
+
+  constructor() {
+    toObservable(this.configService.isMobile)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => this.step.set(0))
+  }
 
   ngOnInit(): void {
     this.loadWallets();

@@ -16,7 +16,7 @@
 .top-section {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
 
   app-total-balance,
   app-wallets {
@@ -27,7 +27,7 @@
 .bottom-section {
   display: flex;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
 
   app-market-info,
   app-transactions {
@@ -35,15 +35,22 @@
   }
 }
 
-.banner {
+.dashboard-banner {
   height: 204px;
+  background-image: url('/assets/images/banner.png');
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
-.row-wrapper {
-  display: flex;
-  gap: 24px;
-}
-.bottom-section {
-  display: flex;
-  gap: 24px;
+@media only screen and (max-width: 575px) {
+  .top-section {
+    flex-direction: column;
+  }
+  .bottom-section {
+    flex-direction: column;
+  }
+
+  .dashboard-banner {
+    background-image: url('/assets/images/banner-mobile.png');
+  }
 }
