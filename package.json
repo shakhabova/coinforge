@@ -30,6 +30,7 @@
     "@taiga-ui/styles": "^4.7.0",
     "buffer": "^6.0.3",
     "date-fns": "^4.1.0",
+    "html2canvas": "^1.4.1",
     "lodash-es": "^4.17.21",
     "primeng": "^18.0.0",
     "qrcode": "^1.5.4",

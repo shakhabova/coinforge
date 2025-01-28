@@ -149,7 +149,7 @@ const mockData: TransactionDto[] = [
     statusDescription: null,
     cryptocurrency: 'ARB',
     oprStatus: 'CONFIRMED' as 'REJECTED' | 'CONFIRMED' | 'REFUNDED',
-    type: 'OUT',
+    type: 'F2C',
     category: 'TRANSACTION',
     commissionIsTransferred: null,
     provider: null,

@@ -1,72 +1,96 @@
 <div class="h4-heading u-mar-bottom-32">Transaction details</div>
-<div class="u-text-center"><app-transaction-type-icon
-  [type]="transaction().type"
-></app-transaction-type-icon></div>
-@if(transaction().type === 'CSTD_OUT'){
-<div class="u-text-center">
-  -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
-</div>
-<div class="u-row-middle u-space-between">
-  <div>Status</div>
-  <app-transaction-status-chip
-    [status]="transaction().oprStatus"
-  ></app-transaction-status-chip>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>From wallet</div>
-  <div>
-    <a [href]="scanUrl() + transaction().fromTrxAddress">{{
-      transaction().fromTrxAddress
-    }}</a>
-    <app-copy-icon [text]="transaction().fromTrxAddress"></app-copy-icon>
-  </div>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>To wallet</div>
-  <div>
-    <a [href]="scanUrl() + transaction().toTrxAddress">{{
-      transaction().toTrxAddress
-    }}</a>
-    <app-copy-icon [text]="transaction().toTrxAddress"></app-copy-icon>
-  </div>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>Transaction hash</div>
-  <div>
-    <a [href]="scanUrl() + transaction().transactionHash">{{
-      transaction().transactionHash
-    }}</a>
-    <app-copy-icon [text]="transaction().transactionHash"></app-copy-icon>
-  </div>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>Transaction ID</div>
-  <div>
-    {{ transaction().id }}
-  </div>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>Sending amount</div>
-  <div>
-    -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
-  </div>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>Recieving amount</div>
-  <div>+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
-</div>
-<div class="u-row-middle u-space-between">
-  <div>Transaction date</div>
-  <div>{{ transaction().createdAt }}</div>
-</div>
-}
-@if(transaction().type === 'CSTD_IN'){
-  <div>+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
 
-  <div>
-    <div>Status</div>
+<div class="screenshot-wrapper" [class.is-taking]="screenshotIsTaking()">
+  <div class="type-icon" [class.in]="!isOutTransaction()">
+    <img src="/assets/icons/arrow.svg" />
+  </div>
+  
+  @if(isOutTransaction()) {
+    <div class="u-text-center">
+      -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
+    </div>
+  } @else {
+    <div class="u-text-center">+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
+  }
+  
+  <div class="details-row">
+    <div class="text-m w600">Status</div>
     <app-transaction-status-chip
       [status]="transaction().oprStatus"
     ></app-transaction-status-chip>
   </div>
-}
+  <div class="details-row">
+    <div class="text-m w600">From wallet</div>
+    <div class="u-row-middle">
+      <a class="address text-m w600" [href]="scanUrl() + transaction().fromTrxAddress">{{
+        transaction().fromTrxAddress
+      }}</a>
+
+      @if (!screenshotIsTaking()) {
+        <app-copy-icon [text]="transaction().fromTrxAddress"></app-copy-icon>
+      }
+    </div>
+  </div>
+  
+  @if (displayToWallet()) {
+    <div class="details-row">
+      <div class="text-m w600">To wallet</div>
+      <div class="u-row-middle">
+        <a class="address text-m w600" [href]="scanUrl() + transaction().toTrxAddress">{{
+          transaction().toTrxAddress
+        }}</a>
+        @if (!screenshotIsTaking()) {
+          <app-copy-icon [text]="transaction().toTrxAddress"></app-copy-icon>
+        }
+      </div>
+    </div>
+  }
+  
+  <div class="details-row">
+    <div class="text-m w600">Transaction hash</div>
+    <div class="u-row-middle text-m w600">
+      <a class="address text-m w600" [href]="scanUrl() + transaction().transactionHash">{{
+        transaction().transactionHash
+      }}</a>
+        @if (!screenshotIsTaking()) {
+          <app-copy-icon [text]="transaction().transactionHash"></app-copy-icon>
+        }
+    </div>
+  </div>
+  <div class="details-row">
+    <div class="text-m w600">Transaction ID</div>
+    <div class="text-m w600">
+      {{ transaction().id }}
+    </div>
+  </div>
+  <div class="details-row">
+    <div class="text-m w600">Sending amount</div>
+    <div class="text-m w600">
+      -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
+    </div>
+  </div>
+  <div class="details-row">
+    <div class="text-m w600">Recieving amount</div>
+    <div class="text-m w600">+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
+  </div>
+  <div class="details-row">
+    <div class="text-m w600">Transaction date</div>
+    <div class="text-m w600">{{ transaction().createdAt | date }}</div>
+  </div>
+</div>
+
+<div class="actions">
+  <button class="button m primary" (click)="download()">
+    <tui-icon icon="@tui.download"></tui-icon>
+    Download
+  </button>
+
+  <!-- <button class="button m secondary u-mar-top-16" (click)="share()">
+    <tui-icon icon="@tui.share"></tui-icon>
+    Share
+  </button> -->
+</div>
+
+<!-- <div class="loader-wrapper">
+  <img src="/assets/icons/loader.svg" />
+</div> -->

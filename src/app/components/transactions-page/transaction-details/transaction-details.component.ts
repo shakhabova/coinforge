@@ -7,7 +7,9 @@ import { CurrenciesService } from 'services/currencies.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { TuiDialogContext } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
+import { DatePipe } from '@angular/common';
+import html2canvas from 'html2canvas';
 
 @Component({
   selector: 'app-transaction-details',
@@ -16,18 +18,22 @@ import { TuiDialogContext } from '@taiga-ui/core';
     TransactionTypeIconComponent,
     TransactionStatusChipComponent,
     CopyIconComponent,
+    DatePipe,
+    TuiIcon,
   ],
   templateUrl: './transaction-details.component.html',
-  styleUrl: './transaction-details.component.css',
+  styleUrl: './transaction-details.component.scss',
 })
 export class TransactionDetailsComponent {
   private cryptocurrenciesService = inject(CurrenciesService);
+  public readonly context = injectContext<TuiDialogContext<void, TransactionDto>>();
+  
   transaction = signal<TransactionDto>({} as unknown as TransactionDto);
-
-   public readonly context =
-      injectContext<TuiDialogContext<void, TransactionDto>>();
-
   scanUrl = signal('');
+  screenshotIsTaking = signal(false);
+
+  isOutTransaction = computed(() => ['CSTD_OUT', 'C2F'].includes(this.transaction().type));
+  displayToWallet = computed(() => ['CSTD_OUT', 'CSTD_IN'].includes(this.transaction().type));
 
   ngOnInit(){
     this.transaction.set(this.context.data)
@@ -35,5 +41,18 @@ export class TransactionDetailsComponent {
         .getCryptoInfo(this.transaction().cryptocurrency)
         .pipe(map((info) => info?.scanUrl))
         .subscribe(scanUrl=>this.scanUrl.set(scanUrl ?? ''))
+  }
+
+  async download() {
+    this.screenshotIsTaking.set(true);
+    setTimeout(async () => {
+      const canvas = await html2canvas(document.querySelector('.screenshot-wrapper')!);
+      const imageBase64 = canvas.toDataURL('image/png');
+      const a = document.createElement('a');
+      a.href = imageBase64;
+      a.download = 'transaction.png';
+      a.click();
+      this.screenshotIsTaking.set(false);
+    }, 0);
   }
 }
