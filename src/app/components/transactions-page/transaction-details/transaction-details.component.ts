@@ -15,12 +15,11 @@ import html2canvas from 'html2canvas';
   selector: 'app-transaction-details',
   standalone: true,
   imports: [
-    TransactionTypeIconComponent,
     TransactionStatusChipComponent,
     CopyIconComponent,
     DatePipe,
-    TuiIcon,
-  ],
+    TuiIcon
+],
   templateUrl: './transaction-details.component.html',
   styleUrl: './transaction-details.component.scss',
 })
