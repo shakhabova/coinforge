@@ -55,6 +55,7 @@ export class LoginApiService {
       );
   }
 
+
   public forceChangePassword(email: string, password: string): Observable<{ data: string }> {
     return this.generateVerifierAndSalt(email)
       .pipe(

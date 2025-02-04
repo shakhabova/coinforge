@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
 import { ConfigService } from "./config.service";
 import { catchError, map, Observable, tap, throwError } from "rxjs";
+import { Router } from "@angular/router";
 
 export const ACCESS_TOKEN_KEY = 'AUTH_TOKEN';
 const REFRESH_TOKEN_KEY = 'AUTH_REFRESH_TOKEN';
@@ -12,6 +13,7 @@ const REFRESH_TOKEN_KEY = 'AUTH_REFRESH_TOKEN';
 export class AuthService {
   private httpClient = inject(HttpClient);
   private configService = inject(ConfigService);
+  private router = inject(Router);
   
   private refreshTokenEndpoint = '';
   
@@ -41,5 +43,6 @@ export class AuthService {
   logout() {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);
+    this.router.navigateByUrl('/auth/login');
   }
 }

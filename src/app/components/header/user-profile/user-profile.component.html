@@ -39,11 +39,12 @@
     [showIcons]="false"
   />
 </div>
-<button class="primary m button u-mar-top-24">Change password</button>
+<button class="primary m button u-mar-top-24"(click)="changePassword()">Change password</button>
 <button class="secondary m button u-mar-top-16">
-  <tui-icon icon="@tui.log-out" 
+  <tui-icon icon="@tui.log-out"  
   [style.width.px]="20"
   [style.height.px]="20"
-  [style.color]="'red'"/>
+  [style.color]="'red'"
+  (click)="logOut()"/>
   Logout
 </button>
