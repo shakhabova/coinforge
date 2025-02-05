@@ -1,10 +1,17 @@
 <div class="header">
   <div class="h3-heading">Wallets</div>
 
+  @if (configService.isMobile()) {
+  <button class="button s primary add-btn">
+    <tui-icon icon="@tui.plus"></tui-icon>
+    Create wallet
+  </button>
+  }
+
   <div class="header-actions">
     <tui-combo-box
-      [(ngModel)]="selectedCurrency" 
-      tuiTextfieldSize="m" 
+      [(ngModel)]="selectedCurrency"
+      tuiTextfieldSize="m"
       class="crypto-select"
       [tuiTextfieldLabelOutside]="true"
       [valueContent]="content"
@@ -12,10 +19,7 @@
       [stringify]="stringifyCryptoSelectItem"
     >
       Cryptocurrency
-      <input
-        placeholder="Type a crypto"
-        tuiTextfieldLegacy
-      />
+      <input placeholder="Type a crypto" tuiTextfieldLegacy />
       <tui-data-list-wrapper
         *tuiDataList
         size="m"
@@ -31,13 +35,15 @@
       </ng-template>
     </tui-combo-box>
 
+    @if (!configService.isMobile()) {
     <button class="button primary m" (click)="createWallet()">
-      <tui-icon icon="@tui.arrow-up"></tui-icon>
+      <tui-icon icon="@tui.plus"></tui-icon>
       Create wallet
     </button>
+    }
   </div>
 </div>
-
+@if(!configService.isMobile()){
 <table tuiTable [columns]="columns">
   <thead>
     <tr tuiThGroup>
@@ -53,24 +59,37 @@
     <tr tuiTr>
       <td *tuiCell="'trxAddress'" tuiTd class="text-m w600">
         <div class="u-row-middle">
-          <a routerLink="/wallets/{{wallet.trxAddress}}" class="address-wrapper">{{ wallet.trxAddress }}</a>
-          <tui-icon icon="@tui.clipboard-copy" (click)="copy(wallet.trxAddress)" class="copy-icon"></tui-icon>
+          <a
+            routerLink="/wallets/{{ wallet.trxAddress }}"
+            class="address-wrapper"
+            >{{ wallet.trxAddress }}</a
+          >
+          <tui-icon
+            icon="@tui.clipboard-copy"
+            (click)="copy(wallet.trxAddress)"
+            class="copy-icon"
+          ></tui-icon>
         </div>
       </td>
 
       <td *tuiCell="'availableOprBalance'" tuiTd class="text-m w600">
         <div class="u-row-middle u-g-12">
-          {{ wallet.availableOprBalance | number : '.0-2' }} 
-          <img [src]="getCryptoIcon(wallet.cryptocurrency) | async" width="24" />
+          {{ wallet.availableOprBalance | number : ".0-2" }}
+          <img
+            [src]="getCryptoIcon(wallet.cryptocurrency) | async"
+            width="24"
+          />
         </div>
       </td>
 
       <td *tuiCell="'walletStatus'" tuiTd>
-        <app-wallet-status-chip [status]="wallet.walletStatus"></app-wallet-status-chip>
+        <app-wallet-status-chip
+          [status]="wallet.walletStatus"
+        ></app-wallet-status-chip>
       </td>
 
       <td *tuiCell="'actions'" tuiTd>
-        <app-wallet-item-option 
+        <app-wallet-item-option
           [wallet]="wallet"
           (block)="onBlock(wallet)"
           (unblock)="onUnblock(wallet)"
@@ -103,3 +122,11 @@
     </span>
   </ng-template>
 </p-paginator>
+} @else { @for (wallet of wallets(); track wallet.id) {
+<app-wallet-info-card
+  [wallet]="wallet"
+  (block)="onBlock(wallet)"
+  (unblock)="onUnblock(wallet)"
+  (deactivate)="onDeactivate(wallet)"
+/>
+} }

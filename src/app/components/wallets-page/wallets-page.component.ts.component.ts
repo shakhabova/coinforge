@@ -30,6 +30,9 @@ import { WalletItemOptionComponent } from "./wallet-item-option/wallet-item-opti
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { TuiFilterByInputPipe } from '@taiga-ui/kit';
 import { RouterModule } from '@angular/router';
+import { ConfigService } from 'services/config.service';
+import { WalletCardComponent } from "../dashboard/wallets/wallet-card/wallet-card.component";
+import { WalletInfoCardComponent } from "./wallet-info-card/wallet-info-card.component";
 
 @Component({
   selector: 'app-wallets-page.component.ts',
@@ -50,6 +53,8 @@ import { RouterModule } from '@angular/router';
     TuiFilterByInputPipe,
     RouterModule,
     DecimalPipe,
+    WalletCardComponent,
+    WalletInfoCardComponent
 ],
   templateUrl: './wallets-page.component.ts.component.html',
   styleUrl: './wallets-page.component.ts.component.css',
@@ -59,6 +64,7 @@ export class WalletsPageComponentTsComponent implements OnInit {
   private walletsService = inject(WalletsService);
   private destroyRef = inject(DestroyRef);
   private dialog = inject(MatDialog);
+  public configService = inject(ConfigService);
 
   protected cryptocurrencies = signal<CurrencyDto[]>([]);
   protected selectedCurrency = model<CurrencyDto | null>(null);

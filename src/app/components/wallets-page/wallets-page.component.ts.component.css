@@ -1,5 +1,5 @@
 :host {
-  width: 1128px;
+  max-width: 1128px;
   display: block;
   margin: 0 auto;
   margin-top: 24px;
@@ -90,4 +90,44 @@ tui-icon {
   text-overflow: ellipsis;
   display: block;
   width: 370px;
+}
+
+@media only screen and (max-width: 575px) {
+  :host {
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 24px 16px;
+  }
+  .header {
+    display: grid;
+    grid-template-areas: 
+      'a b'
+      'c c';
+  }
+
+  .h3-heading {
+    grid-area: a;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px;
+  }
+
+  .add-btn {
+    grid-area: b;
+  }
+
+  .header-actions {
+    grid-area: c;
+  }
+
+  .crypto-select {
+    width: 100%;
+    margin-top: 24px;
+  }
+
+  app-wallet-info-card + app-wallet-info-card {
+    margin-top: 24px;
+  }
 }
