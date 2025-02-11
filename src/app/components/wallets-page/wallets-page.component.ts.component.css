@@ -130,4 +130,8 @@ tui-icon {
   app-wallet-info-card + app-wallet-info-card {
     margin-top: 24px;
   }
+
+  cdk-virtual-scroll-viewport {
+    height: calc(100vh - 146px - 16px - 24px - 60px);
+  }
 }

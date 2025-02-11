@@ -1,5 +1,6 @@
 :host {
   display: block;
+  height: 168px;
 }
 
 .wallet-container {
@@ -43,4 +44,5 @@
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  width: 240px;
 }

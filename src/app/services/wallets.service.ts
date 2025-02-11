@@ -48,7 +48,7 @@ export class WalletsService {
   private currenciesService = inject(CurrenciesService);
 
   getWallets(params: GetWalletsParams): Observable<WalletsPageableDto> {
-    return of(MOCK_WALLETS);
+    return of(mockWallets(params.page));
     // return this.httpClient.get<WalletsPageableDto>(
     //   `${this.configService.serverUrl}/v1/bff-custody/wallets/customer`,
     //   {
@@ -97,6 +97,15 @@ export class WalletsService {
     // TODO check 
     return this.httpClient.put<void>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/update-status/${trxAddress}?status=${status}`, status)
   }
+}
+
+function mockWallets(page: number): typeof MOCK_WALLETS {
+  return { ...MOCK_WALLETS, data: MOCK_WALLETS.data.map((d, i) => {
+    if (i === 0) {
+      return { ...d, availableOprBalance: d.availableOprBalance * (page + 1)}
+    }
+    return d;
+  })}
 }
 
 const MOCK_WALLETS = {
@@ -224,5 +233,5 @@ const MOCK_WALLETS = {
   ],
   pageNumber: 0,
   pageSize: 10,
-  totalElements: 8,
+  totalElements: 28,
 };

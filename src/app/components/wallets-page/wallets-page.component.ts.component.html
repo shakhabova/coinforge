@@ -103,7 +103,7 @@
 <p-paginator
   class="paginator"
   [totalRecords]="totalElements()"
-  [rows]="3"
+  [rows]="pageSize"
   (onPageChange)="onPageChange($event)"
   [showFirstLastIcon]="false"
   [showPageLinks]="true"
@@ -122,11 +122,14 @@
     </span>
   </ng-template>
 </p-paginator>
-} @else { @for (wallet of wallets(); track wallet.id) {
-<app-wallet-info-card
-  [wallet]="wallet"
-  (block)="onBlock(wallet)"
-  (unblock)="onUnblock(wallet)"
-  (deactivate)="onDeactivate(wallet)"
-/>
-} }
+} @else { 
+  <cdk-virtual-scroll-viewport itemSize="168" (scrolledIndexChange)="nextBatch()">
+    <app-wallet-info-card
+      *cdkVirtualFor="let wallet of mobileWallets | async; trackBy: trackById"
+      [wallet]="wallet"
+      (block)="onBlock(wallet)"
+      (unblock)="onUnblock(wallet)"
+      (deactivate)="onDeactivate(wallet)"
+    />
+  </cdk-virtual-scroll-viewport>
+}
