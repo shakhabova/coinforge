@@ -1,0 +1,66 @@
+.hero {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--Primary500, #1C1C1C);
+  background-image: url('/assets/images/bg.png');
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position-y: bottom;
+  padding: 60px 10%;
+  position: relative;
+  height: 500px;
+  // clip-path: polygon(0% 0%, 100% 0%, 100% 85%, 50% 100%, 0% 85%);
+}
+.hero-content {
+  
+  max-width: 517px;
+  color: #111;
+}
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+p {
+  margin: 20px 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #222;
+}
+
+
+
+.hero-images {
+  position: relative;
+  width: 400px;
+  height: 300px;
+}
+.coin {
+  position: absolute;
+  width: 200px;
+  height: auto;
+}
+
+.bitcoin {
+  width: 400px;
+  top: -121px;
+  left: 3%;
+}
+
+.ethereum {
+  top: 170px;
+  right: 80px;
+  width: 230px;
+}
+
+.polygon {
+  bottom: 161px;
+  left: 80%;
+}
+
+.avax {
+  bottom: 0-70px;
+  right: -29%;
+}

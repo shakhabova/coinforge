@@ -22,6 +22,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/transactions-page/transactions-page.component').then(m => m.TransactionsPageComponent),
       },
       {
+        path: 'home-page',
+        loadComponent: () => import('./components/home-page/home-page.component').then(m => m.HomePageComponent),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: '/dashboard'
