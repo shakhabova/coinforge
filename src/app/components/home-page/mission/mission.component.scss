@@ -1,7 +1,7 @@
 .about {
   background: var(--Primary500, #1c1c1c);
   text-align: center;
-  padding: 60px 10%;
+  padding: 60px;
   color: #fff;
 
   h2 {
@@ -13,25 +13,22 @@
   .subtitle {
     color: var(--Neutral0, #fff);
     text-align: center;
-
-    /* Switzer/H5 */
     font-family: Switzer;
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
-    line-height: 24px; /* 133.333% */
+    line-height: 24px;
     margin-bottom: 40px;
   }
 
   .description {
     color: var(--Neutral0, #fff);
     text-align: center;
-    /* text-l-600 */
     font-family: "Nunito Sans";
     font-size: 18px;
     font-style: normal;
     font-weight: 600;
-    line-height: 24px; /* 133.333% */
+    line-height: 24px;
     margin-bottom: 120px;
   }
 }
