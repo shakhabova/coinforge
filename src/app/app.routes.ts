@@ -26,6 +26,10 @@ export const routes: Routes = [
         loadComponent: () => import('./components/home-page/home-page.component').then(m => m.HomePageComponent),
       },
       {
+        path: 'contact-page',
+        loadComponent: () => import('./components/home-page/contact-page/contact-page.component').then(m => m.ContactPageComponent),
+      },
+      {
         path: '',
         pathMatch: 'full',
         redirectTo: '/dashboard'
