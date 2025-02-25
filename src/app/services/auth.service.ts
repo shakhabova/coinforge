@@ -40,6 +40,11 @@ export class AuthService {
     localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
   }
 
+  isLoggedIn(): boolean {
+    // TODO implement
+    return true;
+  }
+
   logout() {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
     localStorage.removeItem(REFRESH_TOKEN_KEY);

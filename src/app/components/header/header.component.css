@@ -4,13 +4,17 @@
   justify-content: space-between;
   background-color: black;
   padding: 0px 20px;
-  height: 60px;
+  height: 72px;
 }
 
 .header__logo {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.header__logo > a {
+  height: 24px;
 }
 
 .mobile-menu-toggle {
@@ -71,6 +75,7 @@
 .header__profile {
   display: flex;
   align-items: center;
+  gap: 16px;
 }
 
 .profile-icon {
