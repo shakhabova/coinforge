@@ -1,0 +1,117 @@
+.footer {
+  background-color: var(--Primary500, #1c1c1c);
+  color: #fff;
+  padding: 40px 10%;
+  text-align: center;
+
+  .footer-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  /* Left Section */
+  .footer-left {
+    text-align: left;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      
+
+      img {
+        width: 150px;
+        height: auto;
+      }
+    }
+
+    p {
+      font-size: 1rem;
+      margin: 16px 0;
+    }
+
+    a {
+      color: #fedd2d;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  /* Center Section: Navigation Links */
+  .footer-center {
+    ul {
+      list-style: none;
+      padding: 0;
+
+      li {
+        margin: 5px 0;
+      }
+
+      a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 1rem;
+
+        &:hover {
+          color: #fedd2d;
+        }
+      }
+    }
+  }
+
+  /* Right Section: Social Icons */
+  .footer-right {
+    display: flex;
+    gap: 15px;
+
+    a {
+      color: #fff;
+      font-size: 1.2rem;
+      transition: 0.3s ease-in-out;
+
+      &:hover {
+        color: #fedd2d;
+      }
+    }
+  }
+
+  /* Bottom Section */
+  .footer-bottom {
+    margin-top: 30px;
+    font-size: 0.9rem;
+    color: #ccc;
+
+    hr {
+      border: 1px solid #fedd2d;
+      margin: 15px 0;
+    }
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .footer-container {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .footer-left, .footer-center, .footer-right {
+    margin-bottom: 20px;
+  }
+
+  .footer-left {
+    text-align: center;
+  }
+
+  .footer-right {
+    justify-content: center;
+  }
+}
