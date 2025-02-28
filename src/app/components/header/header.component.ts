@@ -67,12 +67,10 @@ export class HeaderComponent {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.isHomePage.set(
-          homePageLinks.some((link) =>
-            this.router.url.endsWith(link.routerLink)
-          )
-        );
+        this.updateIsHomePage();
       });
+
+    this.updateIsHomePage();
   }
 
   isMobileMenuOpened = signal(false);
@@ -83,5 +81,13 @@ export class HeaderComponent {
 
   openUserProfile() {
     this.dialog().subscribe();
+  }
+
+  private updateIsHomePage(): void {
+    this.isHomePage.set(
+      homePageLinks.some((link) =>
+        this.router.url.endsWith(link.routerLink)
+      )
+    );
   }
 }
