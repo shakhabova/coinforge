@@ -15,7 +15,7 @@
       }
 
       @if (step() === 0) {
-        <div class="create-wallet-card">
+        <div class="create-wallet-card" (click)="createWallet()">
           <button class="fab">
             <tui-icon 
               icon="@tui.plus"
