@@ -1,14 +1,4 @@
-<div class="title">
-  <div class="h4-heading">Create wallet</div>
-
-  <button class="modal-close-btn" (click)="closeModal()">
-    <tui-icon
-      [icon]="'@tui.x'"
-      [style.width.px]="'20'"
-      [style.height.px]="'20'"
-    ></tui-icon>
-  </button>
-</div>
+<div class="h4-heading u-mar-bottom-32">Create wallet</div>
 
 <div class="crypto-list">
   @for (crypto of cryptos$ | async; track crypto?.cryptoCurrency) {

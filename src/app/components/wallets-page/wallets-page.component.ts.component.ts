@@ -11,10 +11,10 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NgModel } from '@angular/forms';
-import { MatDialog } from '@angular/material/dialog';
 import {
   TuiButton,
   TuiDataList,
+  tuiDialog,
   TuiDropdown,
   TuiIcon,
   TuiSelect,
@@ -67,7 +67,7 @@ export class WalletsPageComponentTsComponent implements OnInit {
   private cryptocurrenciesService = inject(CurrenciesService);
   private walletsService = inject(WalletsService);
   private destroyRef = inject(DestroyRef);
-  private dialog = inject(MatDialog);
+  private createWalletDialog = tuiDialog(CreateWalletModalComponent);
   public configService = inject(ConfigService);
 
   public viewport = viewChild(CdkVirtualScrollViewport);
@@ -121,9 +121,7 @@ export class WalletsPageComponentTsComponent implements OnInit {
   }
 
   createWallet() {
-    const dialogRef = this.dialog.open(CreateWalletModalComponent);
-    dialogRef
-      .afterClosed()
+    this.createWalletDialog()
       .pipe(
         filter((toUpdate) => !!toUpdate),
         takeUntilDestroyed(this.destroyRef)
@@ -220,7 +218,6 @@ export class WalletsPageComponentTsComponent implements OnInit {
       params.cryptocurrency = crypto;
     }
     return this.walletsService.getWallets(params).pipe(
-      tap(console.log),
       map(res => {
         this.totalElements.set(res.totalElements);
         return res.data;

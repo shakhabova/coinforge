@@ -13,7 +13,7 @@ import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { filter, finalize, from } from 'rxjs';
 import { WalletDto, WalletsService } from 'services/wallets.service';
 import { WalletCardComponent } from './wallet-card/wallet-card.component';
-import { TuiIcon } from '@taiga-ui/core';
+import { tuiDialog, TuiIcon } from '@taiga-ui/core';
 import { SlicePipe } from '@angular/common';
 import { ConfigService } from 'services/config.service';
 import { MatDialog } from '@angular/material/dialog';
@@ -31,7 +31,8 @@ export class WalletsComponent implements OnInit {
   private walletsService = inject(WalletsService);
   private destroyRef = inject(DestroyRef);
   private configService = inject(ConfigService);
-  private dialog = inject(MatDialog);
+  
+  private createWalletDialog = tuiDialog(CreateWalletModalComponent);
 
   pageSize = computed(() => (this.configService.isMobile() ? 2 : 4));
   wallets: WritableSignal<WalletDto[]> = signal([]);
@@ -69,9 +70,7 @@ export class WalletsComponent implements OnInit {
   }
 
   createWallet() {
-    const dialogRef = this.dialog.open(CreateWalletModalComponent);
-    dialogRef
-      .afterClosed()
+    this.createWalletDialog()
       .pipe(
         filter((toUpdate) => !!toUpdate),
         takeUntilDestroyed(this.destroyRef)

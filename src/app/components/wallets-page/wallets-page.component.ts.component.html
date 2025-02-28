@@ -2,7 +2,7 @@
   <div class="h3-heading">Wallets</div>
 
   @if (configService.isMobile()) {
-  <button class="button s primary add-btn">
+  <button class="button s primary add-btn" (click)="createWallet()">
     <tui-icon icon="@tui.plus"></tui-icon>
     Create wallet
   </button>

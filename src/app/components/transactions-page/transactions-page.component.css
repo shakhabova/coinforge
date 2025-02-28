@@ -1,5 +1,5 @@
 :host {
-  width: 1128px;
+  max-width: 1128px;
   display: block;
   margin: 0 auto;
   margin-top: 24px;
@@ -105,4 +105,8 @@ button.active {
 
 .transaction-time {
   color: #6f6f6f;
+}
+
+cdk-virtual-scroll-viewport {
+  height: calc(100vh - 68px - 66px - 112px - 72px - 48px);
 }

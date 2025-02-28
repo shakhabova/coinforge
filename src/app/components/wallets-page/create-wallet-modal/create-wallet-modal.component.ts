@@ -1,11 +1,11 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
 import { tuiPure } from '@taiga-ui/cdk';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
 import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
 import { WalletsService } from 'services/wallets.service';
+import {injectContext} from '@taiga-ui/polymorpheus';
 
 @Component({
   selector: 'app-create-wallet-modal',
@@ -15,9 +15,10 @@ import { WalletsService } from 'services/wallets.service';
   styleUrl: './create-wallet-modal.component.css',
 })
 export class CreateWalletModalComponent {
-  private dialogRef = inject(MatDialogRef);
   private currenciesService = inject(CurrenciesService);
   private walletService = inject(WalletsService);
+
+  public readonly context = injectContext<TuiDialogContext<boolean, void>>();
 
   selected = signal('');
 
@@ -53,7 +54,7 @@ export class CreateWalletModalComponent {
   }
 
   closeModal(): void {
-    this.dialogRef.close();
+    this.context.completeWith(false);
   }
 
   @tuiPure
@@ -68,6 +69,6 @@ export class CreateWalletModalComponent {
       return;
     }
 
-    this.dialogRef.close(this.selected());
+    this.context.completeWith(!!this.selected());
   }
 }

@@ -6,6 +6,7 @@ import {
   input,
   model,
   signal,
+  viewChild,
 } from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
 import {
@@ -35,15 +36,22 @@ import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
 import { TuiDay, tuiPure } from '@taiga-ui/cdk';
 import {
+  BehaviorSubject,
   debounce,
   debounceTime,
   filter,
   finalize,
   from,
+  map,
+  mergeMap,
   Observable,
+  of,
+  scan,
+  tap,
+  throttleTime,
 } from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
-import { PageableParams } from 'models/pageable.model';
+import { PageableParams, PageableResponse } from 'models/pageable.model';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import {
@@ -53,6 +61,12 @@ import {
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { format } from 'date-fns';
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
+import { ConfigService } from 'services/config.service';
+import { TransactionItemComponent } from '../dashboard/transactions/transaction-item/transaction-item.component';
+import {
+  CdkVirtualScrollViewport,
+  ScrollingModule,
+} from '@angular/cdk/scrolling';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -87,6 +101,8 @@ import { TransactionDetailsComponent } from './transaction-details/transaction-d
     DecimalPipe,
     AsyncPipe,
     ReactiveFormsModule,
+    TransactionItemComponent,
+    ScrollingModule,
   ],
   templateUrl: './transactions-page.component.html',
   styleUrl: './transactions-page.component.css',
@@ -97,13 +113,19 @@ export class TransactionsPageComponent {
   private destroyRef = inject(DestroyRef);
   private dialogService = inject(TuiDialogService);
   private injector = inject(Injector);
-  
+  public configService = inject(ConfigService);
+
   trxWalletAddress = input<string>();
+
+  public viewport = viewChild(CdkVirtualScrollViewport);
 
   protected isLoading = signal(false);
   protected page = signal(0);
+  protected pageSize = 10;
   private filters?: TransactionFilterModel;
 
+  private loadBatch = new BehaviorSubject<boolean | void>(void 0);
+  public mobileTransactions: Observable<TransactionDto[] | undefined>;
 
   protected columns = [
     'createdAt',
@@ -127,7 +149,32 @@ export class TransactionsPageComponent {
         debounceTime(300),
         takeUntilDestroyed(this.destroyRef)
       )
-      .subscribe(() => this.loadTransactions());
+      .subscribe(() => {
+        this.loadTransactions();
+        this.loadBatch.next(true);
+      });
+
+    this.mobileTransactions = this.loadBatch.pipe(
+      mergeMap(toClear => {
+        return of(toClear).pipe(
+          throttleTime(500),
+          mergeMap(() => this.getTransactions()),
+          map((data) => data.data),
+          tap(console.log),
+          scan((acc, batch) => {
+            if (!acc || !batch) {
+              return [];
+            }
+
+            if (toClear) {
+              return batch;
+            }
+
+            return [...acc, ...batch];
+          }),
+        );
+      }),
+    );
   }
 
   ngOnInit() {
@@ -174,6 +221,22 @@ export class TransactionsPageComponent {
     );
   }
 
+  nextBatch() {
+    const end = this.viewport()?.getRenderedRange().end;
+    const total = this.viewport()?.getDataLength();
+    if (end === total) {
+      if ((this.page() + 1) * this.pageSize >= this.totalElements()) {
+        return;
+      }
+      this.page.update((n) => (n += 1));
+      this.loadBatch.next();
+    }
+  }
+
+  trackById(i: number): number {
+    return i;
+  }
+
   hasFilters(): boolean {
     return !!this.filters && Object.keys(this.filters).length > 0;
   }
@@ -192,24 +255,27 @@ export class TransactionsPageComponent {
           this.injector
         ),
         {
-          data: this.filters
+          data: this.filters,
         }
       )
       .pipe(filter((val) => !!val))
       .subscribe((filters) => {
         this.filters = filters;
-        this.loadTransactions()
+        this.page.set(0);
+        this.loadTransactions();
+        this.loadBatch.next(true);
       });
   }
 
   openDetails(transaction: TransactionDto) {
-    this.dialogService.open(
-      new PolymorpheusComponent(TransactionDetailsComponent, this.injector),
-      {
-        data: transaction
-      }
-
-    ).subscribe()
+    this.dialogService
+      .open(
+        new PolymorpheusComponent(TransactionDetailsComponent, this.injector),
+        {
+          data: transaction,
+        }
+      )
+      .subscribe();
   }
 
   private isTransactionIn(type: TransactionDto['type']): boolean {
@@ -217,23 +283,8 @@ export class TransactionsPageComponent {
   }
 
   private loadTransactions() {
-    console.log('hehe');
     this.isLoading.set(true);
-    const params: TransactionPageableParams = {
-      size: 10,
-      sort: 'id,desc',
-      page: this.page(),
-      transactionHash: this.search.value || undefined,
-    
-    };
-    if (this.filters?.dateFrom) params.dateFrom = this.formatDate(this.filters.dateFrom.toLocalNativeDate());
-    if (this.filters?.dateTo) params.dateTo = this.formatDate(this.filters.dateTo.toLocalNativeDate());
-    if (this.filters?.cryptocurrency) params.cryptocurrency = this.filters.cryptocurrency.cryptoCurrency;
-    if (this.filters?.statuses) params.statuses = this.filters.statuses;
-    if (this.trxWalletAddress()) params.trxWalletAddress = this.trxWalletAddress();
-
-    this.transactionService
-      .getTransactions(params)
+    this.getTransactions()
       .pipe(
         finalize(() => this.isLoading.set(false)),
         takeUntilDestroyed(this.destroyRef)
@@ -248,6 +299,28 @@ export class TransactionsPageComponent {
           console.error(err);
         },
       });
+  }
+
+  private getTransactions(): Observable<PageableResponse<TransactionDto>> {
+    const params: TransactionPageableParams = {
+      size: this.pageSize,
+      sort: 'id,desc',
+      page: this.page(),
+      transactionHash: this.search.value || undefined,
+    };
+    if (this.filters?.dateFrom)
+      params.dateFrom = this.formatDate(
+        this.filters.dateFrom.toLocalNativeDate()
+      );
+    if (this.filters?.dateTo)
+      params.dateTo = this.formatDate(this.filters.dateTo.toLocalNativeDate());
+    if (this.filters?.cryptocurrency)
+      params.cryptocurrency = this.filters.cryptocurrency.cryptoCurrency;
+    if (this.filters?.statuses) params.statuses = this.filters.statuses;
+    if (this.trxWalletAddress())
+      params.trxWalletAddress = this.trxWalletAddress();
+
+    return this.transactionService.getTransactions(params);
   }
 
   private formatDate(date: Date): string {
