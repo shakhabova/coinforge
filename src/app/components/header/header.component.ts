@@ -1,49 +1,16 @@
-import { Component, computed, inject, Injector, signal } from '@angular/core';
-import { NavigationEnd, Router, RouterModule } from '@angular/router';
-import { tuiDialog, TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { tuiDialog, TuiIcon } from '@taiga-ui/core';
 import { ConfigService } from 'services/config.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
-import { filter } from 'rxjs';
 import { AuthService } from 'services/auth.service';
+import { DASHBOARD_LINKS, HOME_PAGE_LINKS } from './constants';
 
-interface HeaderLink {
+export interface HeaderLink {
   routerLink: string;
   icon?: string;
   label: string;
 }
-
-const dashboardLinks: HeaderLink[] = [
-  {
-    label: 'Dashboard',
-    routerLink: '/dashboard',
-    icon: '/assets/icons/Dashboard.svg',
-  },
-  {
-    label: 'Wallets',
-    routerLink: '/wallets',
-    icon: '/assets/icons/Wallet.svg',
-  },
-  {
-    label: 'Transactions',
-    routerLink: '/transactions',
-    icon: '/assets/icons/Transactions.svg',
-  },
-];
-
-const homePageLinks: HeaderLink[] = [
-  {
-    label: 'Home',
-    routerLink: '/home-page',
-  },
-  {
-    label: 'Contact',
-    routerLink: '/contact-page',
-  },
-  {
-    label: 'About us',
-    routerLink: '/about-us',
-  },
-];
 
 @Component({
   selector: 'app-header',
@@ -54,24 +21,14 @@ const homePageLinks: HeaderLink[] = [
 })
 export class HeaderComponent {
   public configService = inject(ConfigService);
-  private router = inject(Router);
+  public isHomePage = input(true);
+
   private dialog = tuiDialog(UserProfileComponent, { size: 'auto' });
   public authService = inject(AuthService);
 
-  public isHomePage = signal(true);
   public activeLinks = computed(() =>
-    this.isHomePage() ? homePageLinks : dashboardLinks
-  );
-
-  ngOnInit() {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.updateIsHomePage();
-      });
-
-    this.updateIsHomePage();
-  }
+    this.isHomePage() ? HOME_PAGE_LINKS : DASHBOARD_LINKS
+  ); 
 
   isMobileMenuOpened = signal(false);
 
@@ -83,11 +40,4 @@ export class HeaderComponent {
     this.dialog().subscribe();
   }
 
-  private updateIsHomePage(): void {
-    this.isHomePage.set(
-      homePageLinks.some((link) =>
-        this.router.url.endsWith(link.routerLink)
-      )
-    );
-  }
 }

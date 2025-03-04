@@ -7,7 +7,6 @@
   .footer-container {
     display: flex;
     justify-content: space-between;
-    align-items: center;
     max-width: 1100px;
     margin: 0 auto;
   }
@@ -31,17 +30,7 @@
     }
 
     p {
-      font-size: 1rem;
-      margin: 16px 0;
-    }
-
-    a {
-      color: #fedd2d;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
-      }
+      color: white;
     }
   }
 
@@ -53,6 +42,11 @@
 
       li {
         margin: 5px 0;
+        text-align: left;
+      }
+
+      li + li {
+        margin-top: 24px;
       }
 
       a {
@@ -96,6 +90,15 @@
   }
 }
 
+.email {
+  color: #fff;
+  text-decoration: none;
+
+  &:hover {
+    color: #fedd2d;
+  }
+}
+
 /* Responsive Design */
 @media (max-width: 1024px) {
   .footer-container {
@@ -113,5 +116,19 @@
 
   .footer-right {
     justify-content: center;
+  }
+}
+
+@media (max-width: 575px) {
+  .footer {
+    padding: 40px 16px;
+  }
+
+  .address {
+    width: 265px;
+  }
+
+  .footer-right {
+    justify-content: flex-start;
   }
 }

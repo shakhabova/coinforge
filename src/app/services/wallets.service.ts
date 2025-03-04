@@ -64,7 +64,9 @@ export class WalletsService {
 
   getWalletInfo(trxAddress: string): Observable<WalletDto | null> {
     // TODO get wallet info by ID
-    return of(MOCK_WALLETS.data.find(w => w.trxAddress === trxAddress) ?? null);
+    return of(
+      MOCK_WALLETS.data.find((w) => w.trxAddress === trxAddress) ?? null
+    );
   }
 
   getWalletsForDashboard(): Observable<WalletDto[]> {
@@ -85,27 +87,43 @@ export class WalletsService {
   }
 
   deactivateWallet(wallet: WalletDto): Observable<void> {
-    return this.setWalletStatus(wallet.trxAddress, 'DEACTIVATED')
+    return this.setWalletStatus(wallet.trxAddress, 'DEACTIVATED');
   }
 
   getEligibleCryptos(): Observable<{ cryptocurrency: string }[]> {
-    return this.currenciesService.getCurrenciesRequest.pipe(map(infos => infos.map(info => ({cryptocurrency: info.cryptoCurrency}))));
+    return this.currenciesService.getCurrenciesRequest.pipe(
+      map((infos) =>
+        infos.map((info) => ({ cryptocurrency: info.cryptoCurrency }))
+      )
+    );
     // return this.httpClient.get<{ cryptocurrency: string }[]>(`${this.configService.serverUrl}/v1/bff-custody/wallets/eligible-cryptocurrencies`);
   }
 
-  private setWalletStatus(trxAddress: string, status: WalletStatus): Observable<void> {
-    // TODO check 
-    return this.httpClient.put<void>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/update-status/${trxAddress}?status=${status}`, status)
+  private setWalletStatus(
+    trxAddress: string,
+    status: WalletStatus
+  ): Observable<void> {
+    // TODO check
+    return this.httpClient.put<void>(
+      `${this.configService.serverUrl}/v1/bff-custody/wallets/customer/update-status/${trxAddress}?status=${status}`,
+      status
+    );
   }
 }
 
 function mockWallets(page: number): typeof MOCK_WALLETS {
-  return { ...MOCK_WALLETS, data: MOCK_WALLETS.data.map((d, i) => {
-    if (i === 0) {
-      return { ...d, availableOprBalance: d.availableOprBalance * (page + 1)}
-    }
-    return d;
-  })}
+  return {
+    ...MOCK_WALLETS,
+    data: MOCK_WALLETS.data.map((d, i) => {
+      if (i === 0) {
+        return {
+          ...d,
+          availableOprBalance: d.availableOprBalance * (page + 1),
+        };
+      }
+      return d;
+    }),
+  };
 }
 
 const MOCK_WALLETS = {

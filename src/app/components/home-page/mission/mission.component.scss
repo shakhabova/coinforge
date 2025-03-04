@@ -4,34 +4,23 @@
   padding: 60px;
   color: #fff;
 
-  h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
-    margin-bottom: 24px;
-  }
-
   .subtitle {
     color: var(--Neutral0, #fff);
     text-align: center;
-    font-family: Switzer;
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
     margin-bottom: 40px;
   }
 
   .description {
     color: var(--Neutral0, #fff);
     text-align: center;
-    font-family: "Nunito Sans";
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px;
     margin-bottom: 120px;
   }
 }
+
+.h3-heading {
+  color: white;
+}
+
 .mission {
   border-radius: 10px;
   background: var(
@@ -59,20 +48,8 @@
   padding: 20px;
   color: #111;
 
-  h2 {
-    font-size: 1.8rem;
-    font-weight: 700;
-  }
-
   p {
     color: var(--Primary-text-color, #272828);
-
-    /* text-l-600 */
-    font-family: "Nunito Sans";
-    font-size: 18px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 24px; /* 133.333% */
 
     strong {
       font-weight: 700;
@@ -86,5 +63,32 @@
   img {
     max-width: 400px;
     height: auto;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .about {
+    padding: 16px;
+    padding-top: 40px;
+  }
+
+  .about-container {
+    padding: 0 16px;
+  }
+
+  .mission {
+    height: unset;
+  }
+
+  .mission-container {
+    flex-direction: column;
+  }
+
+  .mission-text {
+    width: auto;
+  }
+
+  .mission-image {
+    height: 300px;
   }
 }

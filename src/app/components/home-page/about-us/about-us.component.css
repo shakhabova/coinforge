@@ -12,16 +12,12 @@
   overflow: hidden;
 
   h2 {
-    font-size: 2rem;
-    font-weight: 700;
     margin-bottom: 15px;
   }
 
   .description {
     max-width: 800px;
     margin: 0 auto 40px auto;
-    font-size: 1.1rem;
-    line-height: 1.6;
     color: #222;
   }
 }
@@ -54,6 +50,10 @@
   left: -10px;
 }
 
+.h4-heading {
+  color: white;
+}
+
 .services {
   background: var(--Primary500, #1c1c1c);
   color: #fff;
@@ -61,8 +61,6 @@
   padding: 60px 10%;
 
   h2 {
-    font-size: 2.5rem;
-    font-weight: 700;
     margin-bottom: 30px;
   }
 
@@ -86,13 +84,10 @@
     transition: all 0.3s ease-in-out;
 
     h3 {
-      font-size: 1.2rem;
-      font-weight: 700;
       margin-bottom: 10px;
     }
 
     p {
-      font-size: 1rem;
       color: #ccc;
     }
 
@@ -124,20 +119,15 @@
   }
 
   .step-number {
-    font-size: 2rem;
-    font-weight: 700;
     color: #fedd2d;
   }
 
   h3 {
-    font-size: 1.2rem;
-    font-weight: 700;
     margin-top: 5px;
     color: #fff;
   }
 
   p {
-    font-size: 1rem;
     color: #ccc;
     margin-top: 10px;
   }
@@ -175,11 +165,22 @@
     padding: 60px 5%;
   }
 
-  .description {
-    font-size: 1rem;
-  }
-
   .crypto-icons {
     display: none; /* Hide icons on small screens */
+  }
+}
+
+@media (max-width: 575px) {
+  .about {
+    background-image: url("/assets/images/bg-mobile-about.png");
+    padding: 24px 16px;
+  }
+
+  .services {
+    padding: 60px 16px;
+  }
+
+  .services .services-grid {
+    grid-template-columns: 1fr;
   }
 }

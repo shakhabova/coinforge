@@ -4,67 +4,64 @@
   padding: 60px 10%;
   display: flex;
   justify-content: center;
+}
 
-  .contact-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1360px;
-    width: 100%;
+.contact-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1360px;
+  width: 100%;
+}
+
+.contact-content {
+  flex: 1;
+  text-align: left;
+
+  .h3-heading {
+    margin-bottom: 10px;
+    color: white;
   }
 
-  .contact-content {
-    flex: 1;
-    text-align: left;
-
-    h2 {
-      font-size: 2.5rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      font-size: 1.2rem;
-      color: #ccc;
-      margin-bottom: 20px;
-    }
+  .subtitle {
+    color: #ccc;
   }
+}
 
-  .contact-form {
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+
+  .input-group {
     display: flex;
-    flex-direction: column;
-    gap: 15px;
-
-    .input-group {
-      display: flex;
-      gap: 10px;
-      input {
-        flex: 1;
-      }
-    }
-
+    gap: 10px;
     input {
-      padding: 12px;
-
-      font-size: 1rem;
-      color: black;
-      outline: none;
-      border-radius: 10px;
-      border: 1px solid var(--System-color-light-purple, #eceaef);
-      background: var(--Neutral0, #fff);
+      flex: 1;
     }
   }
 
-  .contact-image {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
+  input {
+    padding: 12px;
 
-    img {
-      max-width: 500px;
+    font-size: 1rem;
+    color: black;
+    outline: none;
+    border-radius: 10px;
+    border: 1px solid var(--System-color-light-purple, #eceaef);
+    background: var(--Neutral0, #fff);
+  }
+}
 
-      height: auto;
-    }
+.contact-image {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+
+  img {
+    max-width: 500px;
+
+    height: auto;
   }
 }
 
@@ -84,5 +81,31 @@
 
   .contact-image {
     margin-top: 20px;
+  }
+}
+
+@media only screen and (max-width: 575px) {
+  .contact {
+    padding: 30px 16px;
+  }
+
+  .contact-content {
+    max-width: 100%;
+  }
+
+  .subtitle {
+    margin-bottom: 32px;
+  }
+
+  .contact-form .input-group {
+    flex-direction: row;
+
+    input {
+      width: 1px;
+    }
+  }
+
+  .contact-image {
+    display: none;
   }
 }

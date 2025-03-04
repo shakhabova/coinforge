@@ -6,22 +6,20 @@
 .h1-heading {
   color: var(--Primary-text-color, #272828);
   /* Switzer/H1 */
-  font-family: Switzer;
+  font-family: Switzer-Variable;
   font-size: 68px;
   font-style: normal;
   font-weight: 700;
   line-height: 80px;
 }
-// .h2-heading{
-//   color: var(--Primary-text-color, #272828);
-
-//   /* Switzer/H5 */
-//   font-family: Switzer;
-//   font-size: 18px;
-//   font-style: normal;
-//   font-weight: 600;
-//   line-height: 24px; /* 133.333% */
-// }
+.h2-heading{
+  color: var(--Primary-text-color, #272828);
+  font-family: Switzer-Variable;
+  font-size: 48px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 64px;
+}
 
 .h3-heading {
   color: var(--Neutrals---primary-text-color, #272828);
@@ -103,4 +101,48 @@
 
 .w300 {
   font-weight: 300;
+}
+
+@media only screen and (max-width: 575px) {
+  .h2-xs-heading {
+    color: var(--Primary-text-color, #272828);
+    font-family: Switzer-Variable;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 64px;
+  }
+
+  .h4-xs-heading {
+    color: var(--Neutrals---primary-text-color, #272828);
+    /* Switzer/H4 */
+    font-family: Switzer-Variable;
+    font-size: 26px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 40px; /* 153.846% */
+  }
+
+  .h5-xs-heading {
+    color: var(--Primary-text-color, #272828);
+    /* Switzer/H5 */
+    font-family: Switzer-Variable;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 24px;
+  }
+
+  .h6-xs-heading {
+    color: var(--Primary-text-color, #272828);
+    font-family: Switzer-Variable;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 21px;
+  }
+
+  .w-xs-300 {
+    font-weight: 300;
+  }
 }

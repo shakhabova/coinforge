@@ -1,6 +1,8 @@
-<app-header></app-header>
+<app-header [isHomePage]="isHomePage()"></app-header>
 
 <router-outlet></router-outlet>
 
-<!--<app-footer></app-footer> -->
+@if (isHomePage()) {
+  <app-footer></app-footer>
+}
 <!-- footer -->
