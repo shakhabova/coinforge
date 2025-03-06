@@ -31,7 +31,7 @@ import { tuiPure } from '@taiga-ui/cdk';
 import { WalletItemOptionComponent } from "./wallet-item-option/wallet-item-option.component";
 import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { TuiFilterByInputPipe } from '@taiga-ui/kit';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { ConfigService } from 'services/config.service';
 import { WalletCardComponent } from "../dashboard/wallets/wallet-card/wallet-card.component";
 import { WalletInfoCardComponent } from "./wallet-info-card/wallet-info-card.component";
@@ -69,6 +69,7 @@ export class WalletsPageComponentTsComponent implements OnInit {
   private destroyRef = inject(DestroyRef);
   private createWalletDialog = tuiDialog(CreateWalletModalComponent);
   public configService = inject(ConfigService);
+  private router = inject(Router);
 
   public viewport = viewChild(CdkVirtualScrollViewport);
 
@@ -106,6 +107,10 @@ export class WalletsPageComponentTsComponent implements OnInit {
   ngOnInit() {
     // this.loadWallets();
     this.loadCurrencies();
+  }
+
+  navigateDetails(wallet: WalletDto): void {
+    this.router.navigateByUrl(`/wallets/${ wallet.trxAddress }`)
   }
 
   nextBatch() {

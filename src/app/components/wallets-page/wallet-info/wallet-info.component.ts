@@ -11,6 +11,7 @@ import { WalletStatusChipComponent } from "../../shared/wallet-status-chip/walle
 import { WalletItemOptionComponent } from "../wallet-item-option/wallet-item-option.component";
 import { TransactionsComponent } from "../../dashboard/transactions/transactions.component";
 import { TransactionsPageComponent } from "../../transactions-page/transactions-page.component";
+import { ConfigService } from 'services/config.service';
 
 @Component({
   selector: 'app-wallet-info',
@@ -35,6 +36,7 @@ export class WalletInfoComponent implements OnInit {
   private injector = inject(Injector);
   private location = inject(Location);
   private cryptoService = inject(CurrenciesService);
+  public configService = inject(ConfigService);
 
   protected isLoading = signal(false);
   protected error = signal<unknown | null>(null);

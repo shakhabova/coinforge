@@ -131,6 +131,7 @@
     <app-transaction-item
       *cdkVirtualFor="let transaction of mobileTransactions | async; trackBy: trackById"
       [transaction]="transaction"
+      (click)="openDetails(transaction)"
     ></app-transaction-item>
   </cdk-virtual-scroll-viewport>
 }

@@ -127,6 +127,7 @@
     <app-wallet-info-card
       *cdkVirtualFor="let wallet of mobileWallets | async; trackBy: trackById"
       [wallet]="wallet"
+      (click)="navigateDetails(wallet)"
       (block)="onBlock(wallet)"
       (unblock)="onUnblock(wallet)"
       (deactivate)="onDeactivate(wallet)"

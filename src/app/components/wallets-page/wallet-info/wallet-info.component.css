@@ -1,5 +1,5 @@
 :host {
-  width: 1128px;
+  max-width: 1128px;
   display: block;
   margin: 0 auto;
   margin-top: 24px;
@@ -61,4 +61,42 @@
   background-color: #F7F7FB;
   border-radius: 10px;
   border: 0.5px solid #e9e9e9;
+}
+
+.wallet-icon {
+  width: 60px;
+}
+
+.balance-actions-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.address-mini-wrapper {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 0.5px solid var(--System-color-light-gray, #E9E9E9);
+  background: var(--Neutral100, #F7F7FB);
+}
+
+.address-mini-wrapper .address-text {
+  width: 300px;
+}
+
+@media only screen and (max-width: 575px) {
+  .balance-wrapper {
+    height: auto;
+  }
+
+  .wallet-icon {
+    width: 40px;
+  }
+
+  .balance-actions-wrapper {
+    width: 100%;
+  }
 }
