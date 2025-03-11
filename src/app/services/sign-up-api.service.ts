@@ -62,7 +62,7 @@ export class SignUpApiService {
   }
 
   createUser(user: CreateUserRequest): Observable<CreateUserResponse> {
-    return this.httpClient.post<CreateUserResponse>(`${this.configService.serverUrl}/v1/users/registration`, user);
+    return this.httpClient.post<CreateUserResponse>(`${this.configService.serverUrl}/v1/users/registration`, user, { headers: { 'ADMIN-Customer-ID': '00010004'}});
   }
 
   resendOTP(email: string): Observable<void> {
