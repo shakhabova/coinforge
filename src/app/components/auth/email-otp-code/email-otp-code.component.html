@@ -1,34 +1,42 @@
-<div class="title h5-heading">
-  Verification code
-</div>
+<div class="title h5-heading">Verification code</div>
 
 <div class="subtitle text-sm w400">
-  Enter verification code  we sent to the email address <span class="text-sm w600">{{email}}</span>.
+  Enter verification code we sent to the email address
+  <span class="text-sm w600">{{ email }}</span
+  >.
 </div>
 
-<app-otp-code-input [(otpCode)]="otpCode" [length]="codeLength"></app-otp-code-input>
+<app-otp-code-input
+  [(otpCode)]="otpCode"
+  [length]="codeLength"
+  [error]="!!errorMessage()"
+  [disabled]="loading()"
+></app-otp-code-input>
 
 @if (message() || errorMessage()) {
-  <div class="message" [class.error]="!!errorMessage()">
-    {{ message() || errorMessage() }}
-  </div>
-}
-
-@if (!codeExpired()) {
-  <button 
-    class="confirm-button button primary m"
-    [class.secondary]="isConfirmDisabled()"
-    [disabled]="isConfirmDisabled()"
-    (click)="confirm()"
-  >
-    Confirm
-  </button>
+<div class="message" [class.error]="!!errorMessage()">
+  {{ message() || errorMessage() }}
+</div>
+} @if (!codeExpired()) {
+<button
+  class="confirm-button button primary m"
+  [class.secondary]="isConfirmDisabled()"
+  [disabled]="isConfirmDisabled()"
+  (click)="confirm()"
+>
+  Confirm
+</button>
 } @else {
-  <a class="resend-link">Resend code</a>
-}
-
-@if (!codeExpired()) {
-  <div class="expires">
-    Verification code expires in <span class="time">{{expiresTimer$ | async}}</span>
-  </div>
+<button
+  [disabled]="loading()"
+  class="button secondary m resend-link"
+  (click)="resendCode()"
+>
+  Resend code
+</button>
+} @if (!codeExpired()) {
+<div class="expires">
+  Verification code expires in
+  <span class="time">{{ expiresTimer$ | async }}</span>
+</div>
 }

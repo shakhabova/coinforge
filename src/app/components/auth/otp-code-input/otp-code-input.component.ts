@@ -1,10 +1,11 @@
 import { Component, model, effect, input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { TuiAutoFocus } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-otp-code-input',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, TuiAutoFocus],
   templateUrl: './otp-code-input.component.html',
   styleUrl: './otp-code-input.component.css'
 })
@@ -12,6 +13,7 @@ export class OtpCodeInputComponent {
   otpCode = model('');
   length = input(6);
   error = input(false);
+  disabled = input(false);
 
   otpCodeArray = new Array(this.length()).fill(null);
 

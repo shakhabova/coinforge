@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
+import { tuiDialog, TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { TuiFieldErrorPipe, TuiInputPassword } from '@taiga-ui/kit';
 import { AsyncPipe } from '@angular/common';
@@ -16,6 +16,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { MfaOtpCodeComponent } from '../mfa-otp-code/mfa-otp-code.component';
 import { AuthService } from 'services/auth.service';
+import { DialogService } from 'services/dialog.service';
 
 @Component({
   selector: 'app-login',
@@ -36,12 +37,14 @@ import { AuthService } from 'services/auth.service';
   styleUrl: './login.component.css',
 })
 export class LoginComponent {
-  private dialog = inject(MatDialog);
   private loginService = inject(LoginApiService);
   private fb = inject(NonNullableFormBuilder);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
   private authService = inject(AuthService);
+  private dialogService = inject(DialogService);
+
+  private mfaOptDialog = tuiDialog(MfaOtpCodeComponent, {size: 'auto'});
 
   protected formGroup = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -51,6 +54,11 @@ export class LoginComponent {
   onSubmit() {
     const email = this.formGroup.value.email!;
  
+    this.formGroup.updateValueAndValidity();
+    this.formGroup.markAllAsTouched();
+    if (this.formGroup.invalid) {
+      return;
+    }
 
     this.loginService
       .login(this.formGroup.getRawValue())
@@ -77,37 +85,62 @@ export class LoginComponent {
           }
         },
         error: (err) => {
-          switch (err.code) {
+          switch (err.error?.code) {
             case 'user_not_found':
-              // TODO display not found modal
+              this.dialogService.showInfo({
+                type: 'error',
+                title: 'Error',
+                text: 'The specified user could not be found.',
+              }).subscribe();
               break;
             case 'unauthorized':
-              // TODO display invalid creds modal
+              this.dialogService.showInfo({
+                type: 'error',
+                title: 'Error',
+                text: 'Invalid credentials. Please try again.',
+              }).subscribe();
               break;
             case 'temporary_blocked':
-              // TODO display temp blocked modal
+              this.dialogService.showInfo({
+                type: 'error',
+                title: 'Error',
+                text: 'Your account is temporarily blocked.',
+              }).subscribe();
               break;
             case 'account_pending':
-              // TODO display account pending modal
+              this.dialogService.showInfo({
+                type: 'pending',
+                title: 'Pending',
+                text: 'Your account is currently pending approval',
+              }).subscribe();
               break;
             case 'too_many_attempts':
-              // TODO display too many attempts modal
+              this.dialogService.showInfo({
+                type: 'error',
+                title: 'Error',
+                text: 'You have made too many incorrect attempts. Please try again later.',
+              }).subscribe();
               break;
             case 'email_confirmation_pending':
-              // TODO display conf email modal
+              this.dialogService.showInfo({
+                type: 'error',
+                title: 'Error',
+                text: 'The specified user could not be found.',
+              }).subscribe();
               break;
             default:
-              console.error(err);
-            // TODO dispaly unexpected error modal;
+              this.dialogService.showInfo({
+                type: 'warning',
+                title: 'Error',
+                text: 'An unexpected error has appeared. Please try again later.',
+              }).subscribe();
           }
         },
       });
   }
 
   private sendMfaOtpCode(email: string) {
-    const dialogRef = this.dialog.open(MfaOtpCodeComponent, { data: { email }});
-
-    dialogRef.afterClosed()
+    this.mfaOptDialog({ email })
       .pipe(
         takeUntilDestroyed(this.destroyRef),
       )

@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://crp-custody-dev.apps.ocp-dev.gps.local",
+    "target": "https://dev.coinforge.online",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",

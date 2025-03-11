@@ -1,13 +1,28 @@
 <div class="otp-inputs">
   @for (_ of otpCodeArray; track $index) {
-  <input
-    [(ngModel)]="otpCodeArray[$index]"
-    (ngModelChange)="onCodeChange()"
-    maxlength="1"
-    (input)="onFieldInput($index)"
-    id="otp-code-input-{{ $index }}"
-    (paste)="onInputPaste(toClipboardEvent($event))"
-    [class.erorr]="error()"
-  />
+    @if ($index === 0) {
+      <input
+        tuiAutoFocus
+        [(ngModel)]="otpCodeArray[$index]"
+        (ngModelChange)="onCodeChange()"
+        maxlength="1"
+        (input)="onFieldInput($index)"
+        id="otp-code-input-{{ $index }}"
+        (paste)="onInputPaste(toClipboardEvent($event))"
+        [class.input-error]="error()"
+        [disabled]="disabled()"
+      />
+    } @else {
+      <input
+        [(ngModel)]="otpCodeArray[$index]"
+        (ngModelChange)="onCodeChange()"
+        maxlength="1"
+        (input)="onFieldInput($index)"
+        id="otp-code-input-{{ $index }}"
+        (paste)="onInputPaste(toClipboardEvent($event))"
+        [disabled]="disabled()"
+        [class.input-error]="error()"
+      />
+    }
   }
 </div>

@@ -1,6 +1,15 @@
-import { Component, computed, DestroyRef, inject, INJECTOR, Signal } from '@angular/core';
-import { FormBuilder, FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { firstNameValidator, lastNameValidator, passwordEqualsValidator } from 'utils/validators';
+import { Component, DestroyRef, inject, INJECTOR, OnInit } from '@angular/core';
+import {
+  FormsModule,
+  NonNullableFormBuilder,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import {
+  firstNameValidator,
+  lastNameValidator,
+  passwordEqualsValidator,
+} from 'utils/validators';
 import { CommonModule } from '@angular/common';
 import {
   TuiComboBoxModule,
@@ -13,10 +22,7 @@ import {
   TuiDataList,
   TuiDialogService,
   TuiError,
-  TuiIcon,
   TuiLabel,
-  TuiScrollable,
-  TuiScrollbar,
   TuiTextfield,
 } from '@taiga-ui/core';
 import {
@@ -29,25 +35,22 @@ import {
   tuiInputPhoneInternationalOptionsProvider,
   TuiSortCountriesPipe,
   TuiStringifyContentPipe,
-  TuiStringifyPipe,
 } from '@taiga-ui/kit';
-import {PolymorpheusComponent} from '@taiga-ui/polymorpheus';
-import {getCountries} from 'libphonenumber-js';
-import { COUNTRY_CODES } from 'utils/constants';
+import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
+import { getCountries } from 'libphonenumber-js';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { defer, switchMap, take } from 'rxjs';
 import {
-  CdkFixedSizeVirtualScroll,
-  CdkVirtualForOf,
-  CdkVirtualScrollViewport,
-} from '@angular/cdk/scrolling';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { TuiLet, TuiStringMatcher } from '@taiga-ui/cdk';
-import { catchError, defer, of, switchMap, take } from 'rxjs';
-import { CreateUserRequest, CreateUserResponse, Gender, SignUpApiService } from 'services/sign-up-api.service';
+  CreateUserRequest,
+  CreateUserResponse,
+  Gender,
+  SignUpApiService,
+} from 'services/sign-up-api.service';
 import { DialogService } from 'services/dialog.service';
 import { EmailOtpCodeComponent } from '../email-otp-code/email-otp-code.component';
 import { COUNTRIES } from 'utils/countries';
-import { CountriesComponent } from './countries/countries.component';
 import { PasswordCriteriaComponent } from 'components/shared/password-criteria/password-criteria.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sign-up',
@@ -62,24 +65,16 @@ import { PasswordCriteriaComponent } from 'components/shared/password-criteria/p
     TuiSelectModule,
     TuiDataListWrapper,
     TuiDataList,
-    CdkVirtualScrollViewport,
-    TuiScrollable,
-    CdkFixedSizeVirtualScroll,
-    CdkVirtualForOf,
-    TuiScrollbar,
     TuiError,
     TuiFieldErrorPipe,
     TuiInputPassword,
-    TuiIcon,
     TuiComboBoxModule,
-    TuiLet,
     TuiFilterByInputPipe,
     TuiTextareaModule,
     TuiInputPhoneInternational,
     TuiSortCountriesPipe,
     FormsModule,
     TuiStringifyContentPipe,
-    CountriesComponent,
     PasswordCriteriaComponent,
   ],
   templateUrl: './sign-up.component.html',
@@ -97,31 +92,24 @@ import { PasswordCriteriaComponent } from 'components/shared/password-criteria/p
         required: 'Value is required',
         minlength: (val: unknown) => {
           console.log(val);
-          return 'hehe'
-        }
+          return 'hehe';
+        },
       },
     },
   ],
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
   private fb = inject(NonNullableFormBuilder);
   private signUpApiService = inject(SignUpApiService);
   private destroyRef = inject(DestroyRef);
   private dialogService = inject(DialogService);
   private readonly dialogs = inject(TuiDialogService);
   private readonly injector = inject(INJECTOR);
-
-  
+  private readonly router = inject(Router);
 
   formGroup = this.fb.group({
-    firstName: [
-      '',
-      [firstNameValidator(2, 100), Validators.required],
-    ],
-    lastName: [
-      '',
-      [lastNameValidator(2, 100), Validators.required],
-    ],
+    firstName: ['', [firstNameValidator(2, 100), Validators.required]],
+    lastName: ['', [lastNameValidator(2, 100), Validators.required]],
     gender: ['FEMALE' as Gender, [Validators.required]],
     email: ['', [Validators.required, Validators.email]],
     phoneNumber: [
@@ -153,10 +141,14 @@ export class SignUpComponent {
 
   protected readonly phoneCountries = getCountries();
 
-  countries = COUNTRIES.map(country => country.countryCodeAlpha3);
+  countries = COUNTRIES.map((country) => country.countryCodeAlpha3);
 
   private userWasCreated = false;
   private userCreationResponse?: CreateUserResponse;
+
+  ngOnInit(): void {
+    this.showOTPModal(null);
+  }
 
   toGender(value: any): Gender {
     return value as Gender;
@@ -164,6 +156,7 @@ export class SignUpComponent {
 
   onSubmit() {
     if (this.userWasCreated && this.userCreationResponse) {
+      this.signUpApiService.resendOTP(this.userCreationResponse.email);
       this.showOTPModal(this.userCreationResponse);
       return;
     }
@@ -172,19 +165,18 @@ export class SignUpComponent {
     if (!this.formGroup.valid) {
       return;
     }
-    
+
     const formValue = this.formGroup.getRawValue();
-    this.signUpApiService.generateVerifierAndSalt(formValue.email!)
+    this.signUpApiService
+      .generateVerifierAndSalt(formValue.email!)
       .pipe(
-        switchMap(res => {
+        switchMap((res) => {
           const userCreateRequest: CreateUserRequest = {
             ...formValue,
             verifier: res.b,
             salt: res.salt,
-            address: formValue.address || undefined
+            address: formValue.address || undefined,
           };
-          //TODO remove
-          console.log(userCreateRequest);
           return this.signUpApiService.createUser(userCreateRequest);
         }),
         // catchError((err: unknown, caught) => {
@@ -196,10 +188,10 @@ export class SignUpComponent {
         //   );
         //   return of(null);
         // }),
-        takeUntilDestroyed(this.destroyRef),
+        takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
-        next: user => {
+        next: (user) => {
           if (user?.status !== 'EMAIL_NOT_CONFIRMED') {
             throw user;
           }
@@ -209,17 +201,14 @@ export class SignUpComponent {
           this.userWasCreated = true;
           this.userCreationResponse = user;
           this.formGroup.valueChanges
-            .pipe(
-              take(1),
-              takeUntilDestroyed(this.destroyRef),
-            )
+            .pipe(take(1), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
               this.userWasCreated = false;
               this.userCreationResponse = undefined;
             });
         },
-        error: err => {
-          switch(err.status) {
+        error: (err) => {
+          switch (err.error.status) {
             case 'user_already_exists':
               this.dialogService.showMessage(
                 'Email already exists. Please log in with your existing account or use a different email to sign up',
@@ -234,20 +223,40 @@ export class SignUpComponent {
                 'Back to sign up'
               );
           }
-        }
+        },
       });
   }
 
-  protected readonly stringify = (code: string): string => !code ? '' : COUNTRIES.find(country => country.countryCodeAlpha3 === code)!.name;
+  protected readonly stringify = (code: string): string =>
+    !code
+      ? ''
+      : COUNTRIES.find((country) => country.countryCodeAlpha3 === code)!.name;
 
   private showOTPModal(user: CreateUserResponse | null): void {
-    const otpDialog = this.dialogs.open(
+    const otpDialog = this.dialogs.open<unknown>(
       new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
       {
-        data: { email: user?.email, submitUrl: '' }, // TODO submit url
+        data: {
+          email: user?.email,
+          submitUrl: '/v1/users/registration/otp/validate',
+          id: user?.id,
+        },
       }
     );
 
-    otpDialog.subscribe();
+    otpDialog.subscribe((value) => {
+      if (value) {
+        this.dialogService
+          .showInfo({
+            type: 'success',
+            text: `Your account has been created successfully. Let's get started`,
+            title: 'Congratulations',
+            buttonText: 'Get started',
+          })
+          .subscribe({
+            complete: () => this.router.navigateByUrl('/auth/login'),
+          });
+      }
+    });
   }
 }

@@ -25,9 +25,13 @@ app-otp-code-input {
   background: var(--System-color-light-red, #FFF0F0);
 }
 
-.confirm-button {
+.button {
   width: 100%;
   margin: 16px 0;
+}
+
+.resend-link {
+  margin-bottom: 0;
 }
 
 .expires {

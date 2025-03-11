@@ -8,6 +8,7 @@
 }
 
 .otp-inputs input {
+  text-align: center;
   width: 49px;
   height: 48px;
   display: flex;
@@ -16,4 +17,10 @@
   border-radius: var(--Spacing-Radios-Radios-xs, 10px);
   border: 1px solid var(--System-color-light-purple, #eceaef);
   background: var(--Neutral100, #f7f7fb);
+}
+
+.otp-inputs input.input-error {
+  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
+  border: 1px solid var(--System-color-red, #E7170B);
+  background: var(--System-color-light-red, #FFF0F0);
 }
