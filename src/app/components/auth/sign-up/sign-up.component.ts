@@ -98,7 +98,7 @@ import { Router } from '@angular/router';
     },
   ],
 })
-export class SignUpComponent implements OnInit {
+export class SignUpComponent {
   private fb = inject(NonNullableFormBuilder);
   private signUpApiService = inject(SignUpApiService);
   private destroyRef = inject(DestroyRef);
@@ -145,10 +145,6 @@ export class SignUpComponent implements OnInit {
 
   private userWasCreated = false;
   private userCreationResponse?: CreateUserResponse;
-
-  ngOnInit(): void {
-    this.showOTPModal(null);
-  }
 
   toGender(value: any): Gender {
     return value as Gender;
@@ -253,9 +249,7 @@ export class SignUpComponent implements OnInit {
             title: 'Congratulations',
             buttonText: 'Get started',
           })
-          .subscribe({
-            complete: () => this.router.navigateByUrl('/auth/login'),
-          });
+          .subscribe(() => this.router.navigateByUrl('/auth/login'));
       }
     });
   }
