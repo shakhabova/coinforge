@@ -15,7 +15,7 @@ export class AuthService {
   private configService = inject(ConfigService);
   private router = inject(Router);
   
-  private refreshTokenEndpoint = '';
+  private refreshTokenEndpoint = '/v1/auth/srp/refresh';
   
   public refreshToken(): Observable<void> {
     const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
@@ -25,6 +25,7 @@ export class AuthService {
         tap((response) => {
           // Update the access token in the local storage
           localStorage.setItem(ACCESS_TOKEN_KEY, response.accessToken);
+          localStorage.setItem(REFRESH_TOKEN_KEY, response.refreshToken);
         }),
         catchError((error) => {
           // Handle refresh token error (e.g., redirect to login page)

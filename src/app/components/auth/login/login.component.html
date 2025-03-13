@@ -1,36 +1,40 @@
-<h2>Sign in</h2>
-    <form (submit)="onSubmit()" [formGroup]="formGroup">
-      <label tuiLabel>
-        Email *
-        <tui-input
-          formControlName="email"
-          tuiTextfieldSize="m"
-          [tuiTextfieldLabelOutside]="true"
-        >
-          <input tuiTextfieldLegacy />
-        </tui-input>
-    
-        <tui-error
-          formControlName="email"
-          [error]="[] | tuiFieldError | async"
-        ></tui-error>
-      </label>
-      
-      <label tuiLabel>
-        Password *
-        <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
-          <input formControlName="password" tuiInputPassword />
-        </tui-textfield>
-      </label>
-      
-      <button type="submit" class="sign-in-btn">Sign in</button>
-    </form>
-    <div class="form-footer">
-      <p>Don't you have an account? <a href="#">Sign up</a></p>
-    </div>
-    <div class="terms">
-      <p>
-        By signing up, you agree to Kinetic's
-        <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
-      </p>
-    </div>
+  <h2>Sign in</h2>
+  <form (submit)="onSubmit()" [formGroup]="formGroup">
+    <label tuiLabel>
+      Email *
+      <tui-input
+        formControlName="email"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfieldLegacy />
+      </tui-input>
+  
+      <tui-error
+        formControlName="email"
+        [error]="[] | tuiFieldError | async"
+      ></tui-error>
+    </label>
+  
+    <label tuiLabel>
+      Password *
+      <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
+        <input formControlName="password" tuiInputPassword />
+      </tui-textfield>
+    </label>
+  
+    <button type="submit" class="sign-in-btn">Sign in</button>
+  </form>
+  <div class="form-footer">
+    <p>Don't you have an account? <a href="#">Sign up</a></p>
+  </div>
+  <div class="terms">
+    <p>
+      By signing up, you agree to Kinetic's
+      <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>.
+    </p>
+  </div>
+
+  @if (loading()) {
+    <app-loader></app-loader>
+  }

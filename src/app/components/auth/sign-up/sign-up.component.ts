@@ -164,26 +164,11 @@ export class SignUpComponent {
 
     const formValue = this.formGroup.getRawValue();
     this.signUpApiService
-      .generateVerifierAndSalt(formValue.email!)
+      .createUser({
+        ...formValue,
+        address: formValue.address || undefined,
+      })
       .pipe(
-        switchMap((res) => {
-          const userCreateRequest: CreateUserRequest = {
-            ...formValue,
-            verifier: res.b,
-            salt: res.salt,
-            address: formValue.address || undefined,
-          };
-          return this.signUpApiService.createUser(userCreateRequest);
-        }),
-        // catchError((err: unknown, caught) => {
-        //   console.log(err);
-        //   this.dialogService.showMessage(
-        //     'An unexpected error has appeared. Please try again later',
-        //     'Error',
-        //     'Back to sign up'
-        //   );
-        //   return of(null);
-        // }),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe({
@@ -206,18 +191,20 @@ export class SignUpComponent {
         error: (err) => {
           switch (err.error.status) {
             case 'user_already_exists':
-              this.dialogService.showMessage(
-                'Email already exists. Please log in with your existing account or use a different email to sign up',
-                'Error',
-                'Back to sign up'
-              );
+              this.dialogService.showInfo({
+                type: 'error',
+                text: 'Email already exists. Please log in with your existing account or use a different email to sign up',
+                title: 'Error',
+                buttonText: 'Back to sign up'
+              });
               break;
             default:
-              this.dialogService.showMessage(
-                'An unexpected error has appeared. Please try again later',
-                'Error',
-                'Back to sign up'
-              );
+              this.dialogService.showInfo({
+                type: 'error',
+                text: 'An unexpected error has appeared. Please try again later',
+                title: 'Error',
+                buttonText: 'Back to sign up'
+              });
           }
         },
       });

@@ -132,7 +132,7 @@ export class EmailOtpCodeComponent implements OnInit {
         finalize(() => this.loading.set(false))
       )
       .subscribe({
-        next: (response: unknown) => this.context.completeWith(response),
+        next: () => this.context.completeWith(true),
         error: (err) => {
           if (err.code === 'invalid_confirmation_code') {
             this.errorMessage.set('Invalid OTP code');

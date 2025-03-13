@@ -14,11 +14,11 @@ export class MfaApiService {
     return this.httpClient.post<void>(`${this.configService.serverUrl}/v1/auth/srp/reset-mfa`, { email });
   }
 
-  rejectMfa(email: string): Observable<void> {
+  rejectMfa(email: string, userId: number): Observable<void> {
     return this.httpClient.put<void>(
       `${this.configService.serverUrl}/v1/custody/internal/users/mfa-status?mfaStatus=REJECTED`, 
       null, 
-      { headers: { 'Custody-User-ID': email }}
+      { headers: { 'Custody-User-ID': userId.toString() }}
     );
   }
 }

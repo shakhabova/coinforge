@@ -1,28 +1,63 @@
-import { Component, DestroyRef, inject, INJECTOR } from '@angular/core';
+import { Component, DestroyRef, inject, INJECTOR, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { TuiDialogService, TuiIcon } from '@taiga-ui/core';
+import { TuiDialogService, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { EmailOtpCodeComponent } from 'components/auth/email-otp-code/email-otp-code.component';
+import { finalize } from 'rxjs';
+import { DialogService } from 'services/dialog.service';
 import { MfaApiService } from 'services/mfa-api.service';
+import { UserService } from 'services/user.service';
+import { LoaderComponent } from "../../../shared/loader/loader.component";
 
 @Component({
   selector: 'app-ask-for-mfa',
   standalone: true,
-  imports: [MatDialogModule, TuiIcon],
+  imports: [MatDialogModule, LoaderComponent],
   templateUrl: './ask-for-mfa.component.html',
   styleUrl: './ask-for-mfa.component.css',
 })
-export class AskForMfaComponent {
+export class AskForMfaComponent implements OnInit {
   private mfaApiService = inject(MfaApiService);
   private destroyRef = inject(DestroyRef);
   private readonly tuiDialogs = inject(TuiDialogService);
   private readonly injector = inject(INJECTOR);
   private router = inject(Router);
+  private userService = inject(UserService);
+  private dialogService = inject(DialogService);
 
+  protected readonly loading = signal(false);
   private email = this.router.getCurrentNavigation()?.extras.state?.['email'];
   private mfaQR = this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
+  private userId?: number;
+
+  ngOnInit(): void {
+    if (!this.email) {
+      this.router.navigateByUrl('/auth/login');
+      return;
+    }
+
+    this.loading.set(true);
+    this.userService.getUser(this.email)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef),
+        finalize(() => this.loading.set(false)),
+      )
+      .subscribe({
+        next: (info) => {
+          this.userId = info.id;
+        },
+        error: (err) => {
+          this.dialogService.showInfo({
+            type: 'error',
+            title: 'Error',
+            text: 'Unexpected error occured, please try again later',
+          });
+          console.error(err);
+        }
+      });
+  }
 
   enable() {
     if (this.mfaQR) {
@@ -40,7 +75,7 @@ export class AskForMfaComponent {
 
   discard() {
     this.mfaApiService
-      .rejectMfa(this.email)
+      .rejectMfa(this.email, this.userId!)
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe(() => this.goToDashboard());
   }

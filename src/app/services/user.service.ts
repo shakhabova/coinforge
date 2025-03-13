@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { MfaStatus } from './login-api.service';
 import { ConfigService } from './config.service';
 
@@ -20,16 +20,24 @@ export interface UserInfoDto {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   private httpClient = inject(HttpClient);
   private configService = inject(ConfigService);
 
-  constructor() { }
-
+  constructor() {}
 
   getInfo(): Observable<UserInfoDto> {
-    return this.httpClient.get<UserInfoDto>(`/api/v1/users/current`);
+    return this.httpClient
+      .get<UserInfoDto>(`${this.configService.serverUrl}/v1/users/current`)
+      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  }
+
+  getUser(email: string): Observable<UserInfoDto> {
+    return this.httpClient.get<UserInfoDto>(
+      `${this.configService.serverUrl}/v1/internal/users`,
+      { params: { email: decodeURIComponent(email) } }
+    );
   }
 }
