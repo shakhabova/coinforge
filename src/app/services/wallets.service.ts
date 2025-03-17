@@ -8,7 +8,7 @@ export interface GetWalletsParams {
   statusIn: WalletStatus[];
   size: number;
   page: number;
-  sort: string;
+  sort?: string;
   cryptocurrency?: string;
 }
 

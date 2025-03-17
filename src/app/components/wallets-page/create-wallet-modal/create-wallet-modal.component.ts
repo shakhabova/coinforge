@@ -10,7 +10,7 @@ import {injectContext} from '@taiga-ui/polymorpheus';
 @Component({
   selector: 'app-create-wallet-modal',
   standalone: true,
-  imports: [TuiIcon, AsyncPipe],
+  imports: [AsyncPipe],
   templateUrl: './create-wallet-modal.component.html',
   styleUrl: './create-wallet-modal.component.css',
 })

@@ -16,7 +16,7 @@ export class MfaApiService {
 
   rejectMfa(email: string, userId: number): Observable<void> {
     return this.httpClient.put<void>(
-      `${this.configService.serverUrl}/v1/custody/internal/users/mfa-status?mfaStatus=REJECTED`, 
+      `${this.configService.serverUrl}/v1/internal/users/mfa-status?mfaStatus=REJECTED`, 
       null, 
       { headers: { 'Custody-User-ID': userId.toString() }}
     );

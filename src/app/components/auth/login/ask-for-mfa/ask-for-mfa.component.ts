@@ -39,7 +39,7 @@ export class AskForMfaComponent implements OnInit {
     }
 
     this.loading.set(true);
-    this.userService.getUser(this.email)
+    this.userService.getInfo()
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.loading.set(false)),
