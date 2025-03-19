@@ -7,37 +7,35 @@ import { AuthService } from 'services/auth.service';
 import { DASHBOARD_LINKS, HOME_PAGE_LINKS } from './constants';
 
 export interface HeaderLink {
-  routerLink: string;
-  icon?: string;
-  label: string;
+	routerLink: string;
+	icon?: string;
+	label: string;
 }
 
 @Component({
-  selector: 'app-header',
-  standalone: true,
-  imports: [RouterModule, TuiIcon],
-  templateUrl: './header.component.html',
-  styleUrl: './header.component.css',
+	selector: 'app-header',
+	imports: [RouterModule, TuiIcon],
+	templateUrl: './header.component.html',
+	styleUrl: './header.component.css',
 })
 export class HeaderComponent {
-  public configService = inject(ConfigService);
-  public isHomePage = input(true);
+	public configService = inject(ConfigService);
+	public isHomePage = input(true);
 
-  private dialog = tuiDialog(UserProfileComponent, { size: 'auto' });
-  public authService = inject(AuthService);
+	private dialog = tuiDialog(UserProfileComponent, { size: 'auto' });
+	public authService = inject(AuthService);
 
-  public activeLinks = computed(() =>
-    this.isHomePage() ? HOME_PAGE_LINKS : DASHBOARD_LINKS
-  ); 
+	public activeLinks = computed(() =>
+		this.isHomePage() ? HOME_PAGE_LINKS : DASHBOARD_LINKS,
+	);
 
-  isMobileMenuOpened = signal(false);
+	isMobileMenuOpened = signal(false);
 
-  mobileMenuToggle() {
-    this.isMobileMenuOpened.update((opened) => !opened);
-  }
+	mobileMenuToggle() {
+		this.isMobileMenuOpened.update((opened) => !opened);
+	}
 
-  openUserProfile() {
-    this.dialog().subscribe();
-  }
-
+	openUserProfile() {
+		this.dialog().subscribe();
+	}
 }

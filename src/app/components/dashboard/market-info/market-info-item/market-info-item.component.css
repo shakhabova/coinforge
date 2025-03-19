@@ -1,29 +1,29 @@
 :host {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  align-self: stretch;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	align-self: stretch;
 }
 
 .left-side {
-  display: flex;
-  align-items: center;
-  gap: 16px;
+	display: flex;
+	align-items: center;
+	gap: 16px;
 }
 
 .left-side img {
-  width: 40px;
-  height: 40px;
+	width: 40px;
+	height: 40px;
 }
 
 .right-side {
-  text-align: right;
+	text-align: right;
 }
 
 .subtitle {
-  color: #6F6F6F;
+	color: #6f6f6f;
 }
 
 .subtitle.rate {
-  text-wrap-mode: nowrap;
+	text-wrap-mode: nowrap;
 }

@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
 
 @Component({
-  selector: 'app-about-us',
-  standalone: true,
-  imports: [],
-  templateUrl: './about-us.component.html',
-  styleUrl: './about-us.component.css'
+	selector: 'app-about-us',
+	imports: [],
+	templateUrl: './about-us.component.html',
+	styleUrl: './about-us.component.css',
 })
-export class AboutUsComponent {
-
-}
+export class AboutUsComponent {}

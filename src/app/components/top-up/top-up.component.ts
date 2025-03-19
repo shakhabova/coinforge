@@ -9,62 +9,62 @@ import { WalletDto, WalletsService } from 'services/wallets.service';
 import QRCode from 'qrcode';
 
 @Component({
-  selector: 'app-top-up',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    SelectListComponent,
-    TuiIcon,
-  ],
-  templateUrl: './top-up.component.html',
-  styleUrl: './top-up.component.css'
+	selector: 'app-top-up',
+	imports: [AsyncPipe, SelectListComponent, TuiIcon],
+	templateUrl: './top-up.component.html',
+	styleUrl: './top-up.component.css',
 })
 export class TopUpComponent {
-  private walletService = inject(WalletsService);
-  private currenciesService = inject(CurrenciesService);
+	private walletService = inject(WalletsService);
+	private currenciesService = inject(CurrenciesService);
 
-  selected = model<WalletDto | null>(null);
-  phase = signal<'select' | 'qr'>('select');
-  qrDataUrl = signal<string | null>(null);
-  title = computed(() => this.phase() === 'select' ? 'Top-up with crypto': 'Receive crypto');
+	selected = model<WalletDto | null>(null);
+	phase = signal<'select' | 'qr'>('select');
+	qrDataUrl = signal<string | null>(null);
+	title = computed(() =>
+		this.phase() === 'select' ? 'Top-up with crypto' : 'Receive crypto',
+	);
 
-  protected readonly wallets$ = this.walletService.getWallets({
-    statusIn: ['ACTIVE'],
-    size: 2000,
-    page: 0,
-  }).pipe(map(data => data.data))
+	protected readonly wallets$ = this.walletService
+		.getWallets({
+			statusIn: ['ACTIVE'],
+			size: 2000,
+			page: 0,
+		})
+		.pipe(map((data) => data.data));
 
-  
-  @tuiPure
-  getCryptoIcon(crypto?: string): Observable<string> {
-    if (!crypto) return of('');
+	@tuiPure
+	getCryptoIcon(crypto?: string): Observable<string> {
+		if (!crypto) return of('');
 
-    return this.currenciesService.getCurrencyLinkUrl(crypto);
-  }
+		return this.currenciesService.getCurrencyLinkUrl(crypto);
+	}
 
-  @tuiPure
-  getCryptoName(crypto?: string): Observable<string> {
-    if (!crypto) return of('');
+	@tuiPure
+	getCryptoName(crypto?: string): Observable<string> {
+		if (!crypto) return of('');
 
-    return this.currenciesService.getCurrencyName(crypto);
-  }
+		return this.currenciesService.getCurrencyName(crypto);
+	}
 
-  async onContinue() {
-    const selected = this.selected();
-    if (!selected) {
-      return;
-    }
+	async onContinue() {
+		const selected = this.selected();
+		if (!selected) {
+			return;
+		}
 
-    this.qrDataUrl.set(await QRCode.toDataURL(selected.trxAddress, { margin: 0, width: 200 }));
-    this.phase.set('qr');
-  }
+		this.qrDataUrl.set(
+			await QRCode.toDataURL(selected.trxAddress, { margin: 0, width: 200 }),
+		);
+		this.phase.set('qr');
+	}
 
-  copyAddress() {
-    navigator.clipboard.writeText(this.selected()?.trxAddress!);
-  }
+	copyAddress() {
+		navigator.clipboard.writeText(this.selected()?.trxAddress!);
+	}
 
-  toSelectPhase() {
-    this.selected.set(null);
-    this.phase.set('select');
-  }
+	toSelectPhase() {
+		this.selected.set(null);
+		this.phase.set('select');
+	}
 }

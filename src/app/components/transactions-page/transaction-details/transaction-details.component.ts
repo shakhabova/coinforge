@@ -12,46 +12,52 @@ import { DatePipe } from '@angular/common';
 import html2canvas from 'html2canvas';
 
 @Component({
-  selector: 'app-transaction-details',
-  standalone: true,
-  imports: [
-    TransactionStatusChipComponent,
-    CopyIconComponent,
-    DatePipe,
-    TuiIcon
-],
-  templateUrl: './transaction-details.component.html',
-  styleUrl: './transaction-details.component.scss',
+	selector: 'app-transaction-details',
+	imports: [
+		TransactionStatusChipComponent,
+		CopyIconComponent,
+		DatePipe,
+		TuiIcon,
+	],
+	templateUrl: './transaction-details.component.html',
+	styleUrl: './transaction-details.component.scss',
 })
 export class TransactionDetailsComponent {
-  private cryptocurrenciesService = inject(CurrenciesService);
-  public readonly context = injectContext<TuiDialogContext<void, TransactionDto>>();
-  
-  transaction = signal<TransactionDto>({} as unknown as TransactionDto);
-  scanUrl = signal('');
-  screenshotIsTaking = signal(false);
+	private cryptocurrenciesService = inject(CurrenciesService);
+	public readonly context =
+		injectContext<TuiDialogContext<void, TransactionDto>>();
 
-  isOutTransaction = computed(() => ['CSTD_OUT', 'C2F'].includes(this.transaction().type));
-  displayToWallet = computed(() => ['CSTD_OUT', 'CSTD_IN'].includes(this.transaction().type));
+	transaction = signal<TransactionDto>({} as unknown as TransactionDto);
+	scanUrl = signal('');
+	screenshotIsTaking = signal(false);
 
-  ngOnInit(){
-    this.transaction.set(this.context.data)
-    this.cryptocurrenciesService
-        .getCryptoInfo(this.transaction().cryptocurrency)
-        .pipe(map((info) => info?.scanUrl))
-        .subscribe(scanUrl=>this.scanUrl.set(scanUrl ?? ''))
-  }
+	isOutTransaction = computed(() =>
+		['CSTD_OUT', 'C2F'].includes(this.transaction().type),
+	);
+	displayToWallet = computed(() =>
+		['CSTD_OUT', 'CSTD_IN'].includes(this.transaction().type),
+	);
 
-  async download() {
-    this.screenshotIsTaking.set(true);
-    setTimeout(async () => {
-      const canvas = await html2canvas(document.querySelector('.screenshot-wrapper')!);
-      const imageBase64 = canvas.toDataURL('image/png');
-      const a = document.createElement('a');
-      a.href = imageBase64;
-      a.download = 'transaction.png';
-      a.click();
-      this.screenshotIsTaking.set(false);
-    }, 0);
-  }
+	ngOnInit() {
+		this.transaction.set(this.context.data);
+		this.cryptocurrenciesService
+			.getCryptoInfo(this.transaction().cryptocurrency)
+			.pipe(map((info) => info?.scanUrl))
+			.subscribe((scanUrl) => this.scanUrl.set(scanUrl ?? ''));
+	}
+
+	async download() {
+		this.screenshotIsTaking.set(true);
+		setTimeout(async () => {
+			const canvas = await html2canvas(
+				document.querySelector('.screenshot-wrapper')!,
+			);
+			const imageBase64 = canvas.toDataURL('image/png');
+			const a = document.createElement('a');
+			a.href = imageBase64;
+			a.download = 'transaction.png';
+			a.click();
+			this.screenshotIsTaking.set(false);
+		}, 0);
+	}
 }

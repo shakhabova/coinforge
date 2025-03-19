@@ -1,8 +1,8 @@
 <div class="h4-heading">{{ title() }}</div>
 
-@if (phase() === 'select') {
+@if (phase() === 'from') {
 <div class="text-sm w400 subtitle u-mar-bottom-32">
-  Choose a wallet to top up
+  Choose one of the active wallet
 </div>
 
 <app-select-list
@@ -33,21 +33,15 @@
 >
   Continue
 </button>
-} @else if (phase() === 'qr') {
-  <div class="qr-wrapper">
-    <img [src]="qrDataUrl()" width="200" />
+} @else if (phase() === 'to') {
+<button
+  class="button secondary m"
+  (click)="onNext()"
+>
+  Next
+</button>
 
-    <div class="u-row-middle u-mar-top-16">
-      <div class="address-text text-l w600">{{ selected()?.trxAddress }}</div>
-      <tui-icon
-        icon="@tui.clipboard-copy"
-        (click)="copyAddress()"
-        class="copy-icon"
-      ></tui-icon>
-    </div>
-  </div>
-
-<button class="button secondary m" (click)="toSelectPhase()">
+<button class="button secondary m" (click)="backToFromPhase()">
   <tui-icon icon="@tui.arrow-left"></tui-icon>
   <span>Back</span>
 </button>

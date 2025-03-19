@@ -7,30 +7,29 @@ import { filter } from 'rxjs';
 import { HOME_PAGE_LINKS } from 'components/header/constants';
 
 @Component({
-  selector: 'app-layout',
-  standalone: true,
-  imports: [RouterModule, HeaderComponent, FooterComponent],
-  templateUrl: './layout.component.html',
-  styleUrl: './layout.component.css',
+	selector: 'app-layout',
+	imports: [RouterModule, HeaderComponent, FooterComponent],
+	templateUrl: './layout.component.html',
+	styleUrl: './layout.component.css',
 })
 export class LayoutComponent {
-  private router = inject(Router);
-  public configService = inject(ConfigService);
+	private router = inject(Router);
+	public configService = inject(ConfigService);
 
-  public isHomePage = signal(true);
-  ngOnInit() {
-    this.router.events
-      .pipe(filter((event) => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.updateIsHomePage();
-      });
+	public isHomePage = signal(true);
+	ngOnInit() {
+		this.router.events
+			.pipe(filter((event) => event instanceof NavigationEnd))
+			.subscribe(() => {
+				this.updateIsHomePage();
+			});
 
-    this.updateIsHomePage();
-  }
+		this.updateIsHomePage();
+	}
 
-  private updateIsHomePage(): void {
-    this.isHomePage.set(
-      HOME_PAGE_LINKS.some((link) => this.router.url.endsWith(link.routerLink))
-    );
-  }
+	private updateIsHomePage(): void {
+		this.isHomePage.set(
+			HOME_PAGE_LINKS.some((link) => this.router.url.endsWith(link.routerLink)),
+		);
+	}
 }

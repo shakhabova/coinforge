@@ -1,8 +1,15 @@
-import { Component, computed, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import {
+	Component,
+	computed,
+	DestroyRef,
+	inject,
+	OnInit,
+	signal,
+} from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
-  TransactionDto,
-  TransactionsService,
+	TransactionDto,
+	TransactionsService,
 } from 'services/transactions.service';
 import { groupBy, sortBy } from 'lodash-es';
 import { enUS } from 'date-fns/locale/en-US';
@@ -11,90 +18,91 @@ import { TransactionItemComponent } from './transaction-item/transaction-item.co
 import { finalize } from 'rxjs';
 
 interface DayTransactionsModel {
-  title: string;
-  sortData: string;
-  items: TransactionDto[];
+	title: string;
+	sortData: string;
+	items: TransactionDto[];
 }
 
 @Component({
-  selector: 'app-transactions',
-  standalone: true,
-  imports: [TransactionItemComponent],
-  templateUrl: './transactions.component.html',
-  styleUrl: './transactions.component.scss',
+	selector: 'app-transactions',
+	imports: [TransactionItemComponent],
+	templateUrl: './transactions.component.html',
+	styleUrl: './transactions.component.scss',
 })
 export class TransactionsComponent implements OnInit {
-  private transactionsService = inject(TransactionsService);
-  private destroyRef = inject(DestroyRef);
+	private transactionsService = inject(TransactionsService);
+	private destroyRef = inject(DestroyRef);
 
-  protected loading = signal(false);
-  protected hasError = signal(false);
+	protected loading = signal(false);
+	protected hasError = signal(false);
 
-  protected displayEmpty = computed(() => !this.loading() && !this.hasError() && !this.daysGroups?.length);
-  protected displayError = computed(() => !this.loading() && this.hasError());
+	protected displayEmpty = computed(
+		() => !this.loading() && !this.hasError() && !this.daysGroups?.length,
+	);
+	protected displayError = computed(() => !this.loading() && this.hasError());
 
-  protected daysGroups: DayTransactionsModel[] = [];
+	protected daysGroups: DayTransactionsModel[] = [];
 
-  ngOnInit(): void {
-    this.loading.set(true);
-    this.hasError.set(false);
+	ngOnInit(): void {
+		this.loading.set(true);
+		this.hasError.set(false);
 
-    this.transactionsService
-      .getTransactions({ size: 3 })
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loading.set(false))
-      )
-      .subscribe({
-        next: (transactions) => {
-          if (!transactions.data?.length) {
-            this.daysGroups = [];
-          }
+		this.transactionsService
+			.getTransactions({ size: 3 })
+			.pipe(
+				takeUntilDestroyed(this.destroyRef),
+				finalize(() => this.loading.set(false)),
+			)
+			.subscribe({
+				next: (transactions) => {
+					if (!transactions.data?.length) {
+						this.daysGroups = [];
+					}
 
-          this.mapTransactionsData(transactions.data);
-        },
-        error: (err) => {
-          this.hasError.set(true);
-          // TODO handle transactions error
-        },
-      });
-  }
+					this.mapTransactionsData(transactions.data);
+				},
+				error: (err) => {
+					this.hasError.set(true);
+					// TODO handle transactions error
+				},
+			});
+	}
 
-  private mapTransactionsData(transactions: TransactionDto[]): void {
-    const withDayDict = groupBy(
-      transactions.map((tr) => ({
-        ...tr,
-        dayTitle: getDayTitle(tr.createdAt),
-      })),
-      'dayTitle'
-    );
-    this.daysGroups = sortBy(
-      Object.entries(withDayDict).map((entry) => ({
-        title: entry[0],
-        items: entry[1],
-        sortData: entry[1][0].createdAt,
-      })),
-      'sortData'
-    ).reverse();
-  }
+	private mapTransactionsData(transactions: TransactionDto[]): void {
+		const withDayDict = groupBy(
+			transactions.map((tr) => ({
+				...tr,
+				dayTitle: getDayTitle(tr.createdAt),
+			})),
+			'dayTitle',
+		);
+		this.daysGroups = sortBy(
+			Object.entries(withDayDict).map((entry) => ({
+				title: entry[0],
+				items: entry[1],
+				sortData: entry[1][0].createdAt,
+			})),
+			'sortData',
+		).reverse();
+	}
 }
 
 function getDayTitle(date: string): 'Today' | 'Yesterday' | string {
-  const formatRelativeLocale = {
-    lastWeek: 'dd MMM',
-    yesterday: "'Yesterday'",
-    today: "'Today'",
-    tomorrow: 'dd MMM',
-    nextWeek: 'dd MMM',
-    other: 'dd MMM',
-  };
+	const formatRelativeLocale = {
+		lastWeek: 'dd MMM',
+		yesterday: "'Yesterday'",
+		today: "'Today'",
+		tomorrow: 'dd MMM',
+		nextWeek: 'dd MMM',
+		other: 'dd MMM',
+	};
 
-  const options: FormatRelativeOptions = {
-    locale: {
-      ...enUS,
-      formatRelative: (token) => formatRelativeLocale[token],
-    },
-  };
+	const options: FormatRelativeOptions = {
+		locale: {
+			...enUS,
+			formatRelative: (token) => formatRelativeLocale[token],
+		},
+	};
 
-  return formatRelative(new Date(date), new Date(), options);
+	return formatRelative(new Date(date), new Date(), options);
 }

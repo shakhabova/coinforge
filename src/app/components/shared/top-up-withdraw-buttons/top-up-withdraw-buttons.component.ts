@@ -2,25 +2,22 @@ import { Component, input } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 
 @Component({
-  selector: 'app-top-up-withdraw-buttons',
-  standalone: true,
-  imports: [
-    TuiIcon
-  ],
-  templateUrl: './top-up-withdraw-buttons.component.html',
-  styleUrl: './top-up-withdraw-buttons.component.css',
-  host: {
-    '[class.full-width]': 'fullWidth()'
-  }
+	selector: 'app-top-up-withdraw-buttons',
+	imports: [TuiIcon],
+	templateUrl: './top-up-withdraw-buttons.component.html',
+	styleUrl: './top-up-withdraw-buttons.component.css',
+	host: {
+		'[class.full-width]': 'fullWidth()',
+	},
 })
 export class TopUpWithdrawButtonsComponent {
-  fullWidth = input<boolean>(false);
+	fullWidth = input<boolean>(false);
 
-  topUp() {
-    // TODO implement top up
-  }
+	topUp() {
+		// TODO implement top up
+	}
 
-  withdraw() {
-    // TODO implement withdraw
-  }
+	withdraw() {
+		// TODO implement withdraw
+	}
 }

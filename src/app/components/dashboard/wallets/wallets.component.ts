@@ -1,13 +1,13 @@
 import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  effect,
-  inject,
-  OnInit,
-  signal,
-  WritableSignal,
+	ChangeDetectionStrategy,
+	Component,
+	computed,
+	DestroyRef,
+	effect,
+	inject,
+	OnInit,
+	signal,
+	WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { filter, finalize, from } from 'rxjs';
@@ -20,86 +20,85 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateWalletModalComponent } from 'components/wallets-page/create-wallet-modal/create-wallet-modal.component';
 
 @Component({
-  selector: 'app-wallets',
-  standalone: true,
-  imports: [WalletCardComponent, TuiIcon, SlicePipe],
-  templateUrl: './wallets.component.html',
-  styleUrl: './wallets.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+	selector: 'app-wallets',
+	imports: [WalletCardComponent, TuiIcon, SlicePipe],
+	templateUrl: './wallets.component.html',
+	styleUrl: './wallets.component.scss',
+	changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WalletsComponent implements OnInit {
-  private walletsService = inject(WalletsService);
-  private destroyRef = inject(DestroyRef);
-  private configService = inject(ConfigService);
-  
-  private createWalletDialog = tuiDialog(CreateWalletModalComponent);
+	private walletsService = inject(WalletsService);
+	private destroyRef = inject(DestroyRef);
+	private configService = inject(ConfigService);
 
-  pageSize = computed(() => (this.configService.isMobile() ? 2 : 4));
-  wallets: WritableSignal<WalletDto[]> = signal([]);
-  isLoading = signal(false);
-  hasError = signal(false);
-  step = signal(0);
-  maxPages = computed(() =>
-    Math.floor(this.wallets().length / this.pageSize())
-  );
-  showNextStepBtn = computed(() => this.sliceEnd() < this.wallets().length);
+	private createWalletDialog = tuiDialog(CreateWalletModalComponent);
 
-  sliceStart = computed(() => {
-    if (this.step() === 0) {
-      return 0;
-    }
-    return this.step() * this.pageSize() - 1;
-  });
+	pageSize = computed(() => (this.configService.isMobile() ? 2 : 4));
+	wallets: WritableSignal<WalletDto[]> = signal([]);
+	isLoading = signal(false);
+	hasError = signal(false);
+	step = signal(0);
+	maxPages = computed(() =>
+		Math.floor(this.wallets().length / this.pageSize()),
+	);
+	showNextStepBtn = computed(() => this.sliceEnd() < this.wallets().length);
 
-  sliceEnd = computed(() => {
-    if (this.step() === 0) {
-      return this.configService.isMobile() ? 1 : 3;
-    }
+	sliceStart = computed(() => {
+		if (this.step() === 0) {
+			return 0;
+		}
+		return this.step() * this.pageSize() - 1;
+	});
 
-    return this.sliceStart() + this.pageSize();
-  });
+	sliceEnd = computed(() => {
+		if (this.step() === 0) {
+			return this.configService.isMobile() ? 1 : 3;
+		}
 
-  constructor() {
-    toObservable(this.configService.isMobile)
-      .pipe(takeUntilDestroyed(this.destroyRef))
-      .subscribe(() => this.step.set(0));
-  }
+		return this.sliceStart() + this.pageSize();
+	});
 
-  ngOnInit(): void {
-    this.loadWallets();
-  }
+	constructor() {
+		toObservable(this.configService.isMobile)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe(() => this.step.set(0));
+	}
 
-  createWallet() {
-    this.createWalletDialog()
-      .pipe(
-        filter((toUpdate) => !!toUpdate),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe(() => {
-        this.loadWallets();
-      });
-  }
+	ngOnInit(): void {
+		this.loadWallets();
+	}
 
-  seeAll() {
-    // TODO see all
-  }
+	createWallet() {
+		this.createWalletDialog()
+			.pipe(
+				filter((toUpdate) => !!toUpdate),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe(() => {
+				this.loadWallets();
+			});
+	}
 
-  private loadWallets() {
-    this.hasError.set(false);
-    this.isLoading.set(true);
-    this.walletsService
-      .getWalletsForDashboard()
-      .pipe(
-        finalize(() => this.isLoading.set(false)),
-        takeUntilDestroyed(this.destroyRef)
-      )
-      .subscribe({
-        next: (wallets) => this.wallets.set(wallets),
-        error: (err) => {
-          // TODO check wallets error and empty
-          this.hasError.set(true);
-          console.error(err);
-        },
-      });
-  }
+	seeAll() {
+		// TODO see all
+	}
+
+	private loadWallets() {
+		this.hasError.set(false);
+		this.isLoading.set(true);
+		this.walletsService
+			.getWalletsForDashboard()
+			.pipe(
+				finalize(() => this.isLoading.set(false)),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: (wallets) => this.wallets.set(wallets),
+				error: (err) => {
+					// TODO check wallets error and empty
+					this.hasError.set(true);
+					console.error(err);
+				},
+			});
+	}
 }

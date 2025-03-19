@@ -1,26 +1,26 @@
-import { NG_EVENT_PLUGINS } from "@taiga-ui/event-plugins";
-import { provideAnimations } from "@angular/platform-browser/animations";
+import { NG_EVENT_PLUGINS } from '@taiga-ui/event-plugins';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { providePrimeNG } from 'primeng/config';
 
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
-import { provideHttpClient, withInterceptors } from "@angular/common/http";
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import Aura from '@primeng/themes/aura';
-import { authInterceptor } from "interceptors/auth-interceptor.service";
+import { authInterceptor } from 'interceptors/auth-interceptor.service';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideAnimations(),
-    provideRouter(routes, withComponentInputBinding()), 
-    provideAnimationsAsync('noop'), 
-    NG_EVENT_PLUGINS, 
-    provideHttpClient(withInterceptors([authInterceptor])),
-    providePrimeNG({
-      theme: {
-        preset: Aura,
-      },
-    }),
-  ]
+	providers: [
+		provideAnimations(),
+		provideRouter(routes, withComponentInputBinding()),
+		provideAnimationsAsync('noop'),
+		NG_EVENT_PLUGINS,
+		provideHttpClient(withInterceptors([authInterceptor])),
+		providePrimeNG({
+			theme: {
+				preset: Aura,
+			},
+		}),
+	],
 };

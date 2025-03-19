@@ -5,39 +5,39 @@ import { MfaStatus } from './login-api.service';
 import { ConfigService } from './config.service';
 
 export interface UserInfoDto {
-  id: number;
-  firstName: string;
-  lastName: string;
-  email: string;
-  phoneNumber: string;
-  country: string;
-  city: string;
-  zipCode: string;
-  address: string;
-  status: string;
-  mfaStatus: MfaStatus;
-  role: string;
+	id: number;
+	firstName: string;
+	lastName: string;
+	email: string;
+	phoneNumber: string;
+	country: string;
+	city: string;
+	zipCode: string;
+	address: string;
+	status: string;
+	mfaStatus: MfaStatus;
+	role: string;
 }
 
 @Injectable({
-  providedIn: 'root',
+	providedIn: 'root',
 })
 export class UserService {
-  private httpClient = inject(HttpClient);
-  private configService = inject(ConfigService);
+	private httpClient = inject(HttpClient);
+	private configService = inject(ConfigService);
 
-  constructor() {}
+	constructor() {}
 
-  getInfo(): Observable<UserInfoDto> {
-    return this.httpClient
-      .get<UserInfoDto>(`${this.configService.serverUrl}/v1/users/current`)
-      .pipe(shareReplay({ bufferSize: 1, refCount: true }));
-  }
+	getInfo(): Observable<UserInfoDto> {
+		return this.httpClient
+			.get<UserInfoDto>(`${this.configService.serverUrl}/v1/users/current`)
+			.pipe(shareReplay({ bufferSize: 1, refCount: true }));
+	}
 
-  getUser(email: string): Observable<UserInfoDto> {
-    return this.httpClient.get<UserInfoDto>(
-      `${this.configService.serverUrl}/v1/internal/users`,
-      { params: { email: decodeURIComponent(email) } }
-    );
-  }
+	getUser(email: string): Observable<UserInfoDto> {
+		return this.httpClient.get<UserInfoDto>(
+			`${this.configService.serverUrl}/v1/internal/users`,
+			{ params: { email: decodeURIComponent(email) } },
+		);
+	}
 }

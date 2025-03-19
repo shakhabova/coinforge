@@ -6,24 +6,20 @@ import { CurrenciesService } from 'services/currencies.service';
 import { WalletDto, WalletStatus } from 'services/wallets.service';
 
 @Component({
-  selector: 'app-wallet-card',
-  standalone: true,
-  imports: [
-    AsyncPipe,
-    WalletStatusChipComponent,
-    DecimalPipe
-  ],
-  templateUrl: './wallet-card.component.html',
-  styleUrl: './wallet-card.component.css'
+	selector: 'app-wallet-card',
+	imports: [AsyncPipe, WalletStatusChipComponent, DecimalPipe],
+	templateUrl: './wallet-card.component.html',
+	styleUrl: './wallet-card.component.css',
 })
 export class WalletCardComponent {
-  wallet = input.required<WalletDto>();
+	wallet = input.required<WalletDto>();
 
+	private cryptoService = inject(CurrenciesService);
 
-  private cryptoService = inject(CurrenciesService);
-
-  cryptoIcon = computed(() =>  this.cryptoService.getCurrencyLinkUrl(this.wallet().cryptocurrency));
-  cryptoName = computed(() => this.cryptoService.getCurrencyName(this.wallet().cryptocurrency))
-
-  
+	cryptoIcon = computed(() =>
+		this.cryptoService.getCurrencyLinkUrl(this.wallet().cryptocurrency),
+	);
+	cryptoName = computed(() =>
+		this.cryptoService.getCurrencyName(this.wallet().cryptocurrency),
+	);
 }
