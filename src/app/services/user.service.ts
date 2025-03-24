@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Observable, shareReplay } from 'rxjs';
-import { MfaStatus } from './login-api.service';
+import { map, type Observable, shareReplay } from 'rxjs';
+import type { MfaStatus } from './login-api.service';
 import { ConfigService } from './config.service';
 
 export interface UserInfoDto {
@@ -26,7 +26,7 @@ export class UserService {
 	private httpClient = inject(HttpClient);
 	private configService = inject(ConfigService);
 
-	constructor() {}
+	currentUserId$ = this.getInfo().pipe(map(info => info.id));
 
 	getInfo(): Observable<UserInfoDto> {
 		return this.httpClient

@@ -41,7 +41,7 @@ export class LoginApiService {
 		email: string,
 	): Observable<LoginChallengeResponse> {
 		return this.httpClient.post<LoginChallengeResponse>(
-			`${this.configService.serverUrl}/v1/auth/srp/challenge`,
+			`https://crypto-api-dev.guavapay.com/v1/auth/srp/challenge`,
 			{ email },
 		);
 	}

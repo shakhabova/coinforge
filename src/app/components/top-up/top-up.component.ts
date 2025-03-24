@@ -3,9 +3,9 @@ import { Component, computed, inject, model, signal } from '@angular/core';
 import { tuiPure } from '@taiga-ui/cdk';
 import { TuiIcon } from '@taiga-ui/core';
 import { SelectListComponent } from 'components/shared/select-list/select-list.component';
-import { map, Observable, of } from 'rxjs';
+import { map, type Observable, of } from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
-import { WalletDto, WalletsService } from 'services/wallets.service';
+import { type WalletDto, WalletsService } from 'services/wallets.service';
 import QRCode from 'qrcode';
 
 @Component({
@@ -60,7 +60,10 @@ export class TopUpComponent {
 	}
 
 	copyAddress() {
-		navigator.clipboard.writeText(this.selected()?.trxAddress!);
+		const selected = this.selected();
+		if (selected) {
+			navigator.clipboard.writeText(selected.trxAddress);
+		}
 	}
 
 	toSelectPhase() {

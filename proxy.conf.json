@@ -1,6 +1,6 @@
 {
   "/api": {
-    "target": "https://dev.coinforge.online",
+    "target": "https://crypto-api-dev.guavapay.com",
     "secure": false,
     "changeOrigin": true,
     "logLevel": "info",

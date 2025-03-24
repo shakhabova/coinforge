@@ -34,8 +34,49 @@
   Continue
 </button>
 } @else if (phase() === 'to') {
+  <div class="text-sm w400 subtitle u-mar-bottom-32">
+    You can only send to the same cryptocurrency of<br>the selected wallet
+  </div>
+
+  <ng-container [formGroup]="formGroup">
+    <label tuiLabel class="text-sm w400 u-mar-bottom-24">
+      Wallet address *
+      <tui-input
+        formControlName="address"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+      >
+        <input tuiTextfieldLegacy />
+      </tui-input>
+      <tui-error
+        formControlName="address"
+        [error]="[] | tuiFieldError | async"
+      >
+      </tui-error>
+    </label>
+
+    <label tuiLabel class="text-sm w400 u-mar-bottom-32">
+      Amount *
+      <tui-input
+        formControlName="amount"
+        tuiTextfieldSize="m"
+        [tuiTextfieldLabelOutside]="true"
+        [maskito]="amountMaskOptions()"
+        [tuiUnmaskHandler]="amountUnmask"
+      >
+        <input tuiTextfieldLegacy inputmode="numeric" />
+      </tui-input>
+      <tui-error
+        formControlName="amount"
+        [error]="[] | tuiFieldError | async"
+      >
+      </tui-error>
+    </label>
+  </ng-container>
+
 <button
-  class="button secondary m"
+  class="button secondary m u-mar-bottom-16"
+  [disabled]="formGroup.invalid"
   (click)="onNext()"
 >
   Next
@@ -46,3 +87,10 @@
   <span>Back</span>
 </button>
 }
+
+<ng-template
+  #confirmContent
+  let-context
+>
+  <div class="h4-heading u-mar-bottom-32">Are you sure you want to confirm withdraw?</div>
+</ng-template>

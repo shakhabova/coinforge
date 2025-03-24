@@ -1,17 +1,18 @@
 import { CurrencyPipe } from '@angular/common';
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, inject, type OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { tuiDialog, TuiIcon } from '@taiga-ui/core';
-import { BalanceService, TotalBalanceCurrency } from 'services/balance.service';
+import { BalanceService, type TotalBalanceCurrency } from 'services/balance.service';
 import {
 	ChooseBalanceCurrencyComponent,
-	ChooseBalanceDialogResultData,
+	type ChooseBalanceDialogResultData,
 } from './choose-balance-currency/choose-balance-currency.component';
 import { CurrentCurrencyService } from 'services/current-currency.service';
 import { TopUpComponent } from 'components/top-up/top-up.component';
 import { UserService } from 'services/user.service';
 import { switchMap } from 'rxjs';
+import { WithdrawComponent } from 'components/withdraw/withdraw.component';
 
 @Component({
 	selector: 'app-total-balance',
@@ -27,6 +28,8 @@ export class TotalBalanceComponent implements OnInit {
 	private userService = inject(UserService);
 
 	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
+	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
+
 
 	balance = signal(0);
 	currency = this.currentCurrencyService.currentCurrency;
@@ -45,7 +48,9 @@ export class TotalBalanceComponent implements OnInit {
 	}
 
 	withdraw() {
-		// TODO implement withdraw
+		this.withdrawDialog()
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe();
 	}
 
 	chooseCurrency() {

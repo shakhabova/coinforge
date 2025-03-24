@@ -1,3 +1,8 @@
+:host {
+	width: 440px;
+	display: block;
+}
+
 .crypto-icon {
 	width: 28px;
 	height: 28px;
@@ -9,7 +14,12 @@
 
 .subtitle,
 .wallet-sub-info {
-	color: #6f6f6f;
+	color: #9999A2;
+}
+
+label {
+	color: #6F6F6F;
+	display: block;
 }
 
 .button {
@@ -33,4 +43,14 @@
 	text-overflow: ellipsis;
 	display: block;
 	width: 226px;
+}
+
+tui-error {
+	font: var(--font-font-text-xs-400);
+}
+
+@media only screen and (max-width: 575px) {
+	:host {
+		width: 100%;
+	}
 }

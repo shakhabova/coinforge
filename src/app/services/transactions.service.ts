@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { map, Observable, of } from 'rxjs';
-import { PageableParams, PageableResponse } from 'models/pageable.model';
+import { map, type Observable, of, switchMap } from 'rxjs';
+import type { PageableParams, PageableResponse } from 'models/pageable.model';
+import { environment } from '../../environment/environment';
+import { UserService } from './user.service';
 
 export interface TransactionDto {
 	id: string;
@@ -43,6 +45,21 @@ export interface TransactionDto {
 	updatedAt: string;
 }
 
+export interface CreateTransactionDto {
+	cryptocurrency: string;
+	amount: number;
+	fromTrxAddress: string;
+	toTrxAddress: string;
+}
+
+interface CreateTransactionResponse {
+	id: string;
+	cryptocurrency: string;
+	amount: number;
+	fromTrxAddress: string;
+	toTrxAddress: string;
+}
+
 export interface TransactionPageableParams extends PageableParams {
 	transactionHash?: string;
 	dateFrom?: string;
@@ -58,6 +75,7 @@ export interface TransactionPageableParams extends PageableParams {
 export class TransactionsService {
 	private httpClient = inject(HttpClient);
 	private configService = inject(ConfigService);
+	private userService = inject(UserService);
 
 	getTransactions(
 		params: TransactionPageableParams,
@@ -76,6 +94,23 @@ export class TransactionsService {
 				`${this.configService.serverUrl}/v1/bff-custody/transactions?ids=${id}`,
 			)
 			.pipe(map((transactions) => transactions.data[0]));
+	}
+
+	makeTransaction(info: CreateTransactionDto): Observable<CreateTransactionResponse> {
+		return this.userService.currentUserId$.pipe(
+			switchMap((userId) => {
+				return this.httpClient.post<CreateTransactionResponse>(
+					`${this.configService.serverUrl}/v1/bff-custody/transactions`,
+					info,
+					{
+						headers: {
+							'Customer-ID': environment.customerId,
+							'User-ID': userId.toString(),
+						},
+					},
+				);
+			}),
+		);
 	}
 }
 

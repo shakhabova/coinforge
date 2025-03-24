@@ -41,9 +41,8 @@ import { getCountries } from 'libphonenumber-js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { defer, switchMap, take } from 'rxjs';
 import {
-	CreateUserRequest,
-	CreateUserResponse,
-	Gender,
+	type CreateUserResponse,
+	type Gender,
 	SignUpApiService,
 } from 'services/sign-up-api.service';
 import { DialogService } from 'services/dialog.service';
@@ -145,7 +144,7 @@ export class SignUpComponent {
 	private userWasCreated = false;
 	private userCreationResponse?: CreateUserResponse;
 
-	toGender(value: any): Gender {
+	toGender(value: unknown): Gender {
 		return value as Gender;
 	}
 
@@ -210,7 +209,7 @@ export class SignUpComponent {
 	protected readonly stringify = (code: string): string =>
 		!code
 			? ''
-			: COUNTRIES.find((country) => country.countryCodeAlpha3 === code)!.name;
+			: COUNTRIES.find((country) => country.countryCodeAlpha3 === code)?.name ?? '';
 
 	private showOTPModal(user: CreateUserResponse | null): void {
 		const otpDialog = this.dialogs.open<unknown>(
