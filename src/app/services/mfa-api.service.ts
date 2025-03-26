@@ -21,7 +21,7 @@ export class MfaApiService {
 		return this.httpClient.put<void>(
 			`${this.configService.serverUrl}/v1/internal/users/mfa-status?mfaStatus=REJECTED`,
 			null,
-			{ headers: { 'Custody-User-ID': userId.toString() } },
+			{ headers: { 'Custody-User-ID': userId?.toString() } },
 		);
 	}
 }
