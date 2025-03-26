@@ -82,7 +82,7 @@ export class AskForMfaComponent implements OnInit {
 
 	discard() {
 		this.mfaApiService
-			.rejectMfa(this.email, this.userId!)
+			.rejectMfa(this.email, 31)
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe(() => this.goToDashboard());
 	}
