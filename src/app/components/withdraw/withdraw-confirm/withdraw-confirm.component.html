@@ -1,0 +1,23 @@
+<div class="h4-heading">Are you sure you want to confirm withdraw?</div>
+
+<div class="u-row-middle u-space-between">
+  <span class="label">To wallet</span>
+  <span class="value">{{ withdrawService.formGroup.value.address }}</span>
+</div>
+
+<div class="u-row-middle u-space-between">
+  <span class="label">Amount</span>
+  <span class="value"
+    >{{ withdrawService.formGroup.value.amount }}
+    {{ withdrawService.formGroup.value.cryptocurrency }}</span
+  >
+</div>
+
+<div class="u-row-middle u-g-24">
+  <button class="button secondary m" (click)="context.completeWith(false)">
+    <tui-icon icon="@tui.arrow-left"></tui-icon>
+    Back
+  </button>
+
+  <button class="button primary m" (click)="context.completeWith(true)">Yes</button>
+</div>

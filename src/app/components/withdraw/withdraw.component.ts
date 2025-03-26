@@ -13,7 +13,7 @@ import { type WalletDto, WalletsService } from 'services/wallets.service';
 import { map, type Observable, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CurrenciesService } from 'services/currencies.service';
-import { type TuiDialogContext, TuiError, TuiIcon } from '@taiga-ui/core';
+import { tuiDialog, type TuiDialogContext, TuiDialogService, TuiError, TuiIcon } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { tuiPure } from '@taiga-ui/cdk';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -43,32 +43,9 @@ import {
 import { TransactionsService } from 'services/transactions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogService } from 'services/dialog.service';
+import { WithdrawConfirmComponent } from './withdraw-confirm/withdraw-confirm.component';
+import { WithdrawService } from './widthdraw.service';
 
-const addressPatternValidator = (regex: RegExp): ValidatorFn => {
-	return (field: AbstractControl): Validators | null => {
-		return field.value && regex.test(field.value)
-			? null
-			: {
-					other: 'Only digits and letters are allowed',
-				};
-	};
-};
-
-const amountMinValidator = (field: AbstractControl): Validators | null => {
-	return field.value && Number.parseFloat(field.value) > 0
-		? null
-		: {
-				other: 'Only valid numbers greater than 0 are allowed',
-			};
-};
-
-const amountPatternValidator = (field: AbstractControl): Validators | null => {
-	return field.value && /^[0-9]+$|^[0-9]+\.{0,1}[0-9]+$/.test(field.value)
-		? null
-		: {
-				other: 'Only valid numbers greater than 0 are allowed',
-			};
-};
 
 @Component({
 	selector: 'app-withdraw',
@@ -104,22 +81,13 @@ export class WithdrawComponent {
 	private transactionsService = inject(TransactionsService);
 	private dialogService = inject(DialogService);
 	private destroyRef = inject(DestroyRef);
-	private confirm = inject(TuiConfirmService);
+	private withdrawService = inject(WithdrawService);
 
-	private readonly context =
+	private context =
 		injectContext<TuiDialogContext<void, WalletDto | undefined>>();
 
-	formGroup = new FormBuilder().nonNullable.group({
-		address: [
-			'',
-			[
-				Validators.required,
-				addressPatternValidator(/^[A-Za-z0-9]+$/),
-				Validators.minLength(20),
-			],
-		],
-		amount: ['', [Validators.required, amountMinValidator, amountPatternValidator]],
-	});
+	formGroup = this.withdrawService.formGroup;
+
 	amountMaskOptions: Signal<MaskitoOptions> = computed(() => {
 		const postfix = this.amountPostfix();
 		return {
@@ -222,8 +190,11 @@ export class WithdrawComponent {
 	ngOnInit() {
 		if (this.context.data) {
 			this.selected.set(this.context.data);
+			this.formGroup.controls.cryptocurrency.setValue(this.context.data.cryptocurrency);
 			this.phase.set('to');
 		}
+
+		this.context = {...this.context, dismissible: false};
 	}
 
 	@tuiPure
@@ -245,6 +216,8 @@ export class WithdrawComponent {
 		if (!selected) {
 			return;
 		}
+
+		this.formGroup.controls.cryptocurrency.setValue(selected.cryptocurrency);
 
 		this.phase.set('to');
 	}
@@ -299,4 +272,9 @@ export class WithdrawComponent {
 		this.selected.set(null);
 		this.phase.set('from');
 	}
+}
+
+export function getWithdrawModal() {
+	const confirm = tuiDialog(WithdrawConfirmComponent, {closeable: false, dismissible: false});
+	return tuiDialog(WithdrawComponent, {closeable: confirm(), dismissible: confirm()});
 }

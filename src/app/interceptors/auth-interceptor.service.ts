@@ -56,7 +56,6 @@ function handleTokenExpired(
 	// Call the refresh token endpoint to get a new access token
 	return authService.refreshToken().pipe(
 		switchMap(() => {
-			debugger;
 			const newAccessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 			// Retry the original request with the new access token
 			return next(addToken(request, newAccessToken));
