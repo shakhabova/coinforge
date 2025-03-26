@@ -1,9 +1,5 @@
 import { Component } from '@angular/core';
-import {
-	MatDialog,
-	MatDialogModule,
-	MatDialogRef,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule, type MatDialogRef } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({

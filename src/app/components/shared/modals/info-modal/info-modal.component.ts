@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TuiDialogContext } from '@taiga-ui/core';
+import type { TuiDialogContext } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 
 export interface InfoModalConfig {
@@ -16,6 +16,5 @@ export interface InfoModalConfig {
 	styleUrl: './info-modal.component.css',
 })
 export class InfoModalComponent {
-	public readonly context =
-		injectContext<TuiDialogContext<void, InfoModalConfig>>();
+	public readonly context = injectContext<TuiDialogContext<void, InfoModalConfig>>();
 }

@@ -77,9 +77,7 @@ export class TransactionsService {
 	private configService = inject(ConfigService);
 	private userService = inject(UserService);
 
-	getTransactions(
-		params: TransactionPageableParams,
-	): Observable<PageableResponse<TransactionDto>> {
+	getTransactions(params: TransactionPageableParams): Observable<PageableResponse<TransactionDto>> {
 		return of({
 			data: mockData,
 			pageNumber: 0,
@@ -90,9 +88,7 @@ export class TransactionsService {
 	}
 	getSingleTransaction(id: string): Observable<TransactionDto> {
 		return this.httpClient
-			.get<PageableResponse<TransactionDto>>(
-				`${this.configService.serverUrl}/v1/bff-custody/transactions?ids=${id}`,
-			)
+			.get<PageableResponse<TransactionDto>>(`${this.configService.serverUrl}/v1/bff-custody/transactions?ids=${id}`)
 			.pipe(map((transactions) => transactions.data[0]));
 	}
 
@@ -140,8 +136,7 @@ const mockData: TransactionDto[] = [
 		transactionId: 505,
 		transactionFee: null,
 		gasPrice: null,
-		transactionHash:
-			'0x173e10397ac8dfccc460c066ac4d1fba04830f38ccc82b8d1720470eab942708',
+		transactionHash: '0x173e10397ac8dfccc460c066ac4d1fba04830f38ccc82b8d1720470eab942708',
 		trxStatus: 'CONFIRMED',
 		statusDescription: null,
 		cryptocurrency: 'ARB',
@@ -179,8 +174,7 @@ const mockData: TransactionDto[] = [
 		transactionId: 505,
 		transactionFee: null,
 		gasPrice: null,
-		transactionHash:
-			'0x173e10397ac8dfccc460c066ac4d1fba04830f38ccc82b8d1720470eab942708',
+		transactionHash: '0x173e10397ac8dfccc460c066ac4d1fba04830f38ccc82b8d1720470eab942708',
 		trxStatus: 'CONFIRMED',
 		statusDescription: null,
 		cryptocurrency: 'ARB',
@@ -218,8 +212,7 @@ const mockData: TransactionDto[] = [
 		transactionId: 505,
 		transactionFee: null,
 		gasPrice: null,
-		transactionHash:
-			'0x173e10397ac8dfccc460c066ac4d1fba04830f38ccc82b8d1720470eab942708',
+		transactionHash: '0x173e10397ac8dfccc460c066ac4d1fba04830f38ccc82b8d1720470eab942708',
 		trxStatus: 'CONFIRMED',
 		statusDescription: null,
 		cryptocurrency: 'ARB',

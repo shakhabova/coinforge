@@ -1,19 +1,9 @@
-import {
-	Component,
-	computed,
-	DestroyRef,
-	inject,
-	OnInit,
-	signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, inject, type OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import {
-	TransactionDto,
-	TransactionsService,
-} from 'services/transactions.service';
+import { type TransactionDto, TransactionsService } from 'services/transactions.service';
 import { groupBy, sortBy } from 'lodash-es';
 import { enUS } from 'date-fns/locale/en-US';
-import { formatRelative, FormatRelativeOptions } from 'date-fns';
+import { formatRelative, type FormatRelativeOptions } from 'date-fns';
 import { TransactionItemComponent } from './transaction-item/transaction-item.component';
 import { finalize } from 'rxjs';
 
@@ -36,9 +26,7 @@ export class TransactionsComponent implements OnInit {
 	protected loading = signal(false);
 	protected hasError = signal(false);
 
-	protected displayEmpty = computed(
-		() => !this.loading() && !this.hasError() && !this.daysGroups?.length,
-	);
+	protected displayEmpty = computed(() => !this.loading() && !this.hasError() && !this.daysGroups?.length);
 	protected displayError = computed(() => !this.loading() && this.hasError());
 
 	protected daysGroups: DayTransactionsModel[] = [];

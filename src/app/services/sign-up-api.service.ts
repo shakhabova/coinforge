@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable, of, switchMap } from 'rxjs';
-import { ConfigService } from './config.service';
-import { SrpClientService } from './srp-client.service';
+import type { HttpClient } from '@angular/common/http';
+import { type Observable, of, switchMap } from 'rxjs';
+import type { ConfigService } from './config.service';
+import type { SrpClientService } from './srp-client.service';
 import { environment } from '../../environment/environment';
 
 export interface ChallengeResponse {
@@ -63,10 +63,7 @@ export class SignUpApiService {
 	) {}
 
 	generateVerifierAndSalt(email: string): Observable<ChallengeResponse> {
-		return this.httpClient.post<ChallengeResponse>(
-			`${this.configService.serverUrl}/v1/auth/srp/challenge`,
-			{ email },
-		);
+		return this.httpClient.post<ChallengeResponse>(`${this.configService.serverUrl}/v1/auth/srp/challenge`, { email });
 	}
 
 	createUser(user: UserBaseModel): Observable<CreateUserResponse> {
@@ -76,11 +73,7 @@ export class SignUpApiService {
 				const srpClient = this.srpClientService.srpClient();
 
 				userReq.salt = challenge.salt;
-				userReq.verifier = srpClient.generateVerifier(
-					challenge.salt,
-					user.email,
-					user.password,
-				);
+				userReq.verifier = srpClient.generateVerifier(challenge.salt, user.email, user.password);
 				return this.httpClient.post<CreateUserResponse>(
 					`${this.configService.serverUrl}/v1/users/registration`,
 					userReq,
@@ -91,16 +84,10 @@ export class SignUpApiService {
 	}
 
 	resendOTP(email: string): Observable<void> {
-		return this.httpClient.post<void>(
-			`${this.configService.serverUrl}/v1/users/registration/otp/resend`,
-			{ email },
-		);
+		return this.httpClient.post<void>(`${this.configService.serverUrl}/v1/users/registration/otp/resend`, { email });
 	}
 
 	validateOTP(req: ValidateOTPRequest): Observable<void> {
-		return this.httpClient.post<void>(
-			`${this.configService.serverUrl}/v1/users/registration/otp/validate`,
-			req,
-		);
+		return this.httpClient.post<void>(`${this.configService.serverUrl}/v1/users/registration/otp/validate`, req);
 	}
 }

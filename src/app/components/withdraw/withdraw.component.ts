@@ -1,13 +1,4 @@
-import {
-	Component,
-	computed,
-	DestroyRef,
-	inject,
-	linkedSignal,
-	model,
-	type Signal,
-	signal,
-} from '@angular/core';
+import { Component, computed, DestroyRef, inject, linkedSignal, model, type Signal, signal } from '@angular/core';
 import { SelectListComponent } from '../shared/select-list/select-list.component';
 import { type WalletDto, WalletsService } from 'services/wallets.service';
 import { map, type Observable, of } from 'rxjs';
@@ -17,35 +8,16 @@ import { tuiDialog, type TuiDialogContext, TuiDialogService, TuiError, TuiIcon }
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { tuiPure } from '@taiga-ui/cdk';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import {
-	type AbstractControl,
-	FormBuilder,
-	ReactiveFormsModule,
-	type ValidatorFn,
-	Validators,
-} from '@angular/forms';
-import {
-	TUI_VALIDATION_ERRORS,
-	TuiConfirmService,
-	TuiFieldErrorPipe,
-	TuiUnmaskHandler,
-} from '@taiga-ui/kit';
+import { type AbstractControl, FormBuilder, ReactiveFormsModule, type ValidatorFn, Validators } from '@angular/forms';
+import { TUI_VALIDATION_ERRORS, TuiConfirmService, TuiFieldErrorPipe, TuiUnmaskHandler } from '@taiga-ui/kit';
 import { MaskitoDirective } from '@maskito/angular';
-import {
-	maskitoUpdateElement,
-	type MaskitoElement,
-	type MaskitoOptions,
-} from '@maskito/core';
-import {
-	maskitoCaretGuard,
-	maskitoPostfixPostprocessorGenerator,
-} from '@maskito/kit';
+import { maskitoUpdateElement, type MaskitoElement, type MaskitoOptions } from '@maskito/core';
+import { maskitoCaretGuard, maskitoPostfixPostprocessorGenerator } from '@maskito/kit';
 import { TransactionsService } from 'services/transactions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogService } from 'services/dialog.service';
 import { WithdrawConfirmComponent } from './withdraw-confirm/withdraw-confirm.component';
 import { WithdrawService } from './widthdraw.service';
-
 
 @Component({
 	selector: 'app-withdraw',
@@ -69,8 +41,7 @@ import { WithdrawService } from './widthdraw.service';
 			provide: TUI_VALIDATION_ERRORS,
 			useValue: {
 				required: 'Value is required',
-				minlength:
-					'A wallet address must be a minimum of 20 characters in length',
+				minlength: 'A wallet address must be a minimum of 20 characters in length',
 			},
 		},
 	],
@@ -83,8 +54,7 @@ export class WithdrawComponent {
 	private destroyRef = inject(DestroyRef);
 	private withdrawService = inject(WithdrawService);
 
-	private context =
-		injectContext<TuiDialogContext<void, WalletDto | undefined>>();
+	private context = injectContext<TuiDialogContext<void, WalletDto | undefined>>();
 
 	formGroup = this.withdrawService.formGroup;
 
@@ -93,17 +63,15 @@ export class WithdrawComponent {
 		return {
 			mask: ({ value }) => {
 				let isDotUsed = false;
-				const digitsMask = Array.from(value.replaceAll(postfix, '')).map(
-					(char) => {
-						if (char === this.decimalPointChar) {
-							if (!isDotUsed) {
-								isDotUsed = true;
-								return /\./;
-							}
+				const digitsMask = Array.from(value.replaceAll(postfix, '')).map((char) => {
+					if (char === this.decimalPointChar) {
+						if (!isDotUsed) {
+							isDotUsed = true;
+							return /\./;
 						}
-						return /\d/;
-					},
-				);
+					}
+					return /\d/;
+				});
 
 				if (!digitsMask.length) {
 					return [/[\d\.]/];
@@ -136,10 +104,7 @@ export class WithdrawComponent {
 				maskitoCaretGuard((value) => [0, value.length - postfix.length]),
 				(element: MaskitoElement) => {
 					const blurHandler = () => {
-						const valueWithoutPostfix = element.value.substring(
-							0,
-							element.value.length - postfix.length,
-						);
+						const valueWithoutPostfix = element.value.substring(0, element.value.length - postfix.length);
 
 						if (element.value.startsWith(this.decimalPointChar)) {
 							maskitoUpdateElement(element, `0${element.value}`);
@@ -170,10 +135,8 @@ export class WithdrawComponent {
 
 	selected = model<WalletDto | null>(null);
 	phase = signal<'from' | 'to'>('from');
-	title = computed(() =>
-		this.phase() === 'from' ? 'Withdraw from' : 'Withdraw to',
-	);
-	
+	title = computed(() => (this.phase() === 'from' ? 'Withdraw from' : 'Withdraw to'));
+
 	private decimalPointChar = '.';
 
 	protected readonly wallets$ = this.walletService
@@ -184,8 +147,7 @@ export class WithdrawComponent {
 		})
 		.pipe(map((data) => data.data));
 
-	amountUnmask = (value: string) =>
-		value.substring(0, value.length - this.amountPostfix().length);
+	amountUnmask = (value: string) => value.substring(0, value.length - this.amountPostfix().length);
 
 	ngOnInit() {
 		if (this.context.data) {
@@ -194,7 +156,7 @@ export class WithdrawComponent {
 			this.phase.set('to');
 		}
 
-		this.context = {...this.context, dismissible: false};
+		this.context = { ...this.context, dismissible: false };
 	}
 
 	@tuiPure
@@ -234,26 +196,25 @@ export class WithdrawComponent {
 			return;
 		}
 
-		this.transactionsService.makeTransaction({
-			amount: Number.parseFloat(formValue.amount),
-			fromTrxAddress: selectedWallet.trxAddress,
-			toTrxAddress: formValue.address,
-			cryptocurrency: selectedWallet.cryptocurrency,
-		})
-			.pipe(
-				takeUntilDestroyed(this.destroyRef),
-			)
+		this.transactionsService
+			.makeTransaction({
+				amount: Number.parseFloat(formValue.amount),
+				fromTrxAddress: selectedWallet.trxAddress,
+				toTrxAddress: formValue.address,
+				cryptocurrency: selectedWallet.cryptocurrency,
+			})
+			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe({
 				next: () => {
 					// TODO transaction made successfully
 				},
-				error: err => {
-					switch(err.error?.code) {
+				error: (err) => {
+					switch (err.error?.code) {
 						case 'insufficient_balance':
-							this.formGroup.controls.amount.setErrors({ other: 'Insufficient balance. Please re-enter the amount'});
+							this.formGroup.controls.amount.setErrors({ other: 'Insufficient balance. Please re-enter the amount' });
 							break;
 						case 'minimum_amount_not_met':
-							this.formGroup.controls.amount.setErrors({ other: 'Selected amount should be equal or more than 1 EUR'});
+							this.formGroup.controls.amount.setErrors({ other: 'Selected amount should be equal or more than 1 EUR' });
 							break;
 						default:
 							this.dialogService
@@ -264,8 +225,8 @@ export class WithdrawComponent {
 								})
 								.subscribe();
 					}
-				}
-			})
+				},
+			});
 	}
 
 	backToFromPhase() {
@@ -275,6 +236,6 @@ export class WithdrawComponent {
 }
 
 export function getWithdrawModal() {
-	const confirm = tuiDialog(WithdrawConfirmComponent, {closeable: false, dismissible: false});
-	return tuiDialog(WithdrawComponent, {closeable: confirm(), dismissible: confirm()});
+	const confirm = tuiDialog(WithdrawConfirmComponent, { closeable: false, dismissible: false });
+	return tuiDialog(WithdrawComponent, { closeable: confirm(), dismissible: confirm() });
 }

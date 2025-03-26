@@ -21,9 +21,7 @@ export class TopUpComponent {
 	selected = model<WalletDto | null>(null);
 	phase = signal<'select' | 'qr'>('select');
 	qrDataUrl = signal<string | null>(null);
-	title = computed(() =>
-		this.phase() === 'select' ? 'Top-up with crypto' : 'Receive crypto',
-	);
+	title = computed(() => (this.phase() === 'select' ? 'Top-up with crypto' : 'Receive crypto'));
 
 	protected readonly wallets$ = this.walletService
 		.getWallets({
@@ -53,9 +51,7 @@ export class TopUpComponent {
 			return;
 		}
 
-		this.qrDataUrl.set(
-			await QRCode.toDataURL(selected.trxAddress, { margin: 0, width: 200 }),
-		);
+		this.qrDataUrl.set(await QRCode.toDataURL(selected.trxAddress, { margin: 0, width: 200 }));
 		this.phase.set('qr');
 	}
 

@@ -3,7 +3,7 @@ import { Component, computed, inject, input } from '@angular/core';
 import { WalletStatusChipComponent } from 'components/shared/wallet-status-chip/wallet-status-chip.component';
 import { map } from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
-import { WalletDto, WalletStatus } from 'services/wallets.service';
+import { type WalletDto, WalletStatus } from 'services/wallets.service';
 
 @Component({
 	selector: 'app-wallet-card',
@@ -16,10 +16,6 @@ export class WalletCardComponent {
 
 	private cryptoService = inject(CurrenciesService);
 
-	cryptoIcon = computed(() =>
-		this.cryptoService.getCurrencyLinkUrl(this.wallet().cryptocurrency),
-	);
-	cryptoName = computed(() =>
-		this.cryptoService.getCurrencyName(this.wallet().cryptocurrency),
-	);
+	cryptoIcon = computed(() => this.cryptoService.getCurrencyLinkUrl(this.wallet().cryptocurrency));
+	cryptoName = computed(() => this.cryptoService.getCurrencyName(this.wallet().cryptocurrency));
 }

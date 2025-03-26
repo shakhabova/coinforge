@@ -23,9 +23,7 @@ export class ConfigService {
 					startWith(document.body.clientWidth),
 					takeUntilDestroyed(this.destroyRef),
 				)
-				.subscribe((width) =>
-					this.ngZone.run(() => this.isMobile.set(width <= MOBILE_MAX_WIDTH)),
-				);
+				.subscribe((width) => this.ngZone.run(() => this.isMobile.set(width <= MOBILE_MAX_WIDTH)));
 		});
 	}
 }

@@ -2,13 +2,9 @@ import { Component, DestroyRef, inject, model } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TuiDialogContext, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { type TuiDialogContext, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { TuiSwitch } from '@taiga-ui/kit';
-import {
-	TuiInputComponent,
-	TuiInputModule,
-	TuiTextfieldControllerModule,
-} from '@taiga-ui/legacy';
+import { TuiInputComponent, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { AuthService } from 'services/auth.service';
 import { DialogService } from 'services/dialog.service';
@@ -16,14 +12,7 @@ import { UserService } from 'services/user.service';
 
 @Component({
 	selector: 'app-user-profile',
-	imports: [
-		TuiInputModule,
-		FormsModule,
-		TuiTextfield,
-		TuiTextfieldControllerModule,
-		TuiSwitch,
-		TuiIcon,
-	],
+	imports: [TuiInputModule, FormsModule, TuiTextfield, TuiTextfieldControllerModule, TuiSwitch, TuiIcon],
 	templateUrl: './user-profile.component.html',
 	styleUrl: './user-profile.component.css',
 })

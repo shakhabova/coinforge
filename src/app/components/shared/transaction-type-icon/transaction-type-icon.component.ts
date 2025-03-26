@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
-import { TransactionDto } from 'services/transactions.service';
+import type { TransactionDto } from 'services/transactions.service';
 
 const ICON_TYPE_MAP: Record<TransactionDto['type'], string> = {
 	IN: '@tui.arrow-down',

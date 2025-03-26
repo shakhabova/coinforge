@@ -1,32 +1,18 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { ModalCloseButtonComponent } from '../../shared/modal-close-button/modal-close-button.component';
-import {
-	TuiComboBoxModule,
-	TuiInputDateModule,
-	TuiSelectModule,
-	TuiTextfieldControllerModule,
-} from '@taiga-ui/legacy';
-import {
-	FormBuilder,
-	NonNullableFormBuilder,
-	ReactiveFormsModule,
-} from '@angular/forms';
-import {
-	TuiDataList,
-	TuiDialogContext,
-	TuiDialogService,
-	TuiDropdown,
-} from '@taiga-ui/core';
+import { TuiComboBoxModule, TuiInputDateModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
+import { FormBuilder, NonNullableFormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { TuiDataList, type TuiDialogContext, TuiDialogService, TuiDropdown } from '@taiga-ui/core';
 import { TuiFilterByInputPipe } from '@taiga-ui/kit';
-import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
+import { CurrenciesService, type CurrencyDto } from 'services/currencies.service';
 import { AsyncPipe } from '@angular/common';
-import { TuiDay, tuiPure } from '@taiga-ui/cdk';
-import { Observable, OperatorFunction } from 'rxjs';
+import { type TuiDay, tuiPure } from '@taiga-ui/cdk';
+import { type Observable, OperatorFunction } from 'rxjs';
 import { DialogRef } from '@angular/cdk/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { TransactionDto } from 'services/transactions.service';
+import type { TransactionDto } from 'services/transactions.service';
 
 export interface TransactionFilterModel {
 	dateFrom: TuiDay | null;
@@ -57,10 +43,7 @@ export class TransactionsFilterModalComponent {
 	private destroyRef = inject(DestroyRef);
 	private readonly dialogs = inject(TuiDialogService);
 
-	public readonly context =
-		injectContext<
-			TuiDialogContext<TransactionFilterModel, TransactionFilterModel>
-		>();
+	public readonly context = injectContext<TuiDialogContext<TransactionFilterModel, TransactionFilterModel>>();
 	protected formGroup = this.fb.group({
 		dateFrom: null as TuiDay | null,
 		dateTo: null as TuiDay | null,
@@ -74,9 +57,7 @@ export class TransactionsFilterModalComponent {
 	ngOnInit() {
 		this.loadCurrencies();
 		if (this.context.data) {
-			this.formGroup.patchValue(
-				this.context.data as unknown as TransactionFilterModel,
-			);
+			this.formGroup.patchValue(this.context.data as unknown as TransactionFilterModel);
 		}
 	}
 

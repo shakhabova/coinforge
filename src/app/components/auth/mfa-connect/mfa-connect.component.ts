@@ -1,11 +1,4 @@
-import {
-	Component,
-	computed,
-	inject,
-	model,
-	OnInit,
-	signal,
-} from '@angular/core';
+import { Component, computed, inject, model, type OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TuiLabel } from '@taiga-ui/core';

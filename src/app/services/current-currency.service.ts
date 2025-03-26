@@ -1,13 +1,11 @@
-import { Injectable, model, signal, WritableSignal } from '@angular/core';
-import { TotalBalanceCurrency } from './balance.service';
+import { Injectable, model, signal, type WritableSignal } from '@angular/core';
+import type { TotalBalanceCurrency } from './balance.service';
 
 @Injectable({
 	providedIn: 'root',
 })
 export class CurrentCurrencyService {
-	currentCurrency: WritableSignal<TotalBalanceCurrency> = signal(
-		this.getCurrencyFromStorage() || 'EUR',
-	);
+	currentCurrency: WritableSignal<TotalBalanceCurrency> = signal(this.getCurrencyFromStorage() || 'EUR');
 
 	public setCurrentCurrency(currency: TotalBalanceCurrency): void {
 		this.currentCurrency.set(currency);
@@ -15,8 +13,6 @@ export class CurrentCurrencyService {
 	}
 
 	private getCurrencyFromStorage(): TotalBalanceCurrency | null {
-		return localStorage.getItem(
-			'TOTAL_BALANCE_CURRENCY',
-		) as TotalBalanceCurrency;
+		return localStorage.getItem('TOTAL_BALANCE_CURRENCY') as TotalBalanceCurrency;
 	}
 }

@@ -1,8 +1,5 @@
 import { Component, DestroyRef, effect, inject } from '@angular/core';
-import {
-	MarketInfoItemComponent,
-	MarketInfoItemModel,
-} from './market-info-item/market-info-item.component';
+import { MarketInfoItemComponent, type MarketInfoItemModel } from './market-info-item/market-info-item.component';
 import { RatesService } from 'services/rates.service';
 import { CurrentCurrencyService } from 'services/current-currency.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -23,9 +20,7 @@ export class MarketInfoComponent {
 	protected infos: MarketInfoItemModel[] = [];
 
 	constructor() {
-		effect(() =>
-			this.loadMarketInfo(this.currentCurrencyService.currentCurrency()),
-		);
+		effect(() => this.loadMarketInfo(this.currentCurrencyService.currentCurrency()));
 	}
 
 	private loadMarketInfo(currentCurrency: string) {

@@ -1,5 +1,5 @@
 import { Component, input } from '@angular/core';
-import { WalletStatus } from 'services/wallets.service';
+import type { WalletStatus } from 'services/wallets.service';
 
 @Component({
 	selector: 'app-wallet-status-chip',

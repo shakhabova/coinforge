@@ -18,18 +18,14 @@ export class LayoutComponent {
 
 	public isHomePage = signal(true);
 	ngOnInit() {
-		this.router.events
-			.pipe(filter((event) => event instanceof NavigationEnd))
-			.subscribe(() => {
-				this.updateIsHomePage();
-			});
+		this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
+			this.updateIsHomePage();
+		});
 
 		this.updateIsHomePage();
 	}
 
 	private updateIsHomePage(): void {
-		this.isHomePage.set(
-			HOME_PAGE_LINKS.some((link) => this.router.url.endsWith(link.routerLink)),
-		);
+		this.isHomePage.set(HOME_PAGE_LINKS.some((link) => this.router.url.endsWith(link.routerLink)));
 	}
 }

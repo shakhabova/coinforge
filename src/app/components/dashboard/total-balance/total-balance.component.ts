@@ -30,7 +30,6 @@ export class TotalBalanceComponent implements OnInit {
 	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
 	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
 
-
 	balance = signal(0);
 	currency = this.currentCurrencyService.currentCurrency;
 
@@ -48,21 +47,18 @@ export class TotalBalanceComponent implements OnInit {
 	}
 
 	withdraw() {
-		this.withdrawDialog()
-			.pipe(takeUntilDestroyed(this.destroyRef))
-			.subscribe();
+		this.withdrawDialog().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 
 	chooseCurrency() {
-		const dialogRef = this.dialog.open<
+		const dialogRef = this.dialog.open<ChooseBalanceCurrencyComponent, unknown, ChooseBalanceDialogResultData>(
 			ChooseBalanceCurrencyComponent,
-			unknown,
-			ChooseBalanceDialogResultData
-		>(ChooseBalanceCurrencyComponent, {
-			data: {
-				currentCurrency: this.currency(),
+			{
+				data: {
+					currentCurrency: this.currency(),
+				},
 			},
-		});
+		);
 
 		dialogRef
 			.afterClosed()
@@ -90,8 +86,6 @@ export class TotalBalanceComponent implements OnInit {
 	}
 
 	private getCurrencyFromStorage(): TotalBalanceCurrency {
-		return localStorage.getItem(
-			'TOTAL_BALANCE_CURRENCY',
-		) as TotalBalanceCurrency;
+		return localStorage.getItem('TOTAL_BALANCE_CURRENCY') as TotalBalanceCurrency;
 	}
 }

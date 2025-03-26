@@ -1,15 +1,6 @@
 import { Component, DestroyRef, inject, INJECTOR, OnInit } from '@angular/core';
-import {
-	FormsModule,
-	NonNullableFormBuilder,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
-import {
-	firstNameValidator,
-	lastNameValidator,
-	passwordEqualsValidator,
-} from 'utils/validators';
+import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { firstNameValidator, lastNameValidator, passwordEqualsValidator } from 'utils/validators';
 import { CommonModule } from '@angular/common';
 import {
 	TuiComboBoxModule,
@@ -18,13 +9,7 @@ import {
 	TuiTextareaModule,
 	TuiTextfieldControllerModule,
 } from '@taiga-ui/legacy';
-import {
-	TuiDataList,
-	TuiDialogService,
-	TuiError,
-	TuiLabel,
-	TuiTextfield,
-} from '@taiga-ui/core';
+import { TuiDataList, TuiDialogService, TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import {
 	TUI_VALIDATION_ERRORS,
 	TuiDataListWrapper,
@@ -40,11 +25,7 @@ import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { getCountries } from 'libphonenumber-js';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { defer, switchMap, take } from 'rxjs';
-import {
-	type CreateUserResponse,
-	type Gender,
-	SignUpApiService,
-} from 'services/sign-up-api.service';
+import { type CreateUserResponse, type Gender, SignUpApiService } from 'services/sign-up-api.service';
 import { DialogService } from 'services/dialog.service';
 import { EmailOtpCodeComponent } from '../email-otp-code/email-otp-code.component';
 import { COUNTRIES } from 'utils/countries';
@@ -79,9 +60,7 @@ import { Router } from '@angular/router';
 	styleUrl: './sign-up.component.less',
 	providers: [
 		tuiInputPhoneInternationalOptionsProvider({
-			metadata: defer(async () =>
-				import('libphonenumber-js/max/metadata').then((m) => m.default),
-			),
+			metadata: defer(async () => import('libphonenumber-js/max/metadata').then((m) => m.default)),
 		}),
 		{
 			provide: TUI_VALIDATION_ERRORS,
@@ -110,18 +89,13 @@ export class SignUpComponent {
 		lastName: ['', [lastNameValidator(2, 100), Validators.required]],
 		gender: ['FEMALE' as Gender, [Validators.required]],
 		email: ['', [Validators.required, Validators.email]],
-		phoneNumber: [
-			'',
-			[Validators.required, Validators.minLength(7), Validators.maxLength(15)],
-		],
+		phoneNumber: ['', [Validators.required, Validators.minLength(7), Validators.maxLength(15)]],
 		password: [
 			'',
 			[
 				Validators.required,
 				Validators.minLength(6),
-				Validators.pattern(
-					/^(?=.*?[A-ZА-Я])(?=.*?[a-zа-я])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/,
-				),
+				Validators.pattern(/^(?=.*?[A-ZА-Я])(?=.*?[a-zа-я])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/),
 			],
 		],
 		repeatPassword: ['', [Validators.required, passwordEqualsValidator]],
@@ -177,12 +151,10 @@ export class SignUpComponent {
 
 					this.userWasCreated = true;
 					this.userCreationResponse = user;
-					this.formGroup.valueChanges
-						.pipe(take(1), takeUntilDestroyed(this.destroyRef))
-						.subscribe(() => {
-							this.userWasCreated = false;
-							this.userCreationResponse = undefined;
-						});
+					this.formGroup.valueChanges.pipe(take(1), takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+						this.userWasCreated = false;
+						this.userCreationResponse = undefined;
+					});
 				},
 				error: (err) => {
 					switch (err.error.status) {
@@ -207,21 +179,16 @@ export class SignUpComponent {
 	}
 
 	protected readonly stringify = (code: string): string =>
-		!code
-			? ''
-			: COUNTRIES.find((country) => country.countryCodeAlpha3 === code)?.name ?? '';
+		!code ? '' : (COUNTRIES.find((country) => country.countryCodeAlpha3 === code)?.name ?? '');
 
 	private showOTPModal(user: CreateUserResponse | null): void {
-		const otpDialog = this.dialogs.open<unknown>(
-			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
-			{
-				data: {
-					email: user?.email,
-					submitUrl: '/v1/users/registration/otp/validate',
-					id: user?.id,
-				},
+		const otpDialog = this.dialogs.open<unknown>(new PolymorpheusComponent(EmailOtpCodeComponent, this.injector), {
+			data: {
+				email: user?.email,
+				submitUrl: '/v1/users/registration/otp/validate',
+				id: user?.id,
 			},
-		);
+		});
 
 		otpDialog.subscribe((value) => {
 			if (value) {

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
-import { from, Observable, switchMap } from 'rxjs';
+import { from, type Observable, switchMap } from 'rxjs';
 import { hexStringToBigInt } from 'utils/functions';
 import { SrpClientService } from './srp-client.service';
 
@@ -37,13 +37,10 @@ export class LoginApiService {
 	private configService = inject(ConfigService);
 	private srpClientService = inject(SrpClientService);
 
-	public generateVerifierAndSalt(
-		email: string,
-	): Observable<LoginChallengeResponse> {
-		return this.httpClient.post<LoginChallengeResponse>(
-			`${this.configService.serverUrl}/v1/auth/srp/challenge`,
-			{ email },
-		);
+	public generateVerifierAndSalt(email: string): Observable<LoginChallengeResponse> {
+		return this.httpClient.post<LoginChallengeResponse>(`${this.configService.serverUrl}/v1/auth/srp/challenge`, {
+			email,
+		});
 	}
 
 	public login(value: LoginModel): Observable<AuthenticateResponse> {
@@ -62,10 +59,7 @@ export class LoginApiService {
 		);
 	}
 
-	public forceChangePassword(
-		email: string,
-		password: string,
-	): Observable<{ data: string }> {
+	public forceChangePassword(email: string, password: string): Observable<{ data: string }> {
 		return this.generateVerifierAndSalt(email).pipe(
 			switchMap((challenge) => {
 				const srpClient = this.srpClientService.srpClient();
@@ -81,13 +75,10 @@ export class LoginApiService {
 		);
 	}
 
-	public sendMfaOtpCode(
-		otp: string,
-		email: string,
-	): Observable<AuthenticateResponse> {
-		return this.httpClient.post<AuthenticateResponse>(
-			`${this.configService.serverUrl}/v1/auth/srp/check-mfa`,
-			{ otp, email },
-		);
+	public sendMfaOtpCode(otp: string, email: string): Observable<AuthenticateResponse> {
+		return this.httpClient.post<AuthenticateResponse>(`${this.configService.serverUrl}/v1/auth/srp/check-mfa`, {
+			otp,
+			email,
+		});
 	}
 }

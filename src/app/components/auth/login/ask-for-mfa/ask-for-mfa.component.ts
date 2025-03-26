@@ -1,11 +1,4 @@
-import {
-	Component,
-	DestroyRef,
-	inject,
-	INJECTOR,
-	OnInit,
-	signal,
-} from '@angular/core';
+import { Component, DestroyRef, inject, INJECTOR, type OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -34,8 +27,8 @@ export class AskForMfaComponent implements OnInit {
 	private dialogService = inject(DialogService);
 
 	protected readonly loading = signal(false);
-	private email = this.router.getCurrentNavigation()?.extras.state?.['email'];
-	private mfaQR = this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
+	private email?: string = this.router.getCurrentNavigation()?.extras.state?.['email'];
+	private mfaQR?: string = this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
 	private userId?: number;
 
 	ngOnInit(): void {
@@ -45,8 +38,7 @@ export class AskForMfaComponent implements OnInit {
 		}
 
 		this.loading.set(true);
-		this.userService
-			.getInfo()
+		this.userService.currentUser$
 			.pipe(
 				takeUntilDestroyed(this.destroyRef),
 				finalize(() => this.loading.set(false)),

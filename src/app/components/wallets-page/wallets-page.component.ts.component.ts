@@ -1,64 +1,35 @@
-import {
-	Component,
-	DestroyRef,
-	effect,
-	inject,
-	model,
-	OnInit,
-	Signal,
-	signal,
-	viewChild,
-} from '@angular/core';
+import { Component, DestroyRef, effect, inject, model, type OnInit, Signal, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule, NgModel } from '@angular/forms';
-import {
-	TuiButton,
-	TuiDataList,
-	tuiDialog,
-	TuiDropdown,
-	TuiIcon,
-	TuiSelect,
-} from '@taiga-ui/core';
-import {
-	TuiComboBoxModule,
-	TuiSelectModule,
-	TuiTextfieldControllerModule,
-} from '@taiga-ui/legacy';
+import { TuiButton, TuiDataList, tuiDialog, TuiDropdown, TuiIcon, TuiSelect } from '@taiga-ui/core';
+import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import {
 	BehaviorSubject,
 	filter,
 	finalize,
 	map,
 	mergeMap,
-	Observable,
+	type Observable,
 	scan,
 	takeUntil,
 	tap,
 	throttleTime,
 } from 'rxjs';
-import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
-import {
-	GetWalletsParams,
-	WalletDto,
-	WalletsPageableDto,
-	WalletsService,
-} from 'services/wallets.service';
+import { CurrenciesService, type CurrencyDto } from 'services/currencies.service';
+import { type GetWalletsParams, type WalletDto, WalletsPageableDto, WalletsService } from 'services/wallets.service';
 import { CreateWalletModalComponent } from './create-wallet-modal/create-wallet-modal.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { WalletStatusChipComponent } from '../shared/wallet-status-chip/wallet-status-chip.component';
 import { tuiPure } from '@taiga-ui/cdk';
 import { WalletItemOptionComponent } from './wallet-item-option/wallet-item-option.component';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { PaginatorModule, type PaginatorState } from 'primeng/paginator';
 import { TuiFilterByInputPipe } from '@taiga-ui/kit';
 import { Router, RouterModule } from '@angular/router';
 import { ConfigService } from 'services/config.service';
 import { WalletCardComponent } from '../dashboard/wallets/wallet-card/wallet-card.component';
 import { WalletInfoCardComponent } from './wallet-info-card/wallet-info-card.component';
-import {
-	CdkVirtualScrollViewport,
-	ScrollingModule,
-} from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 
 @Component({
 	selector: 'app-wallets-page.component.ts',
@@ -103,13 +74,8 @@ export class WalletsPageComponentTsComponent implements OnInit {
 	protected totalElements = signal(0);
 
 	protected wallets = signal<WalletDto[]>([]);
-	protected columns = [
-		'trxAddress',
-		'availableOprBalance',
-		'walletStatus',
-		'actions',
-	];
-	protected open: boolean = false;
+	protected columns = ['trxAddress', 'availableOprBalance', 'walletStatus', 'actions'];
+	protected open = false;
 
 	private loadBatch = new BehaviorSubject<void>(void 0);
 	public mobileWallets: Observable<WalletDto[] | undefined>;

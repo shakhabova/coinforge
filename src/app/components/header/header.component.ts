@@ -5,6 +5,7 @@ import { ConfigService } from 'services/config.service';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { AuthService } from 'services/auth.service';
 import { DASHBOARD_LINKS, HOME_PAGE_LINKS } from './constants';
+import { AsyncPipe } from '@angular/common';
 
 export interface HeaderLink {
 	routerLink: string;
@@ -14,7 +15,7 @@ export interface HeaderLink {
 
 @Component({
 	selector: 'app-header',
-	imports: [RouterModule, TuiIcon],
+	imports: [RouterModule, TuiIcon, AsyncPipe],
 	templateUrl: './header.component.html',
 	styleUrl: './header.component.css',
 })
@@ -25,9 +26,7 @@ export class HeaderComponent {
 	private dialog = tuiDialog(UserProfileComponent, { size: 'auto' });
 	public authService = inject(AuthService);
 
-	public activeLinks = computed(() =>
-		this.isHomePage() ? HOME_PAGE_LINKS : DASHBOARD_LINKS,
-	);
+	public activeLinks = computed(() => (this.isHomePage() ? HOME_PAGE_LINKS : DASHBOARD_LINKS));
 
 	isMobileMenuOpened = signal(false);
 

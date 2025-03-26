@@ -1,27 +1,12 @@
 import { Injectable } from '@angular/core';
-import {
-	type AbstractControl,
-	FormBuilder,
-	type ValidatorFn,
-	Validators,
-} from '@angular/forms';
+import { type AbstractControl, FormBuilder, type ValidatorFn, Validators } from '@angular/forms';
 
 @Injectable({ providedIn: 'root' })
 export class WithdrawService {
 	public formGroup = new FormBuilder().nonNullable.group({
-		address: [
-			'',
-			[
-				Validators.required,
-				addressPatternValidator(/^[A-Za-z0-9]+$/),
-				Validators.minLength(20),
-			],
-		],
-		amount: [
-			'',
-			[Validators.required, amountMinValidator, amountPatternValidator],
-		],
-    cryptocurrency: [''],
+		address: ['', [Validators.required, addressPatternValidator(/^[A-Za-z0-9]+$/), Validators.minLength(20)]],
+		amount: ['', [Validators.required, amountMinValidator, amountPatternValidator]],
+		cryptocurrency: [''],
 	});
 }
 

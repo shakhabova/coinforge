@@ -5,13 +5,13 @@ import {
 	DestroyRef,
 	effect,
 	inject,
-	OnInit,
+	type OnInit,
 	signal,
-	WritableSignal,
+	type WritableSignal,
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { filter, finalize, from } from 'rxjs';
-import { WalletDto, WalletsService } from 'services/wallets.service';
+import { type WalletDto, WalletsService } from 'services/wallets.service';
 import { WalletCardComponent } from './wallet-card/wallet-card.component';
 import { tuiDialog, TuiIcon } from '@taiga-ui/core';
 import { SlicePipe } from '@angular/common';
@@ -38,9 +38,7 @@ export class WalletsComponent implements OnInit {
 	isLoading = signal(false);
 	hasError = signal(false);
 	step = signal(0);
-	maxPages = computed(() =>
-		Math.floor(this.wallets().length / this.pageSize()),
-	);
+	maxPages = computed(() => Math.floor(this.wallets().length / this.pageSize()));
 	showNextStepBtn = computed(() => this.sliceEnd() < this.wallets().length);
 
 	sliceStart = computed(() => {

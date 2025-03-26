@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { Observable } from 'rxjs';
+import type { Observable } from 'rxjs';
 
 export interface RateModel {
 	from: string;

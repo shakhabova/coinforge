@@ -1,21 +1,8 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import {
-	AuthenticateResponse,
-	LoginApiService,
-} from 'services/login-api.service';
-import {
-	NonNullableFormBuilder,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
-import {
-	tuiDialog,
-	TuiError,
-	TuiLabel,
-	TuiLoader,
-	TuiTextfield,
-} from '@taiga-ui/core';
+import { type AuthenticateResponse, LoginApiService } from 'services/login-api.service';
+import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { tuiDialog, TuiError, TuiLabel, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { TuiFieldErrorPipe, TuiInputPassword } from '@taiga-ui/kit';
 import { AsyncPipe } from '@angular/common';

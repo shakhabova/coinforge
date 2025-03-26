@@ -5,27 +5,14 @@ import {
 	DestroyRef,
 	inject,
 	model,
-	OnInit,
+	type OnInit,
 	signal,
 } from '@angular/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { OtpCodeInputComponent } from '../otp-code-input/otp-code-input.component';
-import { TuiDialogContext } from '@taiga-ui/core';
-import {
-	CreateUserResponse,
-	SignUpApiService,
-} from 'services/sign-up-api.service';
-import {
-	finalize,
-	interval,
-	map,
-	Observable,
-	share,
-	startWith,
-	Subscription,
-	take,
-	tap,
-} from 'rxjs';
+import type { TuiDialogContext } from '@taiga-ui/core';
+import { CreateUserResponse, SignUpApiService } from 'services/sign-up-api.service';
+import { finalize, interval, map, type Observable, share, startWith, type Subscription, take, tap } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { HttpClient } from '@angular/common/http';
@@ -61,12 +48,9 @@ export class EmailOtpCodeComponent implements OnInit {
 	codeExpired = signal(false);
 	expiresTimer$!: Observable<string>;
 	expiresTimerSub?: Subscription;
-	isConfirmDisabled = computed(
-		() => this.otpCode().length < this.codeLength || this.loading(),
-	);
+	isConfirmDisabled = computed(() => this.otpCode().length < this.codeLength || this.loading());
 
-	private readonly context =
-		injectContext<TuiDialogContext<unknown, EmailOtpModalData>>();
+	private readonly context = injectContext<TuiDialogContext<unknown, EmailOtpModalData>>();
 	private expiresSeconds = 90;
 
 	get email(): string {
@@ -92,30 +76,19 @@ export class EmailOtpCodeComponent implements OnInit {
 
 		let currentSecond = this.expiresSeconds;
 		this.expiresTimer$ = interval(1000).pipe(
-			map(
-				() =>
-					`00:${
-						currentSecond.toString().length === 1
-							? `0${currentSecond}`
-							: currentSecond
-					}`,
-			),
+			map(() => `00:${currentSecond.toString().length === 1 ? `0${currentSecond}` : currentSecond}`),
 			startWith(`00:${currentSecond}`),
 			tap(() => (currentSecond -= 1)),
 			take(this.expiresSeconds + 1),
 			share(),
 		);
 
-		this.expiresTimerSub = this.expiresTimer$
-			.pipe(takeUntilDestroyed(this.destroyRef))
-			.subscribe({
-				complete: () => {
-					this.codeExpired.set(true);
-					this.message.set(
-						'Code has expired. Please send a request for a new code.',
-					);
-				},
-			});
+		this.expiresTimerSub = this.expiresTimer$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
+			complete: () => {
+				this.codeExpired.set(true);
+				this.message.set('Code has expired. Please send a request for a new code.');
+			},
+		});
 	}
 
 	confirm() {

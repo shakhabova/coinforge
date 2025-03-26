@@ -1,12 +1,7 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, computed, inject, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import {
-	FormBuilder,
-	NonNullableFormBuilder,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
+import { FormBuilder, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TuiError, TuiIcon, TuiLabel, TuiTextfield } from '@taiga-ui/core';
@@ -47,9 +42,7 @@ export class ForcePasswordChangeComponent {
 			[
 				Validators.required,
 				Validators.minLength(6),
-				Validators.pattern(
-					/^(?=.*?[A-ZА-Я])(?=.*?[a-zа-я])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/,
-				),
+				Validators.pattern(/^(?=.*?[A-ZА-Я])(?=.*?[a-zа-я])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).+$/),
 			],
 		],
 		repeatPassword: ['', [Validators.required, passwordEqualsValidator]],
@@ -57,10 +50,7 @@ export class ForcePasswordChangeComponent {
 
 	save() {
 		this.loginApiService
-			.forceChangePassword(
-				this.email!,
-				this.formGroup.getRawValue().repeatPassword,
-			)
+			.forceChangePassword(this.email!, this.formGroup.getRawValue().repeatPassword)
 			.subscribe((response) => {
 				this.router.navigateByUrl('/auth/mfa-connect', {
 					state: { mfaQR: response.data, email: this.email },

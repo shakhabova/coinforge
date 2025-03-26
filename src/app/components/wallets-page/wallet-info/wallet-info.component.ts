@@ -7,14 +7,14 @@ import {
 	inject,
 	Injector,
 	input,
-	OnInit,
+	type OnInit,
 	runInInjectionContext,
 	signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiIcon } from '@taiga-ui/core';
-import { finalize, Observable } from 'rxjs';
-import { WalletDto, WalletsService } from 'services/wallets.service';
+import { finalize, type Observable } from 'rxjs';
+import { type WalletDto, WalletsService } from 'services/wallets.service';
 import { CurrenciesService } from 'services/currencies.service';
 import { tuiPure } from '@taiga-ui/cdk';
 import { WalletStatusChipComponent } from '../../shared/wallet-status-chip/wallet-status-chip.component';
@@ -95,16 +95,12 @@ export class WalletInfoComponent implements OnInit {
 
 	@tuiPure
 	getCryptoIconUrl(): Observable<string> {
-		return this.cryptoService.getCurrencyLinkUrl(
-			this.walletInfo()!.cryptocurrency,
-		);
+		return this.cryptoService.getCurrencyLinkUrl(this.walletInfo()!.cryptocurrency);
 	}
 
 	@tuiPure
 	getCryptoName(): Observable<string> {
-		return this.cryptoService.getCurrencyName(
-			this.walletInfo()!.cryptocurrency,
-		);
+		return this.cryptoService.getCurrencyName(this.walletInfo()!.cryptocurrency);
 	}
 
 	onBlock(): void {
@@ -146,9 +142,7 @@ export class WalletInfoComponent implements OnInit {
 	private async generateQR() {
 		const address = this.address();
 		if (address) {
-			this.addressDataUrl.set(
-				await QRCode.toDataURL(address, { margin: 0, width: 84 }),
-			);
+			this.addressDataUrl.set(await QRCode.toDataURL(address, { margin: 0, width: 84 }));
 		}
 	}
 }

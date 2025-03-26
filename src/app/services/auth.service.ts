@@ -1,8 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { catchError, map, Observable, tap, throwError } from 'rxjs';
+import { catchError, map, type Observable, of, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
+import { UserService } from './user.service';
+
+export interface RefreshTokenDto {
+	accessToken: string;
+	refreshToken: string;
+}
 
 export const ACCESS_TOKEN_KEY = 'AUTH_TOKEN';
 const REFRESH_TOKEN_KEY = 'AUTH_REFRESH_TOKEN';
@@ -14,17 +20,22 @@ export class AuthService {
 	private httpClient = inject(HttpClient);
 	private configService = inject(ConfigService);
 	private router = inject(Router);
+	private userService = inject(UserService);
 
 	private refreshTokenEndpoint = '/v1/auth/srp/refresh';
 
-	public refreshToken(): Observable<void> {
+	public get isAuthenticated$() {
+		return this.userService.currentUser$.pipe(
+			catchError(() => of(null)),
+			map((user) => !!user),
+		);
+	}
+
+	public refreshToken(): Observable<RefreshTokenDto> {
 		const refreshToken = localStorage.getItem(REFRESH_TOKEN_KEY);
 
 		return this.httpClient
-			.post<{ accessToken: string; refreshToken: string }>(
-				`${this.configService.serverUrl}/${this.refreshTokenEndpoint}`,
-				{ refreshToken },
-			)
+			.post<RefreshTokenDto>(`${this.configService.serverUrl}/${this.refreshTokenEndpoint}`, { refreshToken })
 			.pipe(
 				tap((response) => {
 					// Update the access token in the local storage
@@ -34,9 +45,8 @@ export class AuthService {
 				catchError((error) => {
 					// Handle refresh token error (e.g., redirect to login page)
 					console.error('Error refreshing access token:', error);
-					return throwError(() => new Error(error));
+					return throwError(() => error);
 				}),
-				map(() => undefined),
 			);
 	}
 
@@ -45,14 +55,10 @@ export class AuthService {
 		localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 	}
 
-	isLoggedIn(): boolean {
-		// TODO implement
-		return true;
-	}
-
 	logout() {
 		localStorage.removeItem(ACCESS_TOKEN_KEY);
 		localStorage.removeItem(REFRESH_TOKEN_KEY);
+		this.userService.clearCurrentUser();
 		this.router.navigateByUrl('/auth/login');
 	}
 }

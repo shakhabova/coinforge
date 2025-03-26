@@ -1,4 +1,4 @@
-import { HeaderLink } from './header.component';
+import type { HeaderLink } from './header.component';
 
 export const DASHBOARD_LINKS: HeaderLink[] = [
 	{

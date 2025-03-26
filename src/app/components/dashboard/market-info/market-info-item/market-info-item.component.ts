@@ -26,17 +26,12 @@ export class MarketInfoItemComponent {
 	private currentCurrencyService = inject(CurrentCurrencyService);
 	private cryptoService = inject(CurrenciesService);
 
-	cryptoIcon = computed(() =>
-		this.cryptoService.getCurrencyLinkUrl(this.shortName()),
-	);
-	fullName = computed(() =>
-		this.cryptoService.getCurrencyName(this.shortName()),
-	);
+	cryptoIcon = computed(() => this.cryptoService.getCurrencyLinkUrl(this.shortName()));
+	fullName = computed(() => this.cryptoService.getCurrencyName(this.shortName()));
 	protected currentCurrency = this.currentCurrencyService.currentCurrency;
 
 	// TODO rework rate
 	protected rate = computed(
-		() =>
-			`1 ${this.currentCurrency()} = ${this.invertedBalance().toFixed(7)} ${this.shortName()}`,
+		() => `1 ${this.currentCurrency()} = ${this.invertedBalance().toFixed(7)} ${this.shortName()}`,
 	);
 }

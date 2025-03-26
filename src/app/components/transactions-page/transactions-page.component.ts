@@ -1,36 +1,15 @@
-import {
-	Component,
-	DestroyRef,
-	inject,
-	Injector,
-	input,
-	model,
-	signal,
-	viewChild,
-} from '@angular/core';
+import { Component, DestroyRef, inject, Injector, input, model, signal, viewChild } from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
-import {
-	TuiButton,
-	TuiDialog,
-	TuiDialogOptions,
-	TuiDialogService,
-	TuiIcon,
-	TuiTextfield,
-} from '@taiga-ui/core';
-import {
-	FormControl,
-	FormsModule,
-	ReactiveFormsModule,
-	Validators,
-} from '@angular/forms';
+import { TuiButton, TuiDialog, TuiDialogOptions, TuiDialogService, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TransactionStatusChipComponent } from '../shared/transaction-status-chip/transaction-status-chip.component';
 import { TransactionTypeIconComponent } from '../shared/transaction-type-icon/transaction-type-icon.component';
 import {
-	TransactionDto,
-	TransactionPageableParams,
+	type TransactionDto,
+	type TransactionPageableParams,
 	TransactionsService,
 } from 'services/transactions.service';
-import { PaginatorModule, PaginatorState } from 'primeng/paginator';
+import { PaginatorModule, type PaginatorState } from 'primeng/paginator';
 import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
@@ -44,18 +23,18 @@ import {
 	from,
 	map,
 	mergeMap,
-	Observable,
+	type Observable,
 	of,
 	scan,
 	tap,
 	throttleTime,
 } from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
-import { PageableParams, PageableResponse } from 'models/pageable.model';
+import { PageableParams, type PageableResponse } from 'models/pageable.model';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import {
-	TransactionFilterModel,
+	type TransactionFilterModel,
 	TransactionsFilterModalComponent,
 } from './transactions-filter-modal/transactions-filter-modal.component';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
@@ -63,10 +42,7 @@ import { format } from 'date-fns';
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import { ConfigService } from 'services/config.service';
 import { TransactionItemComponent } from '../dashboard/transactions/transaction-item/transaction-item.component';
-import {
-	CdkVirtualScrollViewport,
-	ScrollingModule,
-} from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 
 // const TYPE_IN_LABEL = 'IN';
 // const TYPE_OUT_LABEL = 'OUT';
@@ -126,14 +102,7 @@ export class TransactionsPageComponent {
 	private loadBatch = new BehaviorSubject<boolean | void>(void 0);
 	public mobileTransactions: Observable<TransactionDto[] | undefined>;
 
-	protected columns = [
-		'createdAt',
-		'transactionHash',
-		'address',
-		'amount',
-		'status',
-		'type',
-	];
+	protected columns = ['createdAt', 'transactionHash', 'address', 'amount', 'status', 'type'];
 	protected transactions = signal<TransactionDto[]>([]);
 	protected search = new FormControl<string | null>(null, [
 		Validators.minLength(64),
@@ -210,14 +179,10 @@ export class TransactionsPageComponent {
 	@tuiPure
 	getCryptoIcon(transaction: TransactionDto): Observable<string> {
 		if (this.isTransactionIn(transaction.type)) {
-			return this.cryptocurrenciesService.getCurrencyLinkUrl(
-				transaction.currencyTo,
-			);
+			return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
 		}
 
-		return this.cryptocurrenciesService.getCurrencyLinkUrl(
-			transaction.currencyFrom,
-		);
+		return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyFrom);
 	}
 
 	nextBatch() {
@@ -248,15 +213,9 @@ export class TransactionsPageComponent {
 
 	openFilters() {
 		this.dialogService
-			.open<TransactionFilterModel>(
-				new PolymorpheusComponent(
-					TransactionsFilterModalComponent,
-					this.injector,
-				),
-				{
-					data: this.filters,
-				},
-			)
+			.open<TransactionFilterModel>(new PolymorpheusComponent(TransactionsFilterModalComponent, this.injector), {
+				data: this.filters,
+			})
 			.pipe(filter((val) => !!val))
 			.subscribe((filters) => {
 				this.filters = filters;
@@ -268,12 +227,9 @@ export class TransactionsPageComponent {
 
 	openDetails(transaction: TransactionDto) {
 		this.dialogService
-			.open(
-				new PolymorpheusComponent(TransactionDetailsComponent, this.injector),
-				{
-					data: transaction,
-				},
-			)
+			.open(new PolymorpheusComponent(TransactionDetailsComponent, this.injector), {
+				data: transaction,
+			})
 			.subscribe();
 	}
 
@@ -307,17 +263,11 @@ export class TransactionsPageComponent {
 			page: this.page(),
 			transactionHash: this.search.value || undefined,
 		};
-		if (this.filters?.dateFrom)
-			params.dateFrom = this.formatDate(
-				this.filters.dateFrom.toLocalNativeDate(),
-			);
-		if (this.filters?.dateTo)
-			params.dateTo = this.formatDate(this.filters.dateTo.toLocalNativeDate());
-		if (this.filters?.cryptocurrency)
-			params.cryptocurrency = this.filters.cryptocurrency.cryptoCurrency;
+		if (this.filters?.dateFrom) params.dateFrom = this.formatDate(this.filters.dateFrom.toLocalNativeDate());
+		if (this.filters?.dateTo) params.dateTo = this.formatDate(this.filters.dateTo.toLocalNativeDate());
+		if (this.filters?.cryptocurrency) params.cryptocurrency = this.filters.cryptocurrency.cryptoCurrency;
 		if (this.filters?.statuses) params.statuses = this.filters.statuses;
-		if (this.trxWalletAddress())
-			params.trxWalletAddress = this.trxWalletAddress();
+		if (this.trxWalletAddress()) params.trxWalletAddress = this.trxWalletAddress();
 
 		return this.transactionService.getTransactions(params);
 	}

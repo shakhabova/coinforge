@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { map, Observable, of } from 'rxjs';
+import { map, type Observable, of } from 'rxjs';
 import { CurrenciesService } from './currencies.service';
 
 export interface GetWalletsParams {
@@ -64,9 +64,7 @@ export class WalletsService {
 
 	getWalletInfo(trxAddress: string): Observable<WalletDto | null> {
 		// TODO get wallet info by ID
-		return of(
-			MOCK_WALLETS.data.find((w) => w.trxAddress === trxAddress) ?? null,
-		);
+		return of(MOCK_WALLETS.data.find((w) => w.trxAddress === trxAddress) ?? null);
 	}
 
 	getWalletsForDashboard(): Observable<WalletDto[]> {
@@ -92,17 +90,12 @@ export class WalletsService {
 
 	getEligibleCryptos(): Observable<{ cryptocurrency: string }[]> {
 		return this.currenciesService.getCurrenciesRequest.pipe(
-			map((infos) =>
-				infos.map((info) => ({ cryptocurrency: info.cryptoCurrency })),
-			),
+			map((infos) => infos.map((info) => ({ cryptocurrency: info.cryptoCurrency }))),
 		);
 		// return this.httpClient.get<{ cryptocurrency: string }[]>(`${this.configService.serverUrl}/v1/bff-custody/wallets/eligible-cryptocurrencies`);
 	}
 
-	private setWalletStatus(
-		trxAddress: string,
-		status: WalletStatus,
-	): Observable<void> {
+	private setWalletStatus(trxAddress: string, status: WalletStatus): Observable<void> {
 		// TODO check
 		return this.httpClient.put<void>(
 			`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/update-status/${trxAddress}?status=${status}`,

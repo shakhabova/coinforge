@@ -27,16 +27,12 @@ export class OtpCodeInputComponent {
 	}
 
 	onFieldInput(index: number): void {
-		const currentInput = document.querySelector<HTMLInputElement>(
-			`#otp-code-input-${index}`,
-		);
+		const currentInput = document.querySelector<HTMLInputElement>(`#otp-code-input-${index}`);
 		if (!currentInput?.value) {
 			return;
 		}
 
-		const nextInput = document.querySelector<HTMLInputElement>(
-			`#otp-code-input-${++index}`,
-		);
+		const nextInput = document.querySelector<HTMLInputElement>(`#otp-code-input-${++index}`);
 		if (nextInput) {
 			nextInput.focus();
 			nextInput.select();

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { Observable, switchMap } from 'rxjs';
+import { type Observable, switchMap } from 'rxjs';
 import { UserService } from './user.service';
 import { environment } from '../../environment/environment';
 
@@ -16,18 +16,13 @@ export class BalanceService {
 	private userService = inject(UserService);
 
 	getBalance(currency: TotalBalanceCurrency): Observable<number> {
-		return this.userService
-			.getInfo()
-			.pipe(
-				switchMap((user) =>
-					this.httpClient.get<number>(
-						`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/total-balance`,
-						{
-							params: { currency },
-							headers: { 'Customer-ID': environment.customerId },
-						},
-					),
-				),
-			);
+		return this.userService.currentUser$.pipe(
+			switchMap((user) =>
+				this.httpClient.get<number>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/total-balance`, {
+					params: { currency },
+					headers: { 'Customer-ID': environment.customerId },
+				}),
+			),
+		);
 	}
 }

@@ -1,6 +1,6 @@
 import { Component, input, output } from '@angular/core';
 import { TuiButton, TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
-import { WalletDto, WalletStatus } from 'services/wallets.service';
+import { type WalletDto, WalletStatus } from 'services/wallets.service';
 
 @Component({
 	selector: 'app-wallet-item-option',

@@ -1,4 +1,4 @@
-import { Component, computed, input, Signal } from '@angular/core';
+import { Component, computed, input, type Signal } from '@angular/core';
 import { TuiIcon } from '@taiga-ui/core';
 
 interface PasswordCriteriaModel {

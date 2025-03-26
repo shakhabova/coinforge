@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TuiDialogContext } from '@taiga-ui/core';
+import type { TuiDialogContext } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 
 export interface ConfirmModalInfo {
@@ -12,6 +12,5 @@ export interface ConfirmModalInfo {
 	styleUrl: './confirm-modal.component.css',
 })
 export class ConfirmModalComponent {
-	public readonly context =
-		injectContext<TuiDialogContext<boolean, ConfirmModalInfo>>();
+	public readonly context = injectContext<TuiDialogContext<boolean, ConfirmModalInfo>>();
 }

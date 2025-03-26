@@ -1,23 +1,8 @@
-import {
-	Component,
-	DestroyRef,
-	effect,
-	inject,
-	model,
-	OnInit,
-	signal,
-} from '@angular/core';
-import {
-	MAT_DIALOG_DATA,
-	MatDialogModule,
-	MatDialogRef,
-} from '@angular/material/dialog';
+import { Component, DestroyRef, effect, inject, model, type OnInit, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { OtpCodeInputComponent } from '../otp-code-input/otp-code-input.component';
-import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
-import {
-	AuthenticateResponse,
-	LoginApiService,
-} from 'services/login-api.service';
+import { type TuiDialogContext, TuiIcon } from '@taiga-ui/core';
+import { type AuthenticateResponse, LoginApiService } from 'services/login-api.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { injectContext } from '@taiga-ui/polymorpheus';
@@ -37,10 +22,7 @@ export class MfaOtpCodeComponent implements OnInit {
 	private destroyRef = inject(DestroyRef);
 	private router = inject(Router);
 
-	public readonly context =
-		injectContext<
-			TuiDialogContext<AuthenticateResponse | null, MfaOtpModalData>
-		>();
+	public readonly context = injectContext<TuiDialogContext<AuthenticateResponse | null, MfaOtpModalData>>();
 
 	protected otpCode = model('');
 	protected errorMessage = signal('');

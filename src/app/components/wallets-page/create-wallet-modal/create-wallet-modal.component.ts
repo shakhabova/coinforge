@@ -1,9 +1,9 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { tuiPure } from '@taiga-ui/cdk';
-import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
-import { forkJoin, map, Observable, of, switchMap } from 'rxjs';
-import { CurrenciesService, CurrencyDto } from 'services/currencies.service';
+import { type TuiDialogContext, TuiIcon } from '@taiga-ui/core';
+import { forkJoin, map, type Observable, of, switchMap } from 'rxjs';
+import { CurrenciesService, type CurrencyDto } from 'services/currencies.service';
 import { WalletsService } from 'services/wallets.service';
 import { injectContext } from '@taiga-ui/polymorpheus';
 
@@ -31,11 +31,7 @@ export class CreateWalletModalComponent {
 			forkJoin(
 				eligibles.map((eligibleCrypto) =>
 					this.currenciesService.getCurrenciesRequest.pipe(
-						map((cryptoInfos) =>
-							cryptoInfos.find(
-								(info) => info.cryptoCurrency === eligibleCrypto.cryptocurrency,
-							),
-						),
+						map((cryptoInfos) => cryptoInfos.find((info) => info.cryptoCurrency === eligibleCrypto.cryptocurrency)),
 					),
 				),
 			),

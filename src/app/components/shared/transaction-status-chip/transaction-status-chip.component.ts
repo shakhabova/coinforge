@@ -1,5 +1,5 @@
 import { Component, computed, input } from '@angular/core';
-import { TransactionDto } from 'services/transactions.service';
+import type { TransactionDto } from 'services/transactions.service';
 
 const STATUSES_MAP: Record<TransactionDto['oprStatus'], string> = {
 	CONFIRMED: 'Confirmed',

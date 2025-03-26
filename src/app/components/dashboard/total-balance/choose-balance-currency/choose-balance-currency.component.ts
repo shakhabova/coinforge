@@ -1,11 +1,7 @@
-import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
-import {
-	MAT_DIALOG_DATA,
-	MatDialogModule,
-	MatDialogRef,
-} from '@angular/material/dialog';
+import { Component, DestroyRef, inject, type OnInit, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { ModalCloseButtonComponent } from '../../../shared/modal-close-button/modal-close-button.component';
-import { BalanceService, TotalBalanceCurrency } from 'services/balance.service';
+import { BalanceService, type TotalBalanceCurrency } from 'services/balance.service';
 import { finalize, forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
@@ -22,8 +18,7 @@ export interface ChooseBalanceDialogResultData {
 	styleUrl: './choose-balance-currency.component.css',
 })
 export class ChooseBalanceCurrencyComponent implements OnInit {
-	private dialogRef: MatDialogRef<unknown, ChooseBalanceDialogResultData> =
-		inject(MatDialogRef);
+	private dialogRef: MatDialogRef<unknown, ChooseBalanceDialogResultData> = inject(MatDialogRef);
 	private data = inject(MAT_DIALOG_DATA);
 	private balanceService = inject(BalanceService);
 	private destroyRef = inject(DestroyRef);
@@ -44,10 +39,7 @@ export class ChooseBalanceCurrencyComponent implements OnInit {
 	public ngOnInit(): void {
 		this.isLoading.set(true);
 
-		forkJoin([
-			this.balanceService.getBalance('EUR'),
-			this.balanceService.getBalance('GBP'),
-		])
+		forkJoin([this.balanceService.getBalance('EUR'), this.balanceService.getBalance('GBP')])
 			.pipe(
 				finalize(() => this.isLoading.set(false)),
 				takeUntilDestroyed(this.destroyRef),

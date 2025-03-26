@@ -1,16 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { tuiDialog, TuiDialogService } from '@taiga-ui/core';
-import {
-	ConfirmModalComponent,
-	ConfirmModalInfo,
-} from 'components/shared/confirm-modal/confirm-modal.component';
+import { ConfirmModalComponent, type ConfirmModalInfo } from 'components/shared/confirm-modal/confirm-modal.component';
 import { ErrorModalComponent } from 'components/shared/error-modal/error-modal.component';
-import {
-	InfoModalComponent,
-	InfoModalConfig,
-} from 'components/shared/modals/info-modal/info-modal.component';
-import { Observable } from 'rxjs';
+import { InfoModalComponent, type InfoModalConfig } from 'components/shared/modals/info-modal/info-modal.component';
+import type { Observable } from 'rxjs';
 
 export interface DialogMessageModel {
 	title: string;
