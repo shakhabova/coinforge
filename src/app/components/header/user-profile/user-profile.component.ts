@@ -30,7 +30,7 @@ export class UserProfileComponent {
 
 	ngOnInit() {
 		this.usersService
-			.getInfo()
+			.currentUser$
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe((info) => {
 				this.name.set(`${info.firstName} ${info.lastName}`);

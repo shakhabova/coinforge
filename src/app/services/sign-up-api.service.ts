@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import type { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { type Observable, of, switchMap } from 'rxjs';
-import type { ConfigService } from './config.service';
-import type { SrpClientService } from './srp-client.service';
+import { ConfigService } from './config.service';
+import { SrpClientService } from './srp-client.service';
 import { environment } from '../../environment/environment';
 
 export interface ChallengeResponse {

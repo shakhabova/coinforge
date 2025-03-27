@@ -64,19 +64,23 @@ export class AskForMfaComponent implements OnInit {
 			return;
 		}
 
-		this.mfaApiService
-			.resetMfa(this.email)
-			.pipe(takeUntilDestroyed(this.destroyRef))
-			.subscribe(() => {
-				this.showOTPModal();
-			});
+		if (this.email) {
+			this.mfaApiService
+				.resetMfa(this.email)
+				.pipe(takeUntilDestroyed(this.destroyRef))
+				.subscribe(() => {
+					this.showOTPModal();
+				});
+		}
 	}
 
 	discard() {
-		this.mfaApiService
-			.rejectMfa(this.email, this.userId!)
-			.pipe(takeUntilDestroyed(this.destroyRef))
-			.subscribe(() => this.goToDashboard());
+		if (this.email && this.userId) {
+			this.mfaApiService
+				.rejectMfa(this.email, this.userId)
+				.pipe(takeUntilDestroyed(this.destroyRef))
+				.subscribe(() => this.goToDashboard());
+		}
 	}
 
 	private showOTPModal(): void {
