@@ -69,7 +69,7 @@ export class MfaOtpCodeComponent {
       .subscribe({
         next: (response) => this.context.completeWith(response),
         error: (err) => {
-          if (err.code === 'invalid_otp') {
+          if (err.error?.code === 'invalid_otp') {
             this.errorMessage.set('Invalid verification code');
             return;
           }

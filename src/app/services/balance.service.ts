@@ -8,21 +8,20 @@ import { environment } from '../../environment/environment';
 export type TotalBalanceCurrency = 'EUR' | 'GBP';
 
 @Injectable({
-	providedIn: 'root',
+  providedIn: 'root',
 })
 export class BalanceService {
-	private httpClient = inject(HttpClient);
-	private configService = inject(ConfigService);
-	private userService = inject(UserService);
+  private httpClient = inject(HttpClient);
+  private configService = inject(ConfigService);
+  private userService = inject(UserService);
 
-	getBalance(currency: TotalBalanceCurrency): Observable<number> {
-		return this.userService.currentUser$.pipe(
-			switchMap((user) =>
-				this.httpClient.get<number>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/total-balance`, {
-					params: { currency },
-					headers: { 'Customer-ID': environment.customerId },
-				}),
-			),
-		);
-	}
+  getBalance(currency: TotalBalanceCurrency): Observable<number> {
+    return this.httpClient.get<number>(
+      `${this.configService.serverUrl}/v1/bff-custody/wallets/customer/total-balance`,
+      {
+        params: { currency },
+        headers: { 'Customer-ID': environment.customerId },
+      },
+    );
+  }
 }

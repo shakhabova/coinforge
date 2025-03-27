@@ -31,12 +31,9 @@ import { explicitEffect } from 'ngxtension/explicit-effect';
 
 export interface EmailOtpModalData<T> {
   email: string;
-  // submitUrl: string;
-  id: number;
-  // responseType?: 'json' | 'arraybuffer';
-  submitReq: Observable<T>;
+  requestGetter: (otp: string) => Observable<T>;
+  errorButtonText: string;
   codeLength?: number;
-  userId?: number;
 }
 
 @Component({
@@ -45,7 +42,7 @@ export interface EmailOtpModalData<T> {
   templateUrl: './email-otp-code.component.html',
   styleUrl: './email-otp-code.component.css',
 })
-export class EmailOtpCodeComponent implements OnInit {
+export class EmailOtpCodeComponent<T> implements OnInit {
   private destroyRef = inject(DestroyRef);
   private httpClient = inject(HttpClient);
   private configService = inject(ConfigService);
@@ -66,7 +63,7 @@ export class EmailOtpCodeComponent implements OnInit {
   );
 
   private readonly context =
-    injectContext<TuiDialogContext<unknown, EmailOtpModalData>>();
+    injectContext<TuiDialogContext<unknown, EmailOtpModalData<T>>>();
   private expiresSeconds = 90;
 
   get email(): string {
@@ -121,21 +118,19 @@ export class EmailOtpCodeComponent implements OnInit {
   }
 
   confirm() {
-    const headers = {
-      'Custody-User-ID': this.context.data.userId?.toString() || '',
-    };
-
     this.loading.set(true);
-    this.httpClient
-      .post(
-        `${this.configService.serverUrl}${this.context.data?.submitUrl}`,
-        {
-          otp: this.otpCode(),
-          email: this.email,
-          id: this.context.data.id,
-        },
-        { headers, responseType: this.context.data.responseType || 'json' },
-      )
+    // this.httpClient
+    //   .post(
+    //     `${this.configService.serverUrl}${this.context.data?.submitUrl}`,
+    //     {
+    //       otp: this.otpCode(),
+    //       email: this.email,
+    //       id: this.context.data.id,
+    //     },
+    //     { headers, responseType: this.context.data.responseType || 'json' },
+    //   )
+    this.context.data
+      .requestGetter(this.otpCode())
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.loading.set(false)),
@@ -181,7 +176,7 @@ export class EmailOtpCodeComponent implements OnInit {
         type: 'warning',
         title: 'Error',
         text: 'An unexpected error has appeared. Please try again later.',
-        buttonText: 'Back to sign up',
+        buttonText: this.context.data.errorButtonText,
       })
       .subscribe(() => this.context.completeWith(null));
   }

@@ -53,7 +53,7 @@ export class AskForMfaComponent implements OnInit {
       )
       .subscribe({
         next: (info) => {
-          this.userId = info.id;
+          this.userId = info?.id;
         },
         error: (err) => {
           this.dialogService.showInfo({
@@ -92,14 +92,23 @@ export class AskForMfaComponent implements OnInit {
   // }
 
   private showOTPModal(): void {
-    const otpDialog = this.tuiDialogs.open<{ data: string }>(
+    const email = this.email;
+    const userId = this.userId;
+    if (!email || !userId) {
+      return;
+    }
+
+    const getRequest = (otp: string) =>
+      this.mfaApiService.submitResetMfa({ email, otp }, userId);
+
+    const otpDialog = this.tuiDialogs.open<string>(
       new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
       {
         data: {
           email: this.email,
-          submitUrl: '/v1/auth/srp/reset-mfa/submit',
+          requestGetter: getRequest,
           codeLength: 8,
-          userId: this.userId,
+          errorButtonText: 'Back to sign in',
         },
       },
     );
@@ -109,7 +118,7 @@ export class AskForMfaComponent implements OnInit {
         return;
       }
 
-      this.goToMfaConnect(result.data);
+      this.goToMfaConnect(result);
     });
   }
 

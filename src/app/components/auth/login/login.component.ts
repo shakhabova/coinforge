@@ -90,6 +90,7 @@ export class LoginComponent {
                 this.sendMfaOtpCode(email);
                 break;
               case 'REJECTED':
+                this.authorize(response);
                 this.goToDashboard();
                 break;
             }

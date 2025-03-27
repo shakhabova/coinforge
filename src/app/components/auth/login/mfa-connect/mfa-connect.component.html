@@ -1,0 +1,55 @@
+<div class="wrapper">
+  <h1>Two-Factor Authentication (2FA)</h1>
+
+  @if (isMobileAppsPage()) {
+    <div class="subtitle">
+      Scan the QR code and install<br />the Google Authenticator app
+    </div>
+
+    <div class="mobile-apps-qrs-wrapper">
+      <div class="mobile-app">
+        <img src="assets/images/android-mfa-qr.png" />
+        <div class="mobile-app-name">for Android</div>
+      </div>
+
+      <div class="mobile-app">
+        <img src="assets/images/ios-mfa-qr.png" />
+        <div class="mobile-app-name">for IOS</div>
+      </div>
+    </div>
+  } @else {
+    <div class="subtitle">
+      Scan the QR code with the Google Authenticator<br />app and complete the
+      process.
+    </div>
+
+    <img class="mfa-qr" [src]="mfaQR" />
+
+    <label tuiLabel class="mt-32">
+      <input [(ngModel)]="mfaAdded" tuiCheckbox type="checkbox" />
+
+      I have added this account to Google Authenticator.
+    </label>
+  }
+
+  @if (displayNext()) {
+    <button class="button primary m" (click)="goNext()">Next</button>
+  }
+
+  @if (!isMobileAppsPage()) {
+    <button
+      class="button m"
+      [disabled]="!mfaAdded()"
+      [class.primary]="mfaAdded()"
+      [class.secondary]="!mfaAdded()"
+      (click)="done()"
+    >
+      Done
+    </button>
+  }
+
+  @if (displayBack()) {
+    <button class="button secondary m" (click)="goBack()">Back</button>
+  }
+</div>
+
