@@ -24,6 +24,8 @@ export interface EmailOtpModalData {
 	email: string;
 	submitUrl: string;
 	id: number;
+	codeLength?: number;
+	userId?: number;
 }
 
 @Component({
@@ -40,7 +42,7 @@ export class EmailOtpCodeComponent implements OnInit {
 	private signUpApiService = inject(SignUpApiService);
 
 	otpCode = model('');
-	readonly codeLength = 6;
+	codeLength = 6;
 
 	loading = signal(false);
 	message = signal('');
@@ -65,6 +67,10 @@ export class EmailOtpCodeComponent implements OnInit {
 
 	ngOnInit(): void {
 		this.runTimer();
+
+		if (this.context.data.codeLength) {
+			this.codeLength = this.context.data.codeLength;
+		}
 	}
 
 	private runTimer(): void {
@@ -92,19 +98,23 @@ export class EmailOtpCodeComponent implements OnInit {
 	}
 
 	confirm() {
+		const headers = {
+			'Custody-User-ID': this.context.data.userId?.toString() || '',
+		};
+
 		this.loading.set(true);
 		this.httpClient
 			.post(`${this.configService.serverUrl}${this.context.data?.submitUrl}`, {
 				otp: this.otpCode(),
 				email: this.email,
 				id: this.context.data.id,
-			})
+			}, { headers, responseType: 'arraybuffer' })
 			.pipe(
 				takeUntilDestroyed(this.destroyRef),
 				finalize(() => this.loading.set(false)),
 			)
 			.subscribe({
-				next: () => this.context.completeWith(true),
+				next: (res) => this.context.completeWith(res || true),
 				error: (err) => {
 					if (err.code === 'invalid_confirmation_code') {
 						this.errorMessage.set('Invalid OTP code');
@@ -138,6 +148,7 @@ export class EmailOtpCodeComponent implements OnInit {
 	}
 
 	private displayErrorModal(err: unknown) {
+		console.error(err);
 		this.dialogService
 			.showInfo({
 				type: 'warning',

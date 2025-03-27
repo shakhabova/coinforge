@@ -87,7 +87,7 @@ export class AskForMfaComponent implements OnInit {
 		const otpDialog = this.tuiDialogs.open<{ data: string }>(
 			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
 			{
-				data: { email: this.email, submitUrl: '/v1/auth/srp/reset-mfa/submit' },
+				data: { email: this.email, submitUrl: '/v1/auth/srp/reset-mfa/submit', codeLength: 8, userId: this.userId },
 			},
 		);
 

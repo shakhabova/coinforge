@@ -1,6 +1,6 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { MatDialogModule } from '@angular/material/dialog';
-import { type AuthenticateResponse, LoginApiService } from 'services/login-api.service';
+import { type AuthenticateResponse, LoginApiService, MfaStatus } from 'services/login-api.service';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { tuiDialog, TuiError, TuiLabel, TuiLoader, TuiTextfield } from '@taiga-ui/core';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -74,6 +74,7 @@ export class LoginComponent {
 					}
 
 					if (response.userStatus === 'ACTIVE') {
+						// response.mfaStatus = 'PENDING' as MfaStatus;
 						switch (response.mfaStatus) {
 							case 'PENDING':
 								this.askForMfa(email);
