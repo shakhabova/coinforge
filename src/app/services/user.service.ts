@@ -18,6 +18,7 @@ export interface UserInfoDto {
 	status: string;
 	mfaStatus: MfaStatus;
 	role: string;
+	institutionId: string;
 }
 
 @Injectable({

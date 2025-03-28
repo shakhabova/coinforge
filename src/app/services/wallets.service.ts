@@ -3,6 +3,8 @@ import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
 import { map, type Observable, of } from 'rxjs';
 import { CurrenciesService } from './currencies.service';
+import { environment } from '../../environment/environment';
+import { UserInfoDto } from './user.service';
 
 export interface GetWalletsParams {
 	statusIn: WalletStatus[];
@@ -48,18 +50,36 @@ export class WalletsService {
 	private currenciesService = inject(CurrenciesService);
 
 	getWallets(params: GetWalletsParams): Observable<WalletsPageableDto> {
-		return of(mockWallets(params.page));
-		// return this.httpClient.get<WalletsPageableDto>(
-		//   `${this.configService.serverUrl}/v1/bff-custody/wallets/customer`,
-		//   {
-		//     params: {
-		//       statusIn: params.statusIn,
-		//       page: params.page,
-		//       size: params.size,
-		//       sort: params.sort,
-		//     }
-		//   }
-		// );
+		//return of(mockWallets(params.page));
+		const queryParams: GetWalletsParams = {
+			statusIn: params.statusIn,
+			page: params.page,
+			size: params.size,
+		};
+		if (params.sort) {
+			queryParams.sort = params.sort;
+		}
+		if (params.cryptocurrency) {
+			queryParams.cryptocurrency = params.cryptocurrency;
+		}
+
+		return this.httpClient.get<WalletsPageableDto>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer`, {
+			params: queryParams as Required<GetWalletsParams>,
+		});
+	}
+
+	createWallet(cryptoCurrency: string, user: UserInfoDto) {
+		return this.httpClient.post<void>(
+			`${this.configService.serverUrl}/v1/bff-custody/wallets/customer`,
+			{ cryptoCurrency },
+			{
+				headers: {
+					'Custody-User-ID': user.id.toString(),
+					'Customer-ID': environment.customerId,
+					'Institution-ID': user.institutionId
+				},
+			},
+		);
 	}
 
 	getWalletInfo(trxAddress: string): Observable<WalletDto | null> {
@@ -88,11 +108,16 @@ export class WalletsService {
 		return this.setWalletStatus(wallet.trxAddress, 'DEACTIVATED');
 	}
 
-	getEligibleCryptos(): Observable<{ cryptocurrency: string }[]> {
-		return this.currenciesService.getCurrenciesRequest.pipe(
-			map((infos) => infos.map((info) => ({ cryptocurrency: info.cryptoCurrency }))),
+	getEligibleCryptos(): Observable<{ cryptoCurrency: string }[]> {
+		// return this.currenciesService.getCurrenciesRequest.pipe(
+		// 	map((infos) => infos.map((info) => ({ cryptocurrency: info.cryptoCurrency }))),
+		// );
+		return this.httpClient.get<{ cryptoCurrency: string }[]>(
+			`${this.configService.serverUrl}/v1/bff-custody/wallets/eligible-cryptocurrencies`,
+			{
+				headers: { 'Customer-ID': environment.customerId },
+			},
 		);
-		// return this.httpClient.get<{ cryptocurrency: string }[]>(`${this.configService.serverUrl}/v1/bff-custody/wallets/eligible-cryptocurrencies`);
 	}
 
 	private setWalletStatus(trxAddress: string, status: WalletStatus): Observable<void> {

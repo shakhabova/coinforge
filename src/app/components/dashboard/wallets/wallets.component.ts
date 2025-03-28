@@ -31,7 +31,7 @@ export class WalletsComponent implements OnInit {
 	private destroyRef = inject(DestroyRef);
 	private configService = inject(ConfigService);
 
-	private createWalletDialog = tuiDialog(CreateWalletModalComponent);
+	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto' });
 
 	pageSize = computed(() => (this.configService.isMobile() ? 2 : 4));
 	wallets: WritableSignal<WalletDto[]> = signal([]);

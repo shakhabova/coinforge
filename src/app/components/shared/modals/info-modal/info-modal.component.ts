@@ -3,7 +3,7 @@ import type { TuiDialogContext } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 
 export interface InfoModalConfig {
-	type: 'success' | 'warning' | 'pending' | 'error';
+	type: 'success' | 'warning' | 'pending' | 'error' | 'empty';
 	title: string;
 	text?: string;
 	buttonText?: string;
