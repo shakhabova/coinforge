@@ -50,7 +50,11 @@ export class AuthService {
 			);
 	}
 
-	saveToken(accessToken: string, refreshToken: string) {
+	saveToken(accessToken: string | undefined, refreshToken: string | undefined) {
+    if (!accessToken || !refreshToken) {
+      return;
+    }
+
 		localStorage.setItem(ACCESS_TOKEN_KEY, accessToken);
 		localStorage.setItem(REFRESH_TOKEN_KEY, refreshToken);
 	}

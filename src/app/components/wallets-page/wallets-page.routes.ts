@@ -3,7 +3,7 @@ import type { Route } from '@angular/router';
 export const routes: Route[] = [
 	{
 		path: '',
-		loadComponent: () => import('./wallets-page.component.ts.component').then((m) => m.WalletsPageComponentTsComponent),
+		loadComponent: () => import('./wallets-page.component').then((m) => m.WalletsPageComponent),
 		title: 'Wallets',
 	},
 	{

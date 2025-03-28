@@ -1,0 +1,13 @@
+.subtitle, .hint {
+  color: #6f6f6f;
+}
+
+.recover-btn {
+  margin: 0 auto;
+  text-decoration: none;
+  color: #1c1c1c;
+}
+
+.recover-btn:hover {
+  color: #1c1c1c;
+}

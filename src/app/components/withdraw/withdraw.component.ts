@@ -1,241 +1,284 @@
-import { Component, computed, DestroyRef, inject, linkedSignal, model, type Signal, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  DestroyRef,
+  inject,
+  model,
+  type Signal,
+  signal,
+} from '@angular/core';
 import { SelectListComponent } from '../shared/select-list/select-list.component';
 import { type WalletDto, WalletsService } from 'services/wallets.service';
 import { map, type Observable, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CurrenciesService } from 'services/currencies.service';
-import { tuiDialog, type TuiDialogContext, TuiDialogService, TuiError, TuiIcon } from '@taiga-ui/core';
+import {
+  tuiDialog,
+  type TuiDialogContext,
+  TuiDialogService,
+  TuiError,
+  TuiIcon,
+} from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { tuiPure } from '@taiga-ui/cdk';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
-import { type AbstractControl, FormBuilder, ReactiveFormsModule, type ValidatorFn, Validators } from '@angular/forms';
-import { TUI_VALIDATION_ERRORS, TuiConfirmService, TuiFieldErrorPipe, TuiUnmaskHandler } from '@taiga-ui/kit';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  TUI_VALIDATION_ERRORS,
+  TuiConfirmService,
+  TuiFieldErrorPipe,
+  TuiUnmaskHandler,
+} from '@taiga-ui/kit';
 import { MaskitoDirective } from '@maskito/angular';
-import { maskitoUpdateElement, type MaskitoElement, type MaskitoOptions } from '@maskito/core';
-import { maskitoCaretGuard, maskitoPostfixPostprocessorGenerator } from '@maskito/kit';
+import {
+  MaskitoMask,
+  MaskitoPostprocessor,
+  maskitoUpdateElement,
+  type MaskitoElement,
+  type MaskitoOptions,
+} from '@maskito/core';
+import {
+  maskitoCaretGuard,
+  maskitoPostfixPostprocessorGenerator,
+} from '@maskito/kit';
 import { TransactionsService } from 'services/transactions.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DialogService } from 'services/dialog.service';
 import { WithdrawConfirmComponent } from './withdraw-confirm/withdraw-confirm.component';
-import { WithdrawService } from './widthdraw.service';
+import {
+  addressPatternValidator,
+  amountMinValidator,
+  amountPatternValidator,
+} from './validators';
+import {
+  customMaskitoPostprocessor,
+  maskitoMask,
+  onBlurMaskitoPlugin,
+} from './maskito-options';
 
 @Component({
-	selector: 'app-withdraw',
-	standalone: true,
-	imports: [
-		SelectListComponent,
-		AsyncPipe,
-		TuiIcon,
-		TuiInputModule,
-		TuiTextfieldControllerModule,
-		ReactiveFormsModule,
-		TuiError,
-		TuiFieldErrorPipe,
-		MaskitoDirective,
-		TuiUnmaskHandler,
-	],
-	templateUrl: './withdraw.component.html',
-	styleUrl: './withdraw.component.css',
-	providers: [
-		{
-			provide: TUI_VALIDATION_ERRORS,
-			useValue: {
-				required: 'Value is required',
-				minlength: 'A wallet address must be a minimum of 20 characters in length',
-			},
-		},
-	],
+  selector: 'app-withdraw',
+  standalone: true,
+  imports: [
+    SelectListComponent,
+    AsyncPipe,
+    TuiIcon,
+    TuiInputModule,
+    TuiTextfieldControllerModule,
+    ReactiveFormsModule,
+    TuiError,
+    TuiFieldErrorPipe,
+    MaskitoDirective,
+    TuiUnmaskHandler,
+  ],
+  templateUrl: './withdraw.component.html',
+  styleUrl: './withdraw.component.css',
+  providers: [
+    TuiConfirmService,
+    {
+      provide: TUI_VALIDATION_ERRORS,
+      useValue: {
+        required: 'Value is required',
+        minlength:
+          'A wallet address must be a minimum of 20 characters in length',
+      },
+    },
+  ],
 })
 export class WithdrawComponent {
-	private walletService = inject(WalletsService);
-	private currenciesService = inject(CurrenciesService);
-	private transactionsService = inject(TransactionsService);
-	private dialogService = inject(DialogService);
-	private destroyRef = inject(DestroyRef);
-	private withdrawService = inject(WithdrawService);
+  private walletService = inject(WalletsService);
+  private currenciesService = inject(CurrenciesService);
+  private transactionsService = inject(TransactionsService);
+  private dialogService = inject(DialogService);
+  private destroyRef = inject(DestroyRef);
+  private tuiConfirmService = inject(TuiConfirmService);
+  private tuiDialogService = inject(TuiDialogService);
 
-	private context = injectContext<TuiDialogContext<void, WalletDto | undefined>>();
+  private context =
+    injectContext<TuiDialogContext<void, WalletDto | undefined>>();
 
-	formGroup = this.withdrawService.formGroup;
+  private confirmDialog = tuiDialog(WithdrawConfirmComponent, { size: 'auto' });
 
-	amountMaskOptions: Signal<MaskitoOptions> = computed(() => {
-		const postfix = this.amountPostfix();
-		return {
-			mask: ({ value }) => {
-				let isDotUsed = false;
-				const digitsMask = Array.from(value.replaceAll(postfix, '')).map((char) => {
-					if (char === this.decimalPointChar) {
-						if (!isDotUsed) {
-							isDotUsed = true;
-							return /\./;
-						}
-					}
-					return /\d/;
-				});
+  formGroup = new FormBuilder().nonNullable.group({
+    address: [
+      '',
+      [
+        Validators.required,
+        addressPatternValidator(/^[A-Za-z0-9]+$/),
+        Validators.minLength(20),
+      ],
+    ],
+    amount: [
+      '',
+      [Validators.required, amountMinValidator, amountPatternValidator],
+    ],
+    cryptocurrency: [''],
+  });
 
-				if (!digitsMask.length) {
-					return [/[\d\.]/];
-				}
+  amountMaskOptions: Signal<MaskitoOptions> = computed(() => {
+    const postfix = this.amountPostfix();
+    return {
+      mask: maskitoMask(postfix),
+      postprocessors: [
+        // customMaskitoPostprocessor,
+        maskitoPostfixPostprocessorGenerator(postfix),
+      ],
+      plugins: [
+        maskitoCaretGuard((value) => [0, value.length - postfix.length]),
+        onBlurMaskitoPlugin(postfix),
+      ],
+    };
+  });
 
-				return [...digitsMask, postfix];
-			},
-			postprocessors: [
-				// ({ value, selection }, initialElementState) => {
-				// 	const [from, to] = selection;
-				// 	const initValue = initialElementState.value;
-				// 	let newValue = value;
-				// 	if (value.startsWith('0')) {
-				// 		if (value.includes('.') && /[1-9]+0*\./.test(value)) {
-				// 			newValue = value.replace(/^0+/, '');
-				// 		} else if (!value.includes('.') && !initValue.includes('.')) {
-				// 			newValue = `0.${value}`;
-				// 			selection = [from + 2, to + 2];
-				// 		}
-				// 	}
+  amountPostfix = computed(() => ` ${this.selected()?.cryptocurrency ?? ''}`);
 
-				// 	return {
-				// 		value: newValue,
-				// 		selection,
-				// 	};
-				// },
-				maskitoPostfixPostprocessorGenerator(postfix),
-			],
-			plugins: [
-				maskitoCaretGuard((value) => [0, value.length - postfix.length]),
-				(element: MaskitoElement) => {
-					const blurHandler = () => {
-						const valueWithoutPostfix = element.value.substring(0, element.value.length - postfix.length);
+  selected = model<WalletDto | null>(null);
+  phase = signal<'from' | 'to'>('from');
+  title = computed(() =>
+    this.phase() === 'from' ? 'Withdraw from' : 'Withdraw to',
+  );
 
-						if (element.value.startsWith(this.decimalPointChar)) {
-							maskitoUpdateElement(element, `0${element.value}`);
-						} else if (
-							element.value.startsWith('0') &&
-							/[1-9]/.test(element.value) &&
-							!element.value.includes(this.decimalPointChar)
-						) {
-							maskitoUpdateElement(element, `0.${element.value}`);
-						}
+  protected readonly wallets$ = this.walletService
+    .getWallets({
+      statusIn: ['ACTIVE'],
+      size: 2000,
+      page: 0,
+    })
+    .pipe(map((data) => data.data));
 
-						if (valueWithoutPostfix.endsWith(this.decimalPointChar)) {
-							maskitoUpdateElement(
-								element,
-								`${valueWithoutPostfix.substring(0, valueWithoutPostfix.length - 1)}${postfix}`,
-							);
-						}
-					};
+  amountUnmask = (value: string) =>
+    value.substring(0, value.length - this.amountPostfix().length);
 
-					element.addEventListener('blur', blurHandler);
+  ngOnInit() {
+    if (this.context.data) {
+      this.selected.set(this.context.data);
+      this.formGroup.controls.cryptocurrency.setValue(
+        this.context.data.cryptocurrency,
+      );
+      this.phase.set('to');
+    }
 
-					return () => element.removeEventListener('blur', blurHandler);
-				},
-			],
-		};
-	});
-	amountPostfix = computed(() => ` ${this.selected()?.cryptocurrency ?? ''}`);
+    this.context = { ...this.context, dismissible: false };
+  }
 
-	selected = model<WalletDto | null>(null);
-	phase = signal<'from' | 'to'>('from');
-	title = computed(() => (this.phase() === 'from' ? 'Withdraw from' : 'Withdraw to'));
+  @tuiPure
+  getCryptoIcon(crypto?: string): Observable<string> {
+    if (!crypto) return of('');
 
-	private decimalPointChar = '.';
+    return this.currenciesService.getCurrencyLinkUrl(crypto);
+  }
 
-	protected readonly wallets$ = this.walletService
-		.getWallets({
-			statusIn: ['ACTIVE'],
-			size: 2000,
-			page: 0,
-		})
-		.pipe(map((data) => data.data));
+  @tuiPure
+  getCryptoName(crypto?: string): Observable<string> {
+    if (!crypto) return of('');
 
-	amountUnmask = (value: string) => value.substring(0, value.length - this.amountPostfix().length);
+    return this.currenciesService.getCurrencyName(crypto);
+  }
 
-	ngOnInit() {
-		if (this.context.data) {
-			this.selected.set(this.context.data);
-			this.formGroup.controls.cryptocurrency.setValue(this.context.data.cryptocurrency);
-			this.phase.set('to');
-		}
+  onContinue() {
+    const selected = this.selected();
+    if (!selected) {
+      return;
+    }
 
-		this.context = { ...this.context, dismissible: false };
-	}
+    this.formGroup.controls.cryptocurrency.setValue(selected.cryptocurrency);
 
-	@tuiPure
-	getCryptoIcon(crypto?: string): Observable<string> {
-		if (!crypto) return of('');
+    this.phase.set('to');
+  }
 
-		return this.currenciesService.getCurrencyLinkUrl(crypto);
-	}
+  onNext() {
+    this.formGroup.updateValueAndValidity();
+    if (this.formGroup.invalid) {
+      return;
+    }
 
-	@tuiPure
-	getCryptoName(crypto?: string): Observable<string> {
-		if (!crypto) return of('');
+    const formValue = this.formGroup.getRawValue();
+    const selectedWallet = this.selected();
+    if (!selectedWallet) {
+      return;
+    }
 
-		return this.currenciesService.getCurrencyName(crypto);
-	}
+    this.transactionsService
+      .makeTransaction({
+        amount: Number.parseFloat(formValue.amount),
+        fromTrxAddress: selectedWallet.trxAddress,
+        toTrxAddress: formValue.address,
+        cryptocurrency: selectedWallet.cryptocurrency,
+      })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: () => {
+          // TODO transaction made successfully
+        },
+        error: (err) => {
+          switch (err.error?.code) {
+            case 'insufficient_balance':
+              this.formGroup.controls.amount.setErrors({
+                other: 'Insufficient balance. Please re-enter the amount',
+              });
+              break;
+            case 'minimum_amount_not_met':
+              this.formGroup.controls.amount.setErrors({
+                other: 'Selected amount should be equal or more than 1 EUR',
+              });
+              break;
+            default:
+              this.dialogService
+                .showInfo({
+                  type: 'warning',
+                  title: 'Error',
+                  text: 'An unexpected error has appeared. Please try again later.',
+                })
+                .subscribe();
+          }
+        },
+      });
+  }
 
-	onContinue() {
-		const selected = this.selected();
-		if (!selected) {
-			return;
-		}
+  confirm() {
+    const toWalletInfo = this.selected();
+    const formValue = this.formGroup.getRawValue();
+    if (!toWalletInfo || !formValue.amount) {
+      return;
+    }
 
-		this.formGroup.controls.cryptocurrency.setValue(selected.cryptocurrency);
+    const closeable = this.tuiConfirmService.withConfirm({
+      data: {
+        content: 'Are you sure you want to cancel the transfer?',
+      },
+    });
 
-		this.phase.set('to');
-	}
+    this.tuiConfirmService.markAsDirty();
 
-	onNext() {
-		this.formGroup.updateValueAndValidity();
-		if (this.formGroup.invalid) {
-			return;
-		}
+    this.tuiDialogService
+      .open(WithdrawConfirmComponent, {
+        size: 'auto',
+        closeable,
+        dismissible: closeable,
+        data: {
+          toTrxAddress: toWalletInfo.trxAddress,
+          amount: Number.parseFloat(formValue.amount),
+          cryptocurrency: toWalletInfo.cryptocurrency,
+        },
+      })
+      .subscribe({
+        complete: () => this.tuiConfirmService.markAsPristine(),
+      });
+  }
 
-		const formValue = this.formGroup.getRawValue();
-		const selectedWallet = this.selected();
-		if (!selectedWallet) {
-			return;
-		}
-
-		this.transactionsService
-			.makeTransaction({
-				amount: Number.parseFloat(formValue.amount),
-				fromTrxAddress: selectedWallet.trxAddress,
-				toTrxAddress: formValue.address,
-				cryptocurrency: selectedWallet.cryptocurrency,
-			})
-			.pipe(takeUntilDestroyed(this.destroyRef))
-			.subscribe({
-				next: () => {
-					// TODO transaction made successfully
-				},
-				error: (err) => {
-					switch (err.error?.code) {
-						case 'insufficient_balance':
-							this.formGroup.controls.amount.setErrors({ other: 'Insufficient balance. Please re-enter the amount' });
-							break;
-						case 'minimum_amount_not_met':
-							this.formGroup.controls.amount.setErrors({ other: 'Selected amount should be equal or more than 1 EUR' });
-							break;
-						default:
-							this.dialogService
-								.showInfo({
-									type: 'warning',
-									title: 'Error',
-									text: 'An unexpected error has appeared. Please try again later.',
-								})
-								.subscribe();
-					}
-				},
-			});
-	}
-
-	backToFromPhase() {
-		this.selected.set(null);
-		this.phase.set('from');
-	}
+  backToFromPhase() {
+    this.selected.set(null);
+    this.phase.set('from');
+  }
 }
 
-export function getWithdrawModal() {
-	const confirm = tuiDialog(WithdrawConfirmComponent, { closeable: false, dismissible: false });
-	return tuiDialog(WithdrawComponent, { closeable: confirm(), dismissible: confirm() });
-}
+// export function getWithdrawModal() {
+//   const confirm = tuiDialog(WithdrawConfirmComponent, {
+//     closeable: false,
+//     dismissible: false,
+//   });
+//   return tuiDialog(WithdrawComponent, {
+//     closeable: confirm(),
+//     dismissible: confirm(),
+//   });
+// }

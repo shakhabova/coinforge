@@ -1,0 +1,24 @@
+<div class="title h5-heading">OTP code</div>
+
+<div class="subtitle u-mar-bottom-32 text-sm w400">
+  Enter OTP code displayed on your Authentication app
+</div>
+
+<app-otp-code-input
+  [length]="6"
+  [(otpCode)]="otpCode"
+  [error]="!!errorMessage()"
+  [disabled]="loading()"
+></app-otp-code-input>
+
+@if (errorMessage()) {
+  <div class="message error">
+    {{ errorMessage() }}
+  </div>
+}
+
+<div class="hint text-sm w400 u-mar-bottom-24">
+  I want to recover Google Authentication code.
+</div>
+
+<a class="recover-btn text-m w500" (click)="recover()">Recover code</a>

@@ -2,14 +2,13 @@
 
 <div class="u-row-middle u-space-between">
   <span class="label">To wallet</span>
-  <span class="value">{{ withdrawService.formGroup.value.address }}</span>
+  <span class="value">{{ context.data.toTrxAddress }}</span>
 </div>
 
 <div class="u-row-middle u-space-between">
   <span class="label">Amount</span>
   <span class="value"
-    >{{ withdrawService.formGroup.value.amount }}
-    {{ withdrawService.formGroup.value.cryptocurrency }}</span
+    >{{ context.data.amount }} {{ context.data.cryptocurrency }}</span
   >
 </div>
 
@@ -19,5 +18,7 @@
     Back
   </button>
 
-  <button class="button primary m" (click)="context.completeWith(true)">Yes</button>
+  <button class="button primary m" (click)="context.completeWith(true)">
+    Yes
+  </button>
 </div>
