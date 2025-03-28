@@ -10,12 +10,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
-import { EmailOtpCodeComponent } from 'components/auth/shared/email-otp-code/email-otp-code.component';
-import { finalize } from 'rxjs';
 import { DialogService } from 'services/dialog.service';
 import { MfaApiService } from 'services/mfa-api.service';
 import { UserService } from 'services/user.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
+import { EmailOtpCodeComponent } from 'components/auth/shared/email-otp-code/email-otp-code.component';
 
 @Component({
   selector: 'app-ask-for-mfa',
@@ -37,33 +36,12 @@ export class AskForMfaComponent implements OnInit {
     this.router.getCurrentNavigation()?.extras.state?.['email'];
   private mfaQR?: string =
     this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
-  private userId?: number;
 
   ngOnInit(): void {
     if (!this.email) {
       this.router.navigateByUrl('/auth/login');
       return;
     }
-
-    this.loading.set(true);
-    this.userService.currentUser$
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        finalize(() => this.loading.set(false)),
-      )
-      .subscribe({
-        next: (info) => {
-          this.userId = info?.id;
-        },
-        error: (err) => {
-          this.dialogService.showInfo({
-            type: 'error',
-            title: 'Error',
-            text: 'Unexpected error occured, please try again later',
-          });
-          console.error(err);
-        },
-      });
   }
 
   enable() {
@@ -82,24 +60,14 @@ export class AskForMfaComponent implements OnInit {
     }
   }
 
-  // discard() {
-  //   if (this.email && this.userId) {
-  //     this.mfaApiService
-  //       .rejectMfa(this.email, this.userId)
-  //       .pipe(takeUntilDestroyed(this.destroyRef))
-  //       .subscribe(() => this.goToDashboard());
-  //   }
-  // }
-
   private showOTPModal(): void {
     const email = this.email;
-    const userId = this.userId;
-    if (!email || !userId) {
+    if (!email) {
       return;
     }
 
     const getRequest = (otp: string) =>
-      this.mfaApiService.submitResetMfa({ email, otp }, userId);
+      this.mfaApiService.submitResetMfa({ email, otp });
 
     const otpDialog = this.tuiDialogs.open<string>(
       new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
@@ -120,10 +88,6 @@ export class AskForMfaComponent implements OnInit {
 
       this.goToMfaConnect(result);
     });
-  }
-
-  private goToDashboard() {
-    this.router.navigateByUrl('/dashboard');
   }
 
   private goToMfaConnect(mfaQR: string) {

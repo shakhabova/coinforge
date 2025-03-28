@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { catchError, map, type Observable, of, tap, throwError } from 'rxjs';
+import { catchError, combineLatest, delayWhen, filter, map, type Observable, of, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
 
@@ -25,10 +25,12 @@ export class AuthService {
 	private refreshTokenEndpoint = '/v1/auth/srp/refresh';
 
 	public get isAuthenticated$() {
-		return this.userService.currentUser$.pipe(
-			catchError(() => of(null)),
-			map((user) => !!user),
-		);
+		return combineLatest([this.userService.currentUser$, this.userService.currentUserUpdating$])
+			.pipe(
+				filter(([_, updating]) => !updating),
+				catchError(() => of([null])),
+				map(([user]) => !!user),
+			);
 	}
 
 	public refreshToken(): Observable<RefreshTokenDto> {

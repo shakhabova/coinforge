@@ -22,14 +22,11 @@ export class MfaApiService {
     );
   }
 
-  submitResetMfa(req: SubmitResetInfo, userId: number): Observable<string> {
+  submitResetMfa(req: SubmitResetInfo): Observable<string> {
     return this.httpClient.post(
       `${this.configService.serverUrl}/v1/auth/srp/reset-mfa/submit`,
       req,
       {
-        headers: {
-          'Custody-User-ID': userId.toString(),
-        },
         responseType: 'text',
       },
     );

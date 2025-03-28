@@ -20,6 +20,7 @@ import {
 } from 'services/login-api.service';
 import { LoaderComponent } from '../../shared/loader/loader.component';
 import { MfaOtpCodeComponent } from '../shared/mfa-otp-code/mfa-otp-code.component';
+import { UserService } from 'services/user.service';
 
 @Component({
   selector: 'app-login',
@@ -46,6 +47,7 @@ export class LoginComponent {
   private router = inject(Router);
   private authService = inject(AuthService);
   private dialogService = inject(DialogService);
+  private userService = inject(UserService);
   protected readonly loading = signal(false);
 
   private mfaOptDialog = tuiDialog(MfaOtpCodeComponent, { size: 'auto' });
@@ -166,7 +168,7 @@ export class LoginComponent {
   }
 
   private sendMfaOtpCode(email: string) {
-    this.mfaOptDialog({ email })
+    this.mfaOptDialog({ email,  })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((response) => {
         if (response) {
@@ -192,5 +194,6 @@ export class LoginComponent {
 
   private authorize(response: AuthenticateResponse) {
     this.authService.saveToken(response.accessToken, response.refreshToken);
+    this.userService.updateCurrentUser();
   }
 }
