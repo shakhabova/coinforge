@@ -18,7 +18,6 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
 		catchError((error) => {
 			// Check if the error is due to an expired access token
 			if (error.status === 401 && accessToken) {
-				localStorage.removeItem(ACCESS_TOKEN_KEY);
 				return runInInjectionContext(injector, () => {
 					return handle401Error(req, next);
 				});

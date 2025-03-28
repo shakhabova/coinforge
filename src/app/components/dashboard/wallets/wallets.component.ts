@@ -18,10 +18,12 @@ import { SlicePipe } from '@angular/common';
 import { ConfigService } from 'services/config.service';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateWalletModalComponent } from 'components/wallets-page/create-wallet-modal/create-wallet-modal.component';
+import { EmptyDisplayComponent } from 'components/shared/empty-display/empty-display.component';
+import { ErrorDisplayComponent } from 'components/shared/error-display/error-display.component';
 
 @Component({
 	selector: 'app-wallets',
-	imports: [WalletCardComponent, TuiIcon, SlicePipe],
+	imports: [WalletCardComponent, TuiIcon, SlicePipe, EmptyDisplayComponent, ErrorDisplayComponent],
 	templateUrl: './wallets.component.html',
 	styleUrl: './wallets.component.scss',
 	changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +42,9 @@ export class WalletsComponent implements OnInit {
 	step = signal(0);
 	maxPages = computed(() => Math.floor(this.wallets().length / this.pageSize()));
 	showNextStepBtn = computed(() => this.sliceEnd() < this.wallets().length);
+
+	showEmpty = computed(() => !this.isLoading() && !this.hasError() && !this.wallets()?.length);
+	showError = computed(() => !this.isLoading() && this.hasError());
 
 	sliceStart = computed(() => {
 		if (this.step() === 0) {

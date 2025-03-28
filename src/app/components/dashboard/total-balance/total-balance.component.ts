@@ -78,7 +78,7 @@ export class TotalBalanceComponent implements OnInit {
 			.getBalance(this.currency())
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe({
-				next: (balance) => this.balance.set(balance),
+				next: (balance) => this.balance.set(balance.totalBalance),
 				error: (err) => {
 					// TODO handle load balances error
 				},

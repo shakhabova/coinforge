@@ -45,7 +45,7 @@ export class ChooseBalanceCurrencyComponent implements OnInit {
 				takeUntilDestroyed(this.destroyRef),
 			)
 			.subscribe({
-				next: ([EUR, GBP]) => this.balances.set({ EUR, GBP }),
+				next: ([EUR, GBP]) => this.balances.set({ EUR: EUR.totalBalance, GBP: GBP.totalBalance }),
 				error: (err) => {
 					// TODO handle balances error
 				},

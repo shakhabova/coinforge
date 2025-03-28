@@ -50,6 +50,7 @@ import { WalletStatusChipComponent } from '../shared/wallet-status-chip/wallet-s
 import { CreateWalletModalComponent } from './create-wallet-modal/create-wallet-modal.component';
 import { WalletInfoCardComponent } from './wallet-info-card/wallet-info-card.component';
 import { WalletItemOptionComponent } from './wallet-item-option/wallet-item-option.component';
+import { DialogService } from 'services/dialog.service';
 
 @Component({
   selector: 'app-wallets-page',
@@ -82,6 +83,7 @@ export class WalletsPageComponent implements OnInit {
   private createWalletDialog = tuiDialog(CreateWalletModalComponent);
   public configService = inject(ConfigService);
   private router = inject(Router);
+  private dialogService = inject(DialogService);
 
   public viewport = viewChild(CdkVirtualScrollViewport);
 
@@ -180,19 +182,60 @@ export class WalletsPageComponent implements OnInit {
   }
 
   onBlock(wallet: WalletDto): void {
-    // TODO use actual code
-    wallet.walletStatus = 'CUSTOMER_BLOCKED';
-    // this.walletsService.blockWallet(wallet);
+    this.walletsService.blockWallet(wallet)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        error: err => {
+          console.error(err);
+          this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+        }
+      });
   }
 
   onUnblock(wallet: WalletDto): void {
-    wallet.walletStatus = 'ACTIVE';
-    // this.walletsService.unblockWallet(wallet);
+    this.walletsService.unblockWallet(wallet)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        error: err => {
+          console.error(err);
+          this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+        }
+      });
   }
 
   onDeactivate(wallet: WalletDto): void {
-    wallet.walletStatus = 'DEACTIVATED';
-    // this.walletsService.deactivateWallet(wallet);
+    this.walletsService.deactivateWallet(wallet)
+      .pipe(
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe({
+        error: err => {
+          console.error(err);
+          this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+        }
+      });
   }
 
   stringifyCryptoSelectItem(item: CurrencyDto): string {
