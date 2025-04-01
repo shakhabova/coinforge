@@ -1,4 +1,4 @@
-<div class="otp-inputs">
+<div class="otp-inputs" #inputsWrapper>
   @for (_ of otpCodeArray; track $index) {
     @if ($index === 0) {
       <input
@@ -8,7 +8,7 @@
         maxlength="1"
         (input)="onFieldInput($index)"
         id="otp-code-input-{{ $index }}"
-        (paste)="onInputPaste(toClipboardEvent($event))"
+        (paste)="onInputPaste(toClipboardEvent($event), $index)"
         [class.input-error]="error()"
         [disabled]="disabled()"
       />
@@ -19,7 +19,7 @@
         maxlength="1"
         (input)="onFieldInput($index)"
         id="otp-code-input-{{ $index }}"
-        (paste)="onInputPaste(toClipboardEvent($event))"
+        (paste)="onInputPaste(toClipboardEvent($event), $index)"
         [disabled]="disabled()"
         [class.input-error]="error()"
       />

@@ -1,7 +1,7 @@
 :root {
   --Primary-text-color: #272828;
   --Secondary-text-color: #6f6f6f;
-  
+
   --font-font-text-xs-400: normal 400 12px/16px "Nunito Sans";
 }
 
@@ -14,7 +14,7 @@
   font-weight: 700;
   line-height: 80px;
 }
-.h2-heading{
+.h2-heading {
   color: var(--Primary-text-color, #272828);
   font-family: Switzer-Variable;
   font-size: 48px;
@@ -97,6 +97,10 @@
   font-weight: 600;
 }
 
+.w500 {
+  font-weight: 500;
+}
+
 .w400 {
   font-weight: 400;
 }
@@ -105,7 +109,6 @@
   font-weight: 300;
 }
 .w200 {
-
 }
 
 @media only screen and (max-width: 575px) {
@@ -151,3 +154,4 @@
     font-weight: 300;
   }
 }
+

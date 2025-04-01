@@ -1,58 +1,87 @@
-import { Component, model, effect, input } from '@angular/core';
+import {
+  Component,
+  model,
+  effect,
+  input,
+  viewChild,
+  ElementRef,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
+import { explicitEffect } from 'ngxtension/explicit-effect';
 
 @Component({
-	selector: 'app-otp-code-input',
-	imports: [FormsModule, TuiAutoFocus],
-	templateUrl: './otp-code-input.component.html',
-	styleUrl: './otp-code-input.component.css',
+  selector: 'app-otp-code-input',
+  imports: [FormsModule, TuiAutoFocus],
+  templateUrl: './otp-code-input.component.html',
+  styleUrl: './otp-code-input.component.css',
 })
 export class OtpCodeInputComponent {
-	otpCode = model('');
-	length = input(6);
-	error = input(false);
-	disabled = input(false);
+  otpCode = model('');
+  length = input(6);
+  error = input(false);
+  disabled = input(false);
 
-	otpCodeArray = new Array(this.length()).fill(null);
+  inputsWrapper = viewChild<ElementRef<HTMLDivElement>>('inputsWrapper');
 
-	constructor() {
-		effect(() => {
-			this.otpCodeArray = this.otpCodeArray.map((_, i) => this.otpCode()[i]);
-		});
+  otpCodeArray: Array<string | null> = new Array(this.length()).fill(null);
 
-		effect(() => {
-			this.otpCodeArray = new Array(this.length()).fill(null);
-		});
-	}
+  constructor() {
+    explicitEffect([this.otpCode], ([otpCode]) => {
+      this.otpCodeArray = this.otpCodeArray.map((_, i) => otpCode[i]);
+    });
 
-	onFieldInput(index: number): void {
-		const currentInput = document.querySelector<HTMLInputElement>(`#otp-code-input-${index}`);
-		if (!currentInput?.value) {
-			return;
-		}
+    explicitEffect([this.length], ([length]) => {
+      this.otpCodeArray = new Array(length).fill(null);
+    });
+  }
 
-		const nextInput = document.querySelector<HTMLInputElement>(`#otp-code-input-${++index}`);
-		if (nextInput) {
-			nextInput.focus();
-			nextInput.select();
-		}
-	}
+  onFieldInput(index: number): void {
+    const currentInput = this.getInputByIndex(index);
+    if (!currentInput?.value) {
+      return;
+    }
 
-	onInputPaste(event: ClipboardEvent): void {
-		const value = event.clipboardData?.getData('text/plain');
-		if (!value) {
-			return;
-		}
+    const nextInput = this.getInputByIndex(index + 1);
+    if (nextInput) {
+      nextInput.focus();
+      nextInput.select();
+    }
+  }
 
-		this.otpCodeArray = this.otpCodeArray.map((_, i) => value[i]);
-	}
+  onInputPaste(event: ClipboardEvent, index: number): void {
+    const value = event.clipboardData?.getData('text/plain');
+    if (!value) {
+      return;
+    }
 
-	onCodeChange(): void {
-		this.otpCode.set(this.otpCodeArray.join(''));
-	}
+    let j = 0;
+    for (let i = index; i < this.length(); i++) {
+      this.otpCodeArray[i] = value[j];
+      j++;
+    }
 
-	toClipboardEvent(event: Event): ClipboardEvent {
-		return event as ClipboardEvent;
-	}
+    this.onCodeChange();
+    this.getInputByIndex(
+      Math.min(index + value.length, this.length()),
+    )?.focus();
+
+    // this.otpCodeArray = this.otpCodeArray.map((_, i) => value[i]);
+  }
+
+  onCodeChange(): void {
+    this.otpCode.set(this.otpCodeArray.join(''));
+  }
+
+  toClipboardEvent(event: Event): ClipboardEvent {
+    return event as ClipboardEvent;
+  }
+
+  private getInputByIndex(index: number): HTMLInputElement | null {
+    return (
+      this.inputsWrapper()?.nativeElement.querySelector<HTMLInputElement>(
+        `#otp-code-input-${index}`,
+      ) ?? null
+    );
+  }
 }
