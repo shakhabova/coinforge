@@ -1,20 +1,20 @@
-import { AsyncPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, linkedSignal, model, signal } from '@angular/core';
 import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TuiError, TuiIcon, TuiLabel, TuiTextfield } from '@taiga-ui/core';
-import { TuiFieldErrorPipe, TuiInputPassword } from '@taiga-ui/kit';
+import { TuiLabel, TuiTextfield } from '@taiga-ui/core';
+import { TuiInputPassword } from '@taiga-ui/kit';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { PasswordCriteriaComponent } from 'components/shared/password-criteria/password-criteria.component';
 import { LoginApiService } from 'services/login-api.service';
 import { passwordEqualsValidator } from 'utils/validators';
+import { OtpCodeInputComponent } from '../../shared/otp-code-input/otp-code-input.component';
 
 @Component({
-  selector: 'app-force-password-change',
+  selector: 'app-forget-password',
   imports: [
     TuiLabel,
     TuiInputModule,
@@ -23,16 +23,25 @@ import { passwordEqualsValidator } from 'utils/validators';
     TuiInputPassword,
     TuiTextfield,
     PasswordCriteriaComponent,
+    OtpCodeInputComponent,
   ],
-  templateUrl: './force-password-change.component.html',
-  styleUrl: './force-password-change.component.css',
+  templateUrl: './forget-password.component.html',
+  styleUrl: './forget-password.component.css',
 })
-export class ForcePasswordChangeComponent {
+export class ForgetPasswordComponent {
   private fb = inject(NonNullableFormBuilder);
-  private loginApiService = inject(LoginApiService);
   private router = inject(Router);
+  private loginApiService = inject(LoginApiService);
 
-  private email = this.router.getCurrentNavigation()?.extras?.state?.['email'];
+  public otpCode = model<string>('');
+  public readonly codeLength = 8;
+  public errorMessage = signal<string | null>(null);
+  public loading = signal(false);
+  public isSaveDisabled = linkedSignal(
+    () => this.otpCode().length !== this.codeLength && this.formGroup.invalid,
+  );
+
+  public email = this.router.getCurrentNavigation()?.extras?.state?.['email'];
 
   protected formGroup = this.fb.group({
     password: [
@@ -47,21 +56,4 @@ export class ForcePasswordChangeComponent {
     ],
     repeatPassword: ['', [Validators.required, passwordEqualsValidator]],
   });
-
-  save() {
-    if (!this.email) {
-      return;
-    }
-
-    this.loginApiService
-      .forceChangePassword(
-        this.email,
-        this.formGroup.getRawValue().repeatPassword,
-      )
-      .subscribe((response) => {
-        this.router.navigateByUrl('/auth/mfa-connect', {
-          state: { mfaQR: response.data, email: this.email },
-        });
-      });
-  }
 }
