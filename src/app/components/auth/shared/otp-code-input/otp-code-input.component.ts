@@ -1,11 +1,4 @@
-import {
-  Component,
-  model,
-  effect,
-  input,
-  viewChild,
-  ElementRef,
-} from '@angular/core';
+import { Component, model, input, viewChild, ElementRef } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { explicitEffect } from 'ngxtension/explicit-effect';
@@ -27,9 +20,9 @@ export class OtpCodeInputComponent {
   otpCodeArray: Array<string | null> = new Array(this.length()).fill(null);
 
   constructor() {
-    explicitEffect([this.otpCode], ([otpCode]) => {
-      this.otpCodeArray = this.otpCodeArray.map((_, i) => otpCode[i]);
-    });
+    // explicitEffect([this.otpCode], ([otpCode]) => {
+    //   this.otpCodeArray = this.otpCodeArray.map((_, i) => otpCode[i]);
+    // });
 
     explicitEffect([this.length], ([length]) => {
       this.otpCodeArray = new Array(length).fill(null);

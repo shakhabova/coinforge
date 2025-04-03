@@ -99,6 +99,7 @@ export class LoginComponent {
           }
         },
         error: (err) => {
+          console.error(err);
           switch (err.error?.code) {
             case 'user_not_found':
               this.dialogService
@@ -168,7 +169,7 @@ export class LoginComponent {
   }
 
   private sendMfaOtpCode(email: string) {
-    this.mfaOptDialog({ email,  })
+    this.mfaOptDialog({ email })
       .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe((response) => {
         if (response) {

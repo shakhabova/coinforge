@@ -1,39 +1,64 @@
-import type { HttpEvent, HttpHandlerFn, HttpRequest } from '@angular/common/http';
+import type {
+  HttpEvent,
+  HttpHandlerFn,
+  HttpRequest,
+} from '@angular/common/http';
 import { Injector, inject, runInInjectionContext } from '@angular/core';
-import { type Observable, Subject, catchError, filter, switchMap, take, throwError } from 'rxjs';
+import {
+  type Observable,
+  Subject,
+  catchError,
+  filter,
+  switchMap,
+  take,
+  throwError,
+} from 'rxjs';
 import { ACCESS_TOKEN_KEY, AuthService } from 'services/auth.service';
 
 let isRefreshing = false;
 const refreshTokenSubject = new Subject<string | null>();
 
-export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn): Observable<HttpEvent<unknown>> {
-	const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
-	const injector = inject(Injector);
+export function authInterceptor(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn,
+): Observable<HttpEvent<unknown>> {
+  const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
+  const injector = inject(Injector);
 
-	if (accessToken) {
-		req = addToken(req, accessToken);
-	}
+  if (
+    req.url.includes('auth/srp/authenticate') ||
+    req.url.includes('auth/srp/refresh')
+  ) {
+    return next(req);
+  }
 
-	return next(req).pipe(
-		catchError((error) => {
-			// Check if the error is due to an expired access token
-			if (error.status === 401 && accessToken) {
-				return runInInjectionContext(injector, () => {
-					return handle401Error(req, next);
-				});
-			}
+  if (accessToken) {
+    req = addToken(req, accessToken);
+  }
 
-			return throwError(error);
-		}),
-	);
+  return next(req).pipe(
+    catchError((error) => {
+      // Check if the error is due to an expired access token
+      if (error.status === 401 && accessToken) {
+        return runInInjectionContext(injector, () => {
+          return handle401Error(req, next);
+        });
+      }
+
+      return throwError(error);
+    }),
+  );
 }
 
-function addToken(request: HttpRequest<unknown>, token: string | null): HttpRequest<unknown> {
-	return request.clone({
-		setHeaders: {
-			Authorization: `Bearer ${token}`,
-		},
-	});
+function addToken(
+  request: HttpRequest<unknown>,
+  token: string | null,
+): HttpRequest<unknown> {
+  return request.clone({
+    setHeaders: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 }
 
 // function handleTokenExpired(
@@ -60,25 +85,25 @@ function addToken(request: HttpRequest<unknown>, token: string | null): HttpRequ
 // }
 
 function handle401Error(request: HttpRequest<unknown>, next: HttpHandlerFn) {
-	const authService = inject(AuthService);
+  const authService = inject(AuthService);
 
-	if (!isRefreshing) {
-		isRefreshing = true;
-		refreshTokenSubject.next(null);
+  if (!isRefreshing) {
+    isRefreshing = true;
+    refreshTokenSubject.next(null);
 
-		return authService.refreshToken().pipe(
-			switchMap((token) => {
-				isRefreshing = false;
-				refreshTokenSubject.next(token.accessToken);
-				return next(addToken(request, token.accessToken));
-			}),
-		);
-	}
-	return refreshTokenSubject.pipe(
-		filter((token) => token != null),
-		take(1),
-		switchMap((jwt) => {
-			return next(addToken(request, jwt));
-		}),
-	);
+    return authService.refreshToken().pipe(
+      switchMap((token) => {
+        isRefreshing = false;
+        refreshTokenSubject.next(token.accessToken);
+        return next(addToken(request, token.accessToken));
+      }),
+    );
+  }
+  return refreshTokenSubject.pipe(
+    filter((token) => token != null),
+    take(1),
+    switchMap((jwt) => {
+      return next(addToken(request, jwt));
+    }),
+  );
 }

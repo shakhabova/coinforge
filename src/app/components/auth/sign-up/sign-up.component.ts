@@ -88,10 +88,6 @@ import { EmailOtpCodeComponent } from '../shared/email-otp-code/email-otp-code.c
       useValue: {
         email: 'Please enter a valid email, e.g., name@example.com',
         required: 'Value is required',
-        minlength: (val: unknown) => {
-          console.log(val);
-          return 'hehe';
-        },
       },
     },
   ],
