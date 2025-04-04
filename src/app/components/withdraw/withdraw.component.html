@@ -94,5 +94,14 @@
   #confirmContent
   let-context
 >
-  <div class="h4-heading u-mar-bottom-32">Are you sure you want to confirm withdraw?</div>
+  <div class="h4-heading u-mar-bottom-32" style="text-align: center;">Are you sure you want cancel the transfer?</div>
+  <div class="u-row-middle u-g-24">
+    <button class="button secondary m" style="flex: 1" (click)="context.next(false); context.complete()">
+      No
+    </button>
+  
+    <button class="button red primary m" style="flex: 1" (click)="context.next(true); context.complete()">
+      Yes
+    </button>
+  </div>
 </ng-template>

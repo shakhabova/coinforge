@@ -45,22 +45,28 @@ table[tuiTable] {
 	width: 100%;
 }
 
-th {
+thead tr {
 	background-color: #f9f9f9;
 }
 
-td {
+tbody tr {
 	background-color: white;
+	cursor: pointer;
 }
 
 td,
 th {
 	border: none;
+	background-color: transparent;
 }
 
 tr {
 	border: 1px solid var(--tui-border-normal);
 	height: 70px;
+}
+
+tbody tr:hover {
+	background-color: #fafafa;
 }
 
 tui-icon {

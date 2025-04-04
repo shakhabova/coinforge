@@ -106,6 +106,39 @@ export class TransactionsService {
 			}),
 		);
 	}
+
+	confirmTransaction(id: string): Observable<void> {
+		return this.userService.currentUserId$.pipe(
+			switchMap((userId) => {
+				return this.httpClient.post<void>(
+					`${this.configService.serverUrl}/v1/bff-custody/transactions/confirm/${id}`,
+					{},
+					{
+						headers: {
+							'Customer-ID': environment.customerId,
+							'User-ID': userId?.toString() ?? '',
+						},
+					},
+				);
+			}),
+		);
+	}
+
+	deleteTransaction(id: string): Observable<void> {
+		return this.userService.currentUserId$.pipe(
+			switchMap((userId) => {
+				return this.httpClient.delete<void>(
+					`${this.configService.serverUrl}/v1/bff-custody/transactions/remove/${id}`,
+					{
+						headers: {
+							'Customer-ID': environment.customerId,
+							'User-ID': userId?.toString() ?? '',
+						},
+					},
+				);
+			}),
+		);
+	}
 }
 
 const mockData: TransactionDto[] = [
