@@ -96,7 +96,7 @@ export class UserProfileComponent {
 				});
 		} else {
 			this.context.completeWith();
-			this.router.navigateByUrl('/auth/two-factor-auth');
+			this.router.navigate(['/auth/two-factor-auth'], { queryParams: { email: this.email() }});
 		}
 	}
 

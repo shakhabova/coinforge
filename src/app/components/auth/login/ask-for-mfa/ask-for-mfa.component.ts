@@ -4,6 +4,7 @@ import {
   INJECTOR,
   type OnInit,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -32,27 +33,27 @@ export class AskForMfaComponent implements OnInit {
   private dialogService = inject(DialogService);
 
   protected readonly loading = signal(false);
-  private email?: string =
-    this.router.getCurrentNavigation()?.extras.state?.['email'];
-  private mfaQR?: string =
-    this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
+  public email = input<string>();
+  public mfaQR = input<string>();
 
   ngOnInit(): void {
-    if (!this.email) {
+    if (!this.email()) {
       this.router.navigateByUrl('/auth/login');
       return;
     }
   }
 
   enable() {
-    if (this.mfaQR) {
-      this.goToMfaConnect(this.mfaQR);
+    const qr = this.mfaQR();
+    if (qr) {
+      this.goToMfaConnect(qr);
       return;
     }
 
-    if (this.email) {
+    const email = this.email();
+    if (email) {
       this.mfaApiService
-        .resetMfa(this.email)
+        .resetMfa(email)
         .pipe(takeUntilDestroyed(this.destroyRef))
         .subscribe(() => {
           this.showOTPModal();
@@ -61,7 +62,7 @@ export class AskForMfaComponent implements OnInit {
   }
 
   private showOTPModal(): void {
-    const email = this.email;
+    const email = this.email();
     if (!email) {
       return;
     }

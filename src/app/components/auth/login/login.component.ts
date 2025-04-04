@@ -187,7 +187,7 @@ export class LoginComponent {
   }
 
   private askForMfa(email: string) {
-    this.router.navigate(['/auth/two-factor-auth'], { state: { email } });
+    this.router.navigate(['/auth/two-factor-auth'], { queryParams: { email } });
   }
 
   private goToDashboard() {
