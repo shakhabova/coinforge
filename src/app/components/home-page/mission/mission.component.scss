@@ -17,6 +17,11 @@
   }
 }
 
+.about-container {
+  max-width: 1360px;
+  margin: 0 auto;
+}
+
 .h3-heading {
   color: white;
 }
@@ -27,7 +32,7 @@
     --bg,
     linear-gradient(242deg, #fedd2d 35.16%, #322c0c 159.67%)
   );
-  max-width: 100%;
+  max-width: 1360px;
   height: 400px;
   margin: 40px auto;
   display: flex;

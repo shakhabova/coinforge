@@ -7,6 +7,7 @@ import {
   Component,
   DestroyRef,
   type OnInit,
+  computed,
   effect,
   inject,
   model,
@@ -51,6 +52,10 @@ import { CreateWalletModalComponent } from './create-wallet-modal/create-wallet-
 import { WalletInfoCardComponent } from './wallet-info-card/wallet-info-card.component';
 import { WalletItemOptionComponent } from './wallet-item-option/wallet-item-option.component';
 import { DialogService } from 'services/dialog.service';
+import { CopyIconComponent } from "../shared/copy-icon/copy-icon.component";
+import { LoaderComponent } from "../shared/loader/loader.component";
+import { EmptyDisplayComponent } from "../shared/empty-display/empty-display.component";
+import { ErrorDisplayComponent } from "../shared/error-display/error-display.component";
 
 @Component({
   selector: 'app-wallets-page',
@@ -72,7 +77,11 @@ import { DialogService } from 'services/dialog.service';
     DecimalPipe,
     WalletInfoCardComponent,
     ScrollingModule,
-  ],
+    CopyIconComponent,
+    LoaderComponent,
+    EmptyDisplayComponent,
+    ErrorDisplayComponent
+],
   templateUrl: './wallets-page.component.html',
   styleUrl: './wallets-page.component.css',
 })
@@ -80,7 +89,7 @@ export class WalletsPageComponent implements OnInit {
   private cryptocurrenciesService = inject(CurrenciesService);
   private walletsService = inject(WalletsService);
   private destroyRef = inject(DestroyRef);
-  private createWalletDialog = tuiDialog(CreateWalletModalComponent);
+  private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto' });
   public configService = inject(ConfigService);
   private router = inject(Router);
   private dialogService = inject(DialogService);
@@ -105,6 +114,10 @@ export class WalletsPageComponent implements OnInit {
 
   private loadBatch = new BehaviorSubject<void>(void 0);
   public mobileWallets: Observable<WalletDto[] | undefined>;
+  error = signal<unknown>(null);
+
+  isEmpty = computed(() => !this.isLoading() && !this.wallets()?.length && !this.hasError());
+  hasError = computed(() => !this.isLoading() && !!this.error());
 
   constructor() {
     effect(
@@ -128,6 +141,10 @@ export class WalletsPageComponent implements OnInit {
 
   ngOnInit() {
     this.loadCurrencies();
+  }
+
+  openDetails(wallet: WalletDto): void {
+    this.router.navigate(['wallets', wallet.trxAddress])
   }
 
   navigateDetails(wallet: WalletDto): void {
@@ -166,11 +183,6 @@ export class WalletsPageComponent implements OnInit {
   @tuiPure
   getCryptoIcon(crypto: string): Observable<string> {
     return this.cryptocurrenciesService.getCurrencyLinkUrl(crypto);
-  }
-
-  async copy(address: string) {
-    await navigator.clipboard.writeText(address);
-    // TODO display copy success message
   }
 
   onPageChange(state: PaginatorState) {
@@ -249,6 +261,7 @@ export class WalletsPageComponent implements OnInit {
   }
 
   private loadWallets(selectedCurrency?: string) {
+    this.error.set(null);
     this.isLoading.set(true);
     const params: GetWalletsParams = {
       statusIn: ['ACTIVE', 'CUSTOMER_BLOCKED', 'DEACTIVATED'],
@@ -273,7 +286,7 @@ export class WalletsPageComponent implements OnInit {
         },
         error: (err) => {
           console.error(err);
-          // TODO handle wallets table error
+          this.error.set(err);
         },
       });
   }

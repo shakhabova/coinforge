@@ -1,7 +1,6 @@
 <div class="transactions dashboard-card">
   <div class="h5-heading title">Transactions</div>
   
-  @if (!hasError() && !displayEmpty()) {
     @for (group of daysGroups; track $index) {
       <div class="text-m w600 day-group-title">{{ group.title }}</div>
 
@@ -13,14 +12,16 @@
         }
       }
     }
-  }
 
   @if (displayEmpty()) {
-    <div class="empty-wrapper">
-      <img src="/assets/icons/empty-icon.png" class="empty-icon" />
+    <app-empty-display text="No transactions in your history? Your transaction history can be made today." />
+  }
 
-      <div class="empty-desc text-sm w600">No transactions in your history? Your transaction history can be made today.</div>
-    </div>
+  @if (displayError()) {
+    <app-error-display text="Something went wrong while trying to load your transaction." />
   }
 </div>
 
+@if (loading()) {
+  <app-loader />
+}

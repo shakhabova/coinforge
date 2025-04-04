@@ -43,7 +43,7 @@
     }
   </div>
 </div>
-@if(!configService.isMobile()){
+@if(!configService.isMobile() && this.wallets()?.length){
 <table tuiTable [columns]="columns">
   <thead>
     <tr tuiThGroup>
@@ -56,19 +56,11 @@
 
   <tbody tuiTbody [data]="wallets()">
     @for (wallet of wallets(); track wallet.id) {
-    <tr tuiTr>
+    <tr tuiTr (click)="openDetails(wallet)">
       <td *tuiCell="'trxAddress'" tuiTd class="text-m w600">
         <div class="u-row-middle">
-          <a
-            routerLink="/wallets/{{ wallet.trxAddress }}"
-            class="address-wrapper"
-            >{{ wallet.trxAddress }}</a
-          >
-          <tui-icon
-            icon="@tui.clipboard-copy"
-            (click)="copy(wallet.trxAddress)"
-            class="copy-icon"
-          ></tui-icon>
+          <div class="text-m w600 address-wrapper">{{ wallet.trxAddress }}</div>
+          <app-copy-icon [text]="wallet.trxAddress" />
         </div>
       </td>
 
@@ -122,15 +114,31 @@
     </span>
   </ng-template>
 </p-paginator>
-} @else { 
-  <cdk-virtual-scroll-viewport itemSize="168" (scrolledIndexChange)="nextBatch()">
-    <app-wallet-info-card
-      *cdkVirtualFor="let wallet of mobileWallets | async; trackBy: trackById"
-      [wallet]="wallet"
-      (click)="navigateDetails(wallet)"
-      (block)="onBlock(wallet)"
-      (unblock)="onUnblock(wallet)"
-      (deactivate)="onDeactivate(wallet)"
-    />
-  </cdk-virtual-scroll-viewport>
+
+
+
+} @else if (this.configService.isMobile()) {
+<cdk-virtual-scroll-viewport itemSize="168" (scrolledIndexChange)="nextBatch()">
+  <app-wallet-info-card
+    *cdkVirtualFor="let wallet of mobileWallets | async; trackBy: trackById"
+    [wallet]="wallet"
+    (click)="navigateDetails(wallet)"
+    (block)="onBlock(wallet)"
+    (unblock)="onUnblock(wallet)"
+    (deactivate)="onDeactivate(wallet)"
+  />
+</cdk-virtual-scroll-viewport>
 }
+@if(isLoading()) {
+  <app-loader></app-loader>
+  }
+
+ @if (isEmpty()) {
+  <app-empty-display
+    text="Simplify exchanging and transferring in the world of cryptocurrency by opening your own wallet."
+  ></app-empty-display>
+  }
+  
+  @if (hasError()) {
+    <app-error-display text="Something went wrong while trying to load your wallets." />
+  }

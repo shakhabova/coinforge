@@ -25,11 +25,12 @@
 
       <div class="u-row-middle u-mar-top-16">
         <div class="address-text text-m w600">{{ address() }}</div>
-        <tui-icon
+        <app-copy-icon [text]="address()"></app-copy-icon>
+        <!-- <tui-icon
           icon="@tui.clipboard-copy"
           (click)="copyAddress()"
           class="copy-icon"
-        ></tui-icon>
+        ></tui-icon> -->
       </div>
     </div>
   </div>
@@ -85,11 +86,12 @@
     @if (configService.isMobile()) {
       <div class="address-mini-wrapper">
         <div class="address-text text-m w600">{{ address() }}</div>
-        <tui-icon
+        <app-copy-icon [text]="address()"></app-copy-icon>
+        <!-- <tui-icon
           icon="@tui.clipboard-copy"
           (click)="copyAddress()"
           class="copy-icon"
-        ></tui-icon>
+        ></tui-icon> -->
       </div>
     }
   </div>

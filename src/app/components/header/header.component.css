@@ -1,10 +1,17 @@
 .header {
-	display: flex;
-	align-items: stretch;
-	justify-content: space-between;
 	background-color: var(--Primary500, #1c1c1c);
 	padding: 0px 20px;
 	height: 72px;
+	border-bottom: 0.5px solid #65656C;
+}
+
+.header-wrapper {
+	display: flex;
+	align-items: stretch;
+	justify-content: space-between;
+	max-width: 1128px;
+	height: 72px;
+	margin: 0 auto;
 }
 
 .header__logo {
@@ -89,6 +96,7 @@
 	justify-content: center;
 	font-weight: bold;
 	font-size: 12px;
+	cursor: pointer;
 }
 
 .mobile-menu-backdrop {

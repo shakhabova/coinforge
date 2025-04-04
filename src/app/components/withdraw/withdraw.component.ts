@@ -94,7 +94,7 @@ export class WithdrawComponent {
   private tuiConfirmService = inject(TuiConfirmService);
   private tuiDialogService = inject(TuiDialogService);
 
-  private context =
+  public context =
     injectContext<TuiDialogContext<void, WalletDto | undefined>>();
 
   private confirmDialog = tuiDialog(WithdrawConfirmComponent, { size: 'auto' });
@@ -158,7 +158,7 @@ export class WithdrawComponent {
       this.phase.set('to');
     }
 
-    this.context = { ...this.context, dismissible: false };
+    // this.context = { ...this.context, dismissible: false };
   }
 
   @tuiPure

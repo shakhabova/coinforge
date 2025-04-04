@@ -1,8 +1,13 @@
 :host {
 	max-width: 1128px;
-	display: block;
+	display: flex;
+	flex-direction: column;
 	margin: 0 auto;
 	margin-top: 24px;
+	background-color: white;
+	padding: 24px;
+	min-height: 738px;
+	border-radius: 10px;
 
 	--p-paginator-background: white;
 	--p-paginator-color: black;

@@ -20,6 +20,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CreateWalletModalComponent } from 'components/wallets-page/create-wallet-modal/create-wallet-modal.component';
 import { EmptyDisplayComponent } from 'components/shared/empty-display/empty-display.component';
 import { ErrorDisplayComponent } from 'components/shared/error-display/error-display.component';
+import { Router } from '@angular/router';
 
 @Component({
 	selector: 'app-wallets',
@@ -32,6 +33,7 @@ export class WalletsComponent implements OnInit {
 	private walletsService = inject(WalletsService);
 	private destroyRef = inject(DestroyRef);
 	private configService = inject(ConfigService);
+	private router = inject(Router);
 
 	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto' });
 
@@ -83,7 +85,7 @@ export class WalletsComponent implements OnInit {
 	}
 
 	seeAll() {
-		// TODO see all
+		this.router.navigateByUrl('/wallets');
 	}
 
 	private loadWallets() {
@@ -98,7 +100,6 @@ export class WalletsComponent implements OnInit {
 			.subscribe({
 				next: (wallets) => this.wallets.set(wallets),
 				error: (err) => {
-					// TODO check wallets error and empty
 					this.hasError.set(true);
 					console.error(err);
 				},

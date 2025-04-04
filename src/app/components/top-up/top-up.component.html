@@ -47,8 +47,10 @@
     </div>
   </div>
 
-<button class="button secondary m" (click)="toSelectPhase()">
-  <tui-icon icon="@tui.arrow-left"></tui-icon>
-  <span>Back</span>
-</button>
+  @if (!context.data) {
+    <button class="button secondary m" (click)="toSelectPhase()">
+      <tui-icon icon="@tui.arrow-left"></tui-icon>
+      <span>Back</span>
+    </button>
+  }
 }

@@ -1,11 +1,9 @@
-<div class="error-wrapper">
-  <img src="assets/icons/warning-v2.png" />
+<img src="assets/icons/warning-v2.png" />
 
-  @if (text()) {
-    <div class="text-sm w600 u-mar-top-16">{{text()}}</div>
-  }
+@if (text()) {
+  <div class="text-sm w600 u-mar-top-16">{{text()}}</div>
+}
 
-  @if (action()) {
-    <ng-container [ngTemplateOutlet]="action() ?? null"></ng-container>
-  }
-</div>
+@if (action()) {
+  <ng-container [ngTemplateOutlet]="action() ?? null"></ng-container>
+}

@@ -1,4 +1,6 @@
 .wallet-container {
+	display: flex;
+	flex-direction: column;
 	width: 162px;
 	height: 200px;
 	border-radius: 8px;
@@ -25,7 +27,6 @@
 
 .crypto-name {
 	margin-top: 12px;
-	margin-bottom: 44px;
 }
 
 .crypto-balance {

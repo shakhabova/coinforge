@@ -3,28 +3,25 @@
 
   <div class="block">
     <div class="currency-wrapper">
-      <img class="currency-icon" [src]="currencyIconLinks[currency()]">
+      <img class="currency-icon" [src]="currencyIconLinks[currency()]" />
 
       <button class="round-btn" (click)="chooseCurrency()">
         <tui-icon icon="@tui.chevron-down"></tui-icon>
       </button>
     </div>
 
-    <p class="balance h3-heading">{{ balance() | currency : currency() : '' }} {{ currency() }}</p>
+    <p class="balance h3-heading">
+      {{ balance() | currency : currency() : "" }} {{ currency() }}
+    </p>
     <div class="actions">
       <button class="button primary s" (click)="topUp()">
-        <tui-icon
-          icon="@tui.arrow-down"
-        ></tui-icon>
-          Top-up
+        <tui-icon icon="@tui.arrow-down"></tui-icon>
+        Top-up
       </button>
       <button class="button primary s" (click)="withdraw()">
-        <tui-icon
-          icon="@tui.arrow-up"
-        ></tui-icon>
+        <tui-icon icon="@tui.arrow-up"></tui-icon>
         Withdraw
       </button>
     </div>
   </div>
 </div>
-

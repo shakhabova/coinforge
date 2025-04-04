@@ -9,34 +9,8 @@ h2 {
 }
 
 .form-group {
-	margin-bottom: 24px;
-}
-
-.form-group label {
 	display: flex;
-	padding: var(--Spacing-Spacing-Spacing-sm, 12px);
 	flex-direction: column;
-	justify-content: center;
-	align-items: flex-start;
-	gap: var(--Spacing-Spacing-Spacing-xxs, 4px);
-	align-self: stretch;
-	width: 456px;
-}
-
-.form-group input {
-	width: 456px;
-	padding: 10px;
-	font-size: 16px;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-}
-
-.form-group input[type="password"] {
-	font-family: "FontAwesome";
-}
-
-.form-group input[type="checkbox"] {
-	margin-right: 10px;
 }
 
 .sign-in-btn {
@@ -96,4 +70,10 @@ h2 {
 
 .terms a:hover {
 	text-decoration: underline;
+}
+
+.forget-password {
+	margin-left: auto;
+	text-decoration: none;
+	color: #1c1c1c;
 }

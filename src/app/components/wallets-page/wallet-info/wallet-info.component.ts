@@ -12,8 +12,8 @@ import {
 	signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { TuiIcon } from '@taiga-ui/core';
-import { finalize, type Observable } from 'rxjs';
+import { tuiDialog, TuiIcon } from '@taiga-ui/core';
+import { finalize, of, type Observable } from 'rxjs';
 import { type WalletDto, WalletsService } from 'services/wallets.service';
 import { CurrenciesService } from 'services/currencies.service';
 import { tuiPure } from '@taiga-ui/cdk';
@@ -22,6 +22,9 @@ import { WalletItemOptionComponent } from '../wallet-item-option/wallet-item-opt
 import { TransactionsComponent } from '../../dashboard/transactions/transactions.component';
 import { TransactionsPageComponent } from '../../transactions-page/transactions-page.component';
 import { ConfigService } from 'services/config.service';
+import { CopyIconComponent } from 'components/shared/copy-icon/copy-icon.component';
+import { TopUpComponent } from 'components/top-up/top-up.component';
+import { WithdrawComponent } from 'components/withdraw/withdraw.component';
 
 @Component({
 	selector: 'app-wallet-info',
@@ -33,6 +36,7 @@ import { ConfigService } from 'services/config.service';
 		WalletItemOptionComponent,
 		TransactionsComponent,
 		TransactionsPageComponent,
+		CopyIconComponent,
 	],
 	templateUrl: './wallet-info.component.html',
 	styleUrl: './wallet-info.component.css',
@@ -46,6 +50,9 @@ export class WalletInfoComponent implements OnInit {
 	private location = inject(Location);
 	private cryptoService = inject(CurrenciesService);
 	public configService = inject(ConfigService);
+
+	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
+	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
 
 	protected isLoading = signal(false);
 	protected error = signal<unknown | null>(null);
@@ -89,18 +96,24 @@ export class WalletInfoComponent implements OnInit {
 		this.location.back();
 	}
 
-	copyAddress() {
-		navigator.clipboard.writeText(this.address()!);
-	}
-
 	@tuiPure
 	getCryptoIconUrl(): Observable<string> {
-		return this.cryptoService.getCurrencyLinkUrl(this.walletInfo()!.cryptocurrency);
+		const info = this.walletInfo();
+		if (!info) {
+			return of('');
+		}
+
+		return this.cryptoService.getCurrencyLinkUrl(info.cryptocurrency);
 	}
 
 	@tuiPure
 	getCryptoName(): Observable<string> {
-		return this.cryptoService.getCurrencyName(this.walletInfo()!.cryptocurrency);
+		const info = this.walletInfo();
+		if (!info) {
+			return of('');
+		}
+
+		return this.cryptoService.getCurrencyName(info.cryptocurrency);
 	}
 
 	onBlock(): void {
@@ -132,11 +145,29 @@ export class WalletInfoComponent implements OnInit {
 	}
 
 	topUp() {
-		// TODO top up
+		const info = this.walletInfo();
+		if (!info) {
+			return;
+		}
+
+		this.topUpDialog(info)
+			.pipe(
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe();
 	}
 
 	withdraw() {
-		// TODO withdraw
+		const info = this.walletInfo();
+		if (!info) {
+			return;
+		}
+
+		this.withdrawDialog(info)
+			.pipe(
+				takeUntilDestroyed(this.destroyRef)
+			)
+			.subscribe();
 	}
 
 	private async generateQR() {

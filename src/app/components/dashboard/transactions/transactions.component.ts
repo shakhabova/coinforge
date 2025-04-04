@@ -6,6 +6,9 @@ import { enUS } from 'date-fns/locale/en-US';
 import { formatRelative, type FormatRelativeOptions } from 'date-fns';
 import { TransactionItemComponent } from './transaction-item/transaction-item.component';
 import { finalize } from 'rxjs';
+import { EmptyDisplayComponent } from 'components/shared/empty-display/empty-display.component';
+import { ErrorDisplayComponent } from 'components/shared/error-display/error-display.component';
+import { LoaderComponent } from 'components/shared/loader/loader.component';
 
 interface DayTransactionsModel {
 	title: string;
@@ -15,7 +18,7 @@ interface DayTransactionsModel {
 
 @Component({
 	selector: 'app-transactions',
-	imports: [TransactionItemComponent],
+	imports: [TransactionItemComponent, EmptyDisplayComponent, ErrorDisplayComponent, LoaderComponent],
 	templateUrl: './transactions.component.html',
 	styleUrl: './transactions.component.scss',
 })
@@ -51,7 +54,7 @@ export class TransactionsComponent implements OnInit {
 				},
 				error: (err) => {
 					this.hasError.set(true);
-					// TODO handle transactions error
+					console.error(err);
 				},
 			});
 	}

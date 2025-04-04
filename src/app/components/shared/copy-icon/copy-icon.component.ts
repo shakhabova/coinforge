@@ -16,8 +16,9 @@ export class CopyIconComponent {
 	async copy(event: Event) {
 		event.preventDefault();
 		event.stopPropagation();
-		if (this.text()) {
-			await navigator.clipboard.writeText(this.text()!);
+		const text = this.text();
+		if (text) {
+			await navigator.clipboard.writeText(text);
 
 			this.displaySuccess.set(true);
 			setTimeout(() => this.displaySuccess.set(false), 2000);

@@ -1,12 +1,13 @@
 import { AsyncPipe } from '@angular/common';
 import { Component, computed, inject, model, signal } from '@angular/core';
 import { tuiPure } from '@taiga-ui/cdk';
-import { TuiIcon } from '@taiga-ui/core';
+import { TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { SelectListComponent } from 'components/shared/select-list/select-list.component';
 import { map, type Observable, of } from 'rxjs';
 import { CurrenciesService } from 'services/currencies.service';
 import { type WalletDto, WalletsService } from 'services/wallets.service';
 import QRCode from 'qrcode';
+import { injectContext } from '@taiga-ui/polymorpheus';
 
 @Component({
 	selector: 'app-top-up',
@@ -17,6 +18,8 @@ import QRCode from 'qrcode';
 export class TopUpComponent {
 	private walletService = inject(WalletsService);
 	private currenciesService = inject(CurrenciesService);
+
+	public readonly context = injectContext<TuiDialogContext<void, WalletDto | undefined>>();
 
 	selected = model<WalletDto | null>(null);
 	phase = signal<'select' | 'qr'>('select');
@@ -30,6 +33,14 @@ export class TopUpComponent {
 			page: 0,
 		})
 		.pipe(map((data) => data.data));
+
+	async ngOnInit() {
+		if (this.context.data) {
+			this.selected.set(this.context.data);
+			this.qrDataUrl.set(await QRCode.toDataURL(this.context.data.trxAddress, { margin: 0, width: 200 }));
+			this.phase.set('qr');
+		}
+	}
 
 	@tuiPure
 	getCryptoIcon(crypto?: string): Observable<string> {

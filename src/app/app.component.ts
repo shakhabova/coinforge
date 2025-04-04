@@ -1,5 +1,5 @@
-import { TuiRoot } from '@taiga-ui/core';
-import { Component } from '@angular/core';
+import { TUI_DARK_MODE, TuiRoot } from '@taiga-ui/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({

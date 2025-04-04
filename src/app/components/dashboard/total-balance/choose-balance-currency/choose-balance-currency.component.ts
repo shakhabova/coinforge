@@ -5,6 +5,9 @@ import { BalanceService, type TotalBalanceCurrency } from 'services/balance.serv
 import { finalize, forkJoin } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
+import { DialogService } from 'services/dialog.service';
+import type { TuiDialogContext } from '@taiga-ui/core';
+import { injectContext } from '@taiga-ui/polymorpheus';
 
 export interface ChooseBalanceDialogResultData {
 	balance: number;
@@ -18,14 +21,18 @@ export interface ChooseBalanceDialogResultData {
 	styleUrl: './choose-balance-currency.component.css',
 })
 export class ChooseBalanceCurrencyComponent implements OnInit {
-	private dialogRef: MatDialogRef<unknown, ChooseBalanceDialogResultData> = inject(MatDialogRef);
-	private data = inject(MAT_DIALOG_DATA);
 	private balanceService = inject(BalanceService);
 	private destroyRef = inject(DestroyRef);
+	private dialogService = inject(DialogService);
+
+	public context =
+		injectContext<
+			TuiDialogContext<{ balance: number; currency: TotalBalanceCurrency }, { currentCurrency: TotalBalanceCurrency }>
+		>();
 
 	protected isLoading = signal(false);
 
-	selected = signal<TotalBalanceCurrency>(this.data?.currentCurrency || 'EUR');
+	selected = signal<TotalBalanceCurrency>(this.context.data.currentCurrency || 'EUR');
 	balances = signal<Record<TotalBalanceCurrency, number>>({
 		EUR: 0,
 		GBP: 0,
@@ -39,7 +46,8 @@ export class ChooseBalanceCurrencyComponent implements OnInit {
 	public ngOnInit(): void {
 		this.isLoading.set(true);
 
-		forkJoin([this.balanceService.getBalance('EUR'), this.balanceService.getBalance('GBP')])
+		this.balanceService
+			.getBalance(['EUR', 'GBP'])
 			.pipe(
 				finalize(() => this.isLoading.set(false)),
 				takeUntilDestroyed(this.destroyRef),
@@ -47,19 +55,19 @@ export class ChooseBalanceCurrencyComponent implements OnInit {
 			.subscribe({
 				next: ([EUR, GBP]) => this.balances.set({ EUR: EUR.totalBalance, GBP: GBP.totalBalance }),
 				error: (err) => {
-					// TODO handle balances error
+					console.error(err);
+					this.dialogService.showInfo({
+						type: 'warning',
+						title: 'Oops, something went wrong while loading total balance',
+					});
 				},
 			});
 	}
 
 	choose() {
-		this.dialogRef.close({
+		this.context.completeWith({
 			balance: this.balances()[this.selected()],
 			currency: this.selected(),
 		});
-	}
-
-	closeModal() {
-		this.dialogRef.close();
 	}
 }

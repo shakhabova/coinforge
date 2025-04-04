@@ -41,6 +41,7 @@ import { DialogService } from 'services/dialog.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { explicitEffect } from 'ngxtension/explicit-effect';
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
+import { TuiAutoFocus } from '@taiga-ui/cdk';
 
 @Component({
   selector: 'app-forget-password',
@@ -58,6 +59,7 @@ import { RxwebValidators } from '@rxweb/reactive-form-validators';
     TuiFieldErrorPipe,
     AsyncPipe,
     LoaderComponent,
+    TuiAutoFocus,
   ],
   templateUrl: './forget-password.component.html',
   styleUrl: './forget-password.component.css',

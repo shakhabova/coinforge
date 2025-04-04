@@ -82,10 +82,12 @@
   Next
 </button>
 
-<button class="button secondary m" (click)="backToFromPhase()">
-  <tui-icon icon="@tui.arrow-left"></tui-icon>
-  <span>Back</span>
-</button>
+  @if (!context.data) {
+    <button class="button secondary m" (click)="backToFromPhase()">
+      <tui-icon icon="@tui.arrow-left"></tui-icon>
+      <span>Back</span>
+    </button>
+  }
 }
 
 <ng-template

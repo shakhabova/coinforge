@@ -1,13 +1,16 @@
 .footer {
   background-color: var(--Primary500, #1c1c1c);
   color: #fff;
-  padding: 40px 10%;
   text-align: center;
+  border-top: 1px solid #FEDD2D;
+  padding: 60px;
+  padding-bottom: 48px;
+  padding-top: 104px;
 
   .footer-container {
     display: flex;
     justify-content: space-between;
-    max-width: 1100px;
+    max-width: 1360px;
     margin: 0 auto;
   }
 
@@ -79,13 +82,21 @@
 
   /* Bottom Section */
   .footer-bottom {
-    margin-top: 30px;
     font-size: 0.9rem;
     color: #ccc;
+    
+    max-width: 1360px;
+    margin: 0 auto;
+    margin-top: 48px;
 
     hr {
       border: 1px solid #fedd2d;
-      margin: 15px 0;
+    }
+
+    .footer-bottom-text {
+      margin-top: 48px;
+      margin-bottom: 0;
+      color: white;
     }
   }
 }

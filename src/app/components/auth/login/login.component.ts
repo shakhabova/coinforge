@@ -7,7 +7,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TuiError, TuiLabel, TuiTextfield, tuiDialog } from '@taiga-ui/core';
 import { TuiFieldErrorPipe, TuiInputPassword } from '@taiga-ui/kit';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -36,6 +36,7 @@ import { UserService } from 'services/user.service';
     TuiInputPassword,
     TuiTextfield,
     LoaderComponent,
+    RouterModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',

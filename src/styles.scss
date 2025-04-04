@@ -19,6 +19,10 @@ body {
 }
 html, body { height: 100%; }
 
+.t-root-content {
+  height: 100dvh;
+}
+
 [tuiWrapper][data-appearance=textfield], [tuiAppearance][data-appearance=textfield] {
   box-shadow: unset;
 }

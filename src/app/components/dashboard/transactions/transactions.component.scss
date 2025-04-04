@@ -2,6 +2,8 @@
   width: 744px;
   height: 448px;
   overflow: auto;
+  display: flex;
+  flex-direction: column;
 }
 
 .title {

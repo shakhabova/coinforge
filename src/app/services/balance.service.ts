@@ -21,8 +21,8 @@ export class BalanceService {
   private configService = inject(ConfigService);
   private userService = inject(UserService);
 
-  getBalance(currency: TotalBalanceCurrency): Observable<TotalBalanceDto> {
-    return this.httpClient.get<TotalBalanceDto>(
+  getBalance(currency: TotalBalanceCurrency[]): Observable<TotalBalanceDto[]> {
+    return this.httpClient.get<TotalBalanceDto[]>(
       `${this.configService.serverUrl}/v1/bff-custody/wallets/customer/total-balance`,
       {
         params: { currency },

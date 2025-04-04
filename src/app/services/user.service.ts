@@ -29,8 +29,6 @@ export class UserService {
   private configService = inject(ConfigService);
   private destroyRef = inject(DestroyRef);
 
-  #currentUserInfo: UserInfoDto | null = null;
-
   currentUser$ = new BehaviorSubject<UserInfoDto | null>(null);
   currentUserUpdating$ = new BehaviorSubject<boolean>(false);
   currentUserId$ = this.currentUser$.pipe(map((info) => info?.id));
@@ -69,6 +67,6 @@ export class UserService {
   }
 
   clearCurrentUser(): void {
-    this.#currentUserInfo = null;
+    this.currentUser$.next(null);
   }
 }

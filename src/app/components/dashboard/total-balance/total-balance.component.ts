@@ -13,6 +13,7 @@ import { TopUpComponent } from 'components/top-up/top-up.component';
 import { UserService } from 'services/user.service';
 import { switchMap } from 'rxjs';
 import { WithdrawComponent } from 'components/withdraw/withdraw.component';
+import { DialogService } from 'services/dialog.service';
 
 @Component({
 	selector: 'app-total-balance',
@@ -24,8 +25,9 @@ export class TotalBalanceComponent implements OnInit {
 	private balanceService = inject(BalanceService);
 	private currentCurrencyService = inject(CurrentCurrencyService);
 	private destroyRef = inject(DestroyRef);
-	private dialog = inject(MatDialog);
-	private userService = inject(UserService);
+	private dialogService = inject(DialogService);
+
+	private chooseBalanceDialog = tuiDialog(ChooseBalanceCurrencyComponent, { size: 'auto' });
 
 	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
 	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
@@ -43,25 +45,15 @@ export class TotalBalanceComponent implements OnInit {
 	}
 
 	topUp() {
-		this.topUpDialog().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+		this.topUpDialog(undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 
 	withdraw() {
-		this.withdrawDialog().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
+		this.withdrawDialog(undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 
 	chooseCurrency() {
-		const dialogRef = this.dialog.open<ChooseBalanceCurrencyComponent, unknown, ChooseBalanceDialogResultData>(
-			ChooseBalanceCurrencyComponent,
-			{
-				data: {
-					currentCurrency: this.currency(),
-				},
-			},
-		);
-
-		dialogRef
-			.afterClosed()
+		this.chooseBalanceDialog({ currentCurrency: this.currency() })
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe((currency) => {
 				if (currency) {
@@ -75,12 +67,18 @@ export class TotalBalanceComponent implements OnInit {
 
 	private loadBalance() {
 		this.balanceService
-			.getBalance(this.currency())
+			.getBalance([this.currency()])
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe({
-				next: (balance) => this.balance.set(balance.totalBalance),
+				next: (balance) => {
+					this.balance.set(balance[0].totalBalance);
+				},
 				error: (err) => {
-					// TODO handle load balances error
+					console.error(err);
+					this.dialogService.showInfo({
+						type: 'warning',
+						title: 'Oops, something went wrong while loading total balance',
+					});
 				},
 			});
 	}
