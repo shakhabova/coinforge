@@ -127,7 +127,6 @@ export class WalletsPageComponent implements OnInit {
   }
 
   ngOnInit() {
-    // this.loadWallets();
     this.loadCurrencies();
   }
 
@@ -182,59 +181,59 @@ export class WalletsPageComponent implements OnInit {
   }
 
   onBlock(wallet: WalletDto): void {
-    this.walletsService.blockWallet(wallet)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef)
-      )
+    this.walletsService
+      .blockWallet(wallet)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        error: err => {
+        next: () => (wallet.walletStatus = 'CUSTOMER_BLOCKED'),
+        error: (err) => {
           console.error(err);
           this.dialogService
-						.showInfo({
-							type: 'warning',
-							title: 'Error',
-							text: 'An unexpected error has appeared. Please try again later.',
-						})
-						.subscribe();
-        }
+            .showInfo({
+              type: 'warning',
+              title: 'Error',
+              text: 'An unexpected error has appeared. Please try again later.',
+            })
+            .subscribe();
+        },
       });
   }
 
   onUnblock(wallet: WalletDto): void {
-    this.walletsService.unblockWallet(wallet)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef)
-      )
+    this.walletsService
+      .unblockWallet(wallet)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        error: err => {
+        next: () => (wallet.walletStatus = 'ACTIVE'),
+        error: (err) => {
           console.error(err);
           this.dialogService
-						.showInfo({
-							type: 'warning',
-							title: 'Error',
-							text: 'An unexpected error has appeared. Please try again later.',
-						})
-						.subscribe();
-        }
+            .showInfo({
+              type: 'warning',
+              title: 'Error',
+              text: 'An unexpected error has appeared. Please try again later.',
+            })
+            .subscribe();
+        },
       });
   }
 
   onDeactivate(wallet: WalletDto): void {
-    this.walletsService.deactivateWallet(wallet)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef)
-      )
+    this.walletsService
+      .deactivateWallet(wallet)
+      .pipe(takeUntilDestroyed(this.destroyRef))
       .subscribe({
-        error: err => {
+        next: () => (wallet.walletStatus = 'DEACTIVATED'),
+        error: (err) => {
           console.error(err);
           this.dialogService
-						.showInfo({
-							type: 'warning',
-							title: 'Error',
-							text: 'An unexpected error has appeared. Please try again later.',
-						})
-						.subscribe();
-        }
+            .showInfo({
+              type: 'warning',
+              title: 'Error',
+              text: 'An unexpected error has appeared. Please try again later.',
+            })
+            .subscribe();
+        },
       });
   }
 
