@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { OtpCodeInputComponent } from '../otp-code-input/otp-code-input.component';
-import type { TuiDialogContext } from '@taiga-ui/core';
+import { TuiLoader, type TuiDialogContext } from '@taiga-ui/core';
 import { SignUpApiService } from 'services/sign-up-api.service';
 import {
   finalize,
@@ -38,7 +38,7 @@ export interface EmailOtpModalData<T> {
 
 @Component({
   selector: 'app-email-otp-code',
-  imports: [OtpCodeInputComponent, AsyncPipe],
+  imports: [OtpCodeInputComponent, AsyncPipe, TuiLoader],
   templateUrl: './email-otp-code.component.html',
   styleUrl: './email-otp-code.component.css',
 })
@@ -66,7 +66,7 @@ export class EmailOtpCodeComponent<T> implements OnInit {
     injectContext<TuiDialogContext<unknown, EmailOtpModalData<T>>>();
   private expiresSeconds = 90;
 
-  get email(): string {
+  get contextEmail(): string {
     return this.context.data?.email;
   }
 
@@ -119,16 +119,6 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 
   confirm() {
     this.loading.set(true);
-    // this.httpClient
-    //   .post(
-    //     `${this.configService.serverUrl}${this.context.data?.submitUrl}`,
-    //     {
-    //       otp: this.otpCode(),
-    //       email: this.email,
-    //       id: this.context.data.id,
-    //     },
-    //     { headers, responseType: this.context.data.responseType || 'json' },
-    //   )
     this.context.data
       .requestGetter(this.otpCode())
       .pipe(
@@ -138,12 +128,12 @@ export class EmailOtpCodeComponent<T> implements OnInit {
       .subscribe({
         next: (res) => this.context.completeWith(res || true),
         error: (err) => {
-          if (err.code === 'invalid_confirmation_code') {
+          if (err.error?.code === 'invalid_confirmation_code') {
             this.errorMessage.set('Invalid OTP code');
             return;
           }
 
-          if (err.code === 'OTP_EXPIRED') {
+          if (err.error?.code === 'OTP_EXPIRED') {
             this.codeExpired.set(true);
             this.errorMessage.set('OTP has expired');
             return;
@@ -158,7 +148,7 @@ export class EmailOtpCodeComponent<T> implements OnInit {
     this.loading.set(true);
     this.otpCode.set('');
     this.signUpApiService
-      .resendOTP(this.email)
+      .resendOTP(this.contextEmail)
       .pipe(
         takeUntilDestroyed(this.destroyRef),
         finalize(() => this.loading.set(false)),

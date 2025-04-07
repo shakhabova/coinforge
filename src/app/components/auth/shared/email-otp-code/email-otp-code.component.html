@@ -2,7 +2,7 @@
 
 <div class="subtitle text-sm w400">
   Enter verification code we sent to the email address
-  <span class="text-sm w600">{{ email }}</span
+  <span class="text-sm w600">{{ contextEmail }}</span
   >.
 </div>
 
@@ -18,14 +18,21 @@
   {{ message() || errorMessage() }}
 </div>
 } @if (!codeExpired()) {
-<button
-  class="confirm-button button primary m"
-  [class.secondary]="isConfirmDisabled()"
-  [disabled]="isConfirmDisabled()"
-  (click)="confirm()"
->
-  Confirm
-</button>
+  <tui-loader
+    class="loader"
+    [inheritColor]="true"
+    [overlay]="true"
+    [showLoader]="loading()"
+  >
+    <button
+      class="confirm-button button primary m"
+      [class.secondary]="isConfirmDisabled()"
+      [disabled]="isConfirmDisabled()"
+      (click)="confirm()"
+    >
+      Confirm
+    </button>
+  </tui-loader>
 } @else {
 <button
   [disabled]="loading()"

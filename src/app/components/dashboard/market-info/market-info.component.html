@@ -2,7 +2,7 @@
   <div class="h5-heading title">Market Info</div>
 
   @for (info of infos; track $index) {
-    <app-market-info-item [info]="info"></app-market-info-item>
+    <app-market-info-item [info]="info" [loading]="loading()"></app-market-info-item>
 
     @if (!$last) {
       <div class="siz"></div>

@@ -105,4 +105,11 @@ export class WalletsComponent implements OnInit {
 				},
 			});
 	}
+
+	// private getWallets() {
+
+	// 	return this.walletsService.getWallets({
+
+	// 	})
+	// }
 }

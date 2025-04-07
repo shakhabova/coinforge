@@ -1,8 +1,10 @@
-import { Component, DestroyRef, effect, inject } from '@angular/core';
+import { Component, computed, DestroyRef, effect, inject, signal } from '@angular/core';
 import { MarketInfoItemComponent, type MarketInfoItemModel } from './market-info-item/market-info-item.component';
 import { RatesService } from 'services/rates.service';
 import { CurrentCurrencyService } from 'services/current-currency.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { DialogService } from 'services/dialog.service';
+import { finalize } from 'rxjs';
 
 const MARKET_INFO_COINS = ['BTC', 'ETH', 'USDC', 'USDT'];
 
@@ -17,6 +19,11 @@ export class MarketInfoComponent {
 	private currentCurrencyService = inject(CurrentCurrencyService);
 	private destroyRef = inject(DestroyRef);
 
+	loading = signal(false);
+	error = signal<unknown>(null);
+
+	displayError = computed(() => !this.loading() && !!this.error());
+
 	protected infos: MarketInfoItemModel[] = [];
 
 	constructor() {
@@ -24,9 +31,11 @@ export class MarketInfoComponent {
 	}
 
 	private loadMarketInfo(currentCurrency: string) {
+		this.loading.set(true);
+		this.error.set(null);
 		this.ratesService
 			.ratesBulk()
-			.pipe(takeUntilDestroyed(this.destroyRef))
+			.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
 			.subscribe({
 				next: (ratesDto) => {
 					this.infos = [];
@@ -39,7 +48,7 @@ export class MarketInfoComponent {
 					});
 				},
 				error: (err) => {
-					// TODO handle rates error
+					this.error.set(err);
 				},
 			});
 	}
