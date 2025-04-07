@@ -1,41 +1,44 @@
 <div class="h4-heading">{{ title() }}</div>
 
-@if (phase() === 'from') {
-<div class="text-sm w400 subtitle u-mar-bottom-32">
-  Choose one of the active wallet
-</div>
-
-<app-select-list
-  [items]="wallets$ | async"
-  [valueTemp]="listValueTemp"
-  [(selected)]="selected"
-></app-select-list>
-
-<ng-template #listValueTemp let-item>
-  <img
-    class="crypto-icon"
-    [src]="getCryptoIcon(item?.cryptocurrency) | async"
-  />
-
-  <div class="crypto-name-wrapper">
-    <div class="text-m w600">{{ getCryptoName(item?.cryptocurrency) | async }}</div>
-    <div class="u-row-middle text-xs w400 wallet-sub-info">
-      <div>{{ item?.availableOprBalance }}</div>&nbsp;
-      <div>{{ item?.cryptocurrency }}</div>
-    </div>
-  </div>
-</ng-template>
-
-<button
-  class="button primary m"
-  [disabled]="!selected()"
-  (click)="onContinue()"
->
-  Continue
-</button>
-} @else if (phase() === 'to') {
+@if (phase() === "from") {
   <div class="text-sm w400 subtitle u-mar-bottom-32">
-    You can only send to the same cryptocurrency of<br>the selected wallet
+    Choose one of the active wallet
+  </div>
+
+  <app-select-list
+    [items]="wallets$ | async"
+    [valueTemp]="listValueTemp"
+    [(selected)]="selected"
+  ></app-select-list>
+
+  <ng-template #listValueTemp let-item>
+    <img
+      class="crypto-icon"
+      [src]="getCryptoIcon(item?.cryptocurrency) | async"
+    />
+
+    <div class="crypto-name-wrapper">
+      <div class="text-m w600">
+        {{ getCryptoName(item?.cryptocurrency) | async }}
+      </div>
+      <div class="u-row-middle text-xs w400 wallet-sub-info">
+        <div>{{ item?.availableOprBalance }}</div>
+        &nbsp;
+        <div>{{ item?.cryptocurrency }}</div>
+      </div>
+    </div>
+  </ng-template>
+
+  <button
+    class="button primary m"
+    [disabled]="!selected()"
+    (click)="onContinue()"
+  >
+    Continue
+  </button>
+} @else if (phase() === "to") {
+  <div class="text-sm w400 subtitle u-mar-bottom-32">
+    You can only send to the same cryptocurrency of<br />the selected wallet
   </div>
 
   <ng-container [formGroup]="formGroup">
@@ -48,10 +51,7 @@
       >
         <input tuiTextfieldLegacy />
       </tui-input>
-      <tui-error
-        formControlName="address"
-        [error]="[] | tuiFieldError | async"
-      >
+      <tui-error formControlName="address" [error]="[] | tuiFieldError | async">
       </tui-error>
     </label>
 
@@ -66,21 +66,18 @@
       >
         <input tuiTextfieldLegacy inputmode="numeric" />
       </tui-input>
-      <tui-error
-        formControlName="amount"
-        [error]="[] | tuiFieldError | async"
-      >
+      <tui-error formControlName="amount" [error]="[] | tuiFieldError | async">
       </tui-error>
     </label>
   </ng-container>
 
-<button
-  class="button secondary m u-mar-bottom-16"
-  [disabled]="formGroup.invalid"
-  (click)="onNext()"
->
-  Next
-</button>
+  <button
+    class="button secondary m u-mar-bottom-16"
+    [disabled]="formGroup.invalid"
+    (click)="onNext()"
+  >
+    Next
+  </button>
 
   @if (!context.data) {
     <button class="button secondary m" (click)="backToFromPhase()">
@@ -90,17 +87,24 @@
   }
 }
 
-<ng-template
-  #confirmContent
-  let-context
->
-  <div class="h4-heading u-mar-bottom-32" style="text-align: center;">Are you sure you want cancel the transfer?</div>
+<ng-template #confirmContent let-context>
+  <div class="h4-heading u-mar-bottom-32" style="text-align: center">
+    Are you sure you want cancel the transfer?
+  </div>
   <div class="u-row-middle u-g-24">
-    <button class="button secondary m" style="flex: 1" (click)="context.next(false); context.complete()">
+    <button
+      class="button secondary m"
+      style="flex: 1"
+      (click)="context.next(false); context.complete()"
+    >
       No
     </button>
-  
-    <button class="button red primary m" style="flex: 1" (click)="context.next(true); context.complete()">
+
+    <button
+      class="button red primary m"
+      style="flex: 1"
+      (click)="context.next(true); context.complete()"
+    >
       Yes
     </button>
   </div>

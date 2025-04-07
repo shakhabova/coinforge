@@ -1,26 +1,26 @@
 :host {
-	display: block;
+  display: block;
 }
 
 .otp-inputs {
-	display: flex;
-	justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .otp-inputs input {
-	text-align: center;
-	width: 49px;
-	height: 48px;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	border-radius: var(--Spacing-Radios-Radios-xs, 10px);
-	border: 1px solid var(--System-color-light-purple, #eceaef);
-	background: var(--Neutral100, #f7f7fb);
+  text-align: center;
+  width: 49px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
+  border: 1px solid var(--System-color-light-purple, #eceaef);
+  background: var(--Neutral100, #f7f7fb);
 }
 
 .otp-inputs input.input-error {
-	border-radius: var(--Spacing-Radios-Radios-xs, 10px);
-	border: 1px solid var(--System-color-red, #e7170b);
-	background: var(--System-color-light-red, #fff0f0);
+  border-radius: var(--Spacing-Radios-Radios-xs, 10px);
+  border: 1px solid var(--System-color-red, #e7170b);
+  background: var(--System-color-light-red, #fff0f0);
 }

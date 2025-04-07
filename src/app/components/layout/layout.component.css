@@ -1,4 +1,4 @@
 :host {
-	display: block;
-	min-height: var(--tui-viewport-height);
+  display: block;
+  min-height: var(--tui-viewport-height);
 }

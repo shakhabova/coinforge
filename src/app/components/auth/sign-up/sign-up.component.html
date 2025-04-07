@@ -86,8 +86,10 @@
       <input formControlName="password" tuiInputPassword />
     </tui-textfield>
   </label>
-  
-  <app-password-criteria [password]="formGroup.get('password')?.getRawValue()"></app-password-criteria>
+
+  <app-password-criteria
+    [password]="formGroup.get('password')?.getRawValue()"
+  ></app-password-criteria>
 
   <label tuiLabel>
     Repeat password *

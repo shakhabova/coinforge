@@ -33,7 +33,9 @@
   }
 
   @if (displayNext()) {
-    <button class="button primary m u-mar-top-48" (click)="goNext()">Next</button>
+    <button class="button primary m u-mar-top-48" (click)="goNext()">
+      Next
+    </button>
   }
 
   @if (!isMobileAppsPage()) {
@@ -52,4 +54,3 @@
     <button class="button secondary m" (click)="goBack()">Back</button>
   }
 </div>
-

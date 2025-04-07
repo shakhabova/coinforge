@@ -4,15 +4,18 @@
   <div class="type-icon" [class.in]="!isOutTransaction()">
     <img src="/assets/icons/arrow.svg" />
   </div>
-  
-  @if(isOutTransaction()) {
+
+  @if (isOutTransaction()) {
     <div class="u-text-center">
-      -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
+      -{{ transaction().amountInSenderCurrency }}
+      {{ transaction().currencyFrom }}
     </div>
   } @else {
-    <div class="u-text-center">+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
+    <div class="u-text-center">
+      +{{ transaction().amount }} {{ transaction().currencyTo }}
+    </div>
   }
-  
+
   <div class="details-row">
     <div class="text-m w600">Status</div>
     <app-transaction-status-chip
@@ -22,39 +25,45 @@
   <div class="details-row">
     <div class="text-m w600">From wallet</div>
     <div class="u-row-middle">
-      <a class="address text-m w600" [href]="scanUrl() + transaction().fromTrxAddress">{{
-        transaction().fromTrxAddress
-      }}</a>
+      <a
+        class="address text-m w600"
+        [href]="scanUrl() + transaction().fromTrxAddress"
+        >{{ transaction().fromTrxAddress }}</a
+      >
 
       @if (!screenshotIsTaking()) {
         <app-copy-icon [text]="transaction().fromTrxAddress"></app-copy-icon>
       }
     </div>
   </div>
-  
+
   @if (displayToWallet()) {
     <div class="details-row">
       <div class="text-m w600">To wallet</div>
       <div class="u-row-middle">
-        <a class="address text-m w600" [href]="scanUrl() + transaction().toTrxAddress">{{
-          transaction().toTrxAddress
-        }}</a>
+        <a
+          class="address text-m w600"
+          [href]="scanUrl() + transaction().toTrxAddress"
+          >{{ transaction().toTrxAddress }}</a
+        >
         @if (!screenshotIsTaking()) {
           <app-copy-icon [text]="transaction().toTrxAddress"></app-copy-icon>
         }
       </div>
     </div>
   }
-  
+
   <div class="details-row">
     <div class="text-m w600">Transaction hash</div>
     <div class="u-row-middle text-m w600">
-      <a class="address text-m w600" [href]="scanUrl() + transaction().transactionHash">{{
-        transaction().transactionHash
-      }}</a>
-        @if (!screenshotIsTaking()) {
-          <app-copy-icon [text]="transaction().transactionHash"></app-copy-icon>
-        }
+      <a
+        class="address text-m w600"
+        [href]="scanUrl() + transaction().transactionHash"
+        >{{ transaction().transactionHash }}</a
+      >
+      @if (!screenshotIsTaking()) {
+        <app-copy-icon [text]="transaction().transactionHash"></app-copy-icon>
+      }
     </div>
   </div>
   <div class="details-row">
@@ -66,12 +75,15 @@
   <div class="details-row">
     <div class="text-m w600">Sending amount</div>
     <div class="text-m w600">
-      -{{ transaction().amountInSenderCurrency }} {{ transaction().currencyFrom }}
+      -{{ transaction().amountInSenderCurrency }}
+      {{ transaction().currencyFrom }}
     </div>
   </div>
   <div class="details-row">
     <div class="text-m w600">Recieving amount</div>
-    <div class="text-m w600">+{{ transaction().amount }} {{ transaction().currencyTo }}</div>
+    <div class="text-m w600">
+      +{{ transaction().amount }} {{ transaction().currencyTo }}
+    </div>
   </div>
   <div class="details-row">
     <div class="text-m w600">Transaction date</div>

@@ -1,39 +1,42 @@
 <div class="h4-heading">{{ title() }}</div>
 
-@if (phase() === 'select') {
-<div class="text-sm w400 subtitle u-mar-bottom-32">
-  Choose a wallet to top up
-</div>
-
-<app-select-list
-  [items]="wallets$ | async"
-  [valueTemp]="listValueTemp"
-  [(selected)]="selected"
-></app-select-list>
-
-<ng-template #listValueTemp let-item>
-  <img
-    class="crypto-icon"
-    [src]="getCryptoIcon(item?.cryptocurrency) | async"
-  />
-
-  <div class="crypto-name-wrapper">
-    <div class="text-m w600">{{ getCryptoName(item?.cryptocurrency) | async }}</div>
-    <div class="u-row-middle text-xs w400 wallet-sub-info">
-      <div>{{ item?.availableOprBalance }}</div>&nbsp;
-      <div>{{ item?.cryptocurrency }}</div>
-    </div>
+@if (phase() === "select") {
+  <div class="text-sm w400 subtitle u-mar-bottom-32">
+    Choose a wallet to top up
   </div>
-</ng-template>
 
-<button
-  class="button primary m"
-  [disabled]="!selected()"
-  (click)="onContinue()"
->
-  Continue
-</button>
-} @else if (phase() === 'qr') {
+  <app-select-list
+    [items]="wallets$ | async"
+    [valueTemp]="listValueTemp"
+    [(selected)]="selected"
+  ></app-select-list>
+
+  <ng-template #listValueTemp let-item>
+    <img
+      class="crypto-icon"
+      [src]="getCryptoIcon(item?.cryptocurrency) | async"
+    />
+
+    <div class="crypto-name-wrapper">
+      <div class="text-m w600">
+        {{ getCryptoName(item?.cryptocurrency) | async }}
+      </div>
+      <div class="u-row-middle text-xs w400 wallet-sub-info">
+        <div>{{ item?.availableOprBalance }}</div>
+        &nbsp;
+        <div>{{ item?.cryptocurrency }}</div>
+      </div>
+    </div>
+  </ng-template>
+
+  <button
+    class="button primary m"
+    [disabled]="!selected()"
+    (click)="onContinue()"
+  >
+    Continue
+  </button>
+} @else if (phase() === "qr") {
   <div class="qr-wrapper">
     <img [src]="qrDataUrl()" width="200" />
 

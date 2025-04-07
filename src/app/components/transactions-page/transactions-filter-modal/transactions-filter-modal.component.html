@@ -34,7 +34,7 @@
       *tuiDataList
       size="m"
       [itemContent]="content"
-      [items]="cryptocurrencies() | tuiFilterByInput : currencyMatcher"
+      [items]="cryptocurrencies() | tuiFilterByInput: currencyMatcher"
     />
 
     <ng-template #content let-data>
@@ -50,6 +50,12 @@
     <input placeholder="Status" tuiTextfieldLegacy />
     <tui-data-list-wrapper *tuiDataList [items]="statuses" />
   </tui-select>
-  <button class="button primary m u-mar-top-32 u-mar-bottom-16" (click)="onApply()" [disabled]="formGroup.pristine">Apply</button>
+  <button
+    class="button primary m u-mar-top-32 u-mar-bottom-16"
+    (click)="onApply()"
+    [disabled]="formGroup.pristine"
+  >
+    Apply
+  </button>
   <button class="button secondary m" (click)="onClear()">Clear</button>
 </ng-container>

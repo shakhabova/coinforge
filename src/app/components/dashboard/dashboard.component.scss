@@ -37,7 +37,7 @@
 
 .dashboard-banner {
   height: 204px;
-  background-image: url('/assets/images/banner.png');
+  background-image: url("/assets/images/banner.png");
   background-size: contain;
   background-repeat: no-repeat;
 }
@@ -51,6 +51,6 @@
   }
 
   .dashboard-banner {
-    background-image: url('/assets/images/banner-mobile.png');
+    background-image: url("/assets/images/banner-mobile.png");
   }
 }

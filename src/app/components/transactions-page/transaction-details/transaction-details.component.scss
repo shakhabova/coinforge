@@ -13,11 +13,11 @@
 }
 
 .details-row > .text-m:first-child {
-  color: #6F6F6F;
+  color: #6f6f6f;
 }
 
 .details-row + .details-row {
-  border-top: 1px #ECEAEF dashed;
+  border-top: 1px #eceaef dashed;
 }
 
 .actions {
@@ -32,7 +32,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background-color: #F2F2F2;
+  background-color: #f2f2f2;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -58,5 +58,5 @@
   position: absolute;
   inset: 0;
   z-index: 10000000;
-  background-color: rgba(0,0,0,0.7);
+  background-color: rgba(0, 0, 0, 0.7);
 }

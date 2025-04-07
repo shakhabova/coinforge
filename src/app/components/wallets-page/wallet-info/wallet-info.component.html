@@ -7,95 +7,105 @@
     ></tui-icon>
   </button>
 
-  @if(walletInfo()) {
-  <div class="h3-heading h4-xs-heading">
-    {{ walletInfo()?.walletName }}
-  </div>
+  @if (walletInfo()) {
+    <div class="h3-heading h4-xs-heading">
+      {{ walletInfo()?.walletName }}
+    </div>
   }
 </div>
 
 @if (walletInfo()) {
-<div class="u-row-middle u-g-24">
-  @if(!configService.isMobile()) {
-  <div class="address-wrapper">
-    <div class="address-title h5-heading u-mar-bottom-24">Wallet address</div>
+  <div class="u-row-middle u-g-24">
+    @if (!configService.isMobile()) {
+      <div class="address-wrapper">
+        <div class="address-title h5-heading u-mar-bottom-24">
+          Wallet address
+        </div>
 
-    <div class="qr-wrapper">
-      <img [src]="addressDataUrl()" width="84" />
+        <div class="qr-wrapper">
+          <img [src]="addressDataUrl()" width="84" />
 
-      <div class="u-row-middle u-mar-top-16">
-        <div class="address-text text-m w600">{{ address() }}</div>
-        <app-copy-icon [text]="address()"></app-copy-icon>
-        <!-- <tui-icon
+          <div class="u-row-middle u-mar-top-16">
+            <div class="address-text text-m w600">{{ address() }}</div>
+            <app-copy-icon [text]="address()"></app-copy-icon>
+            <!-- <tui-icon
           icon="@tui.clipboard-copy"
           (click)="copyAddress()"
           class="copy-icon"
         ></tui-icon> -->
-      </div>
-    </div>
-  </div>
-  }
-
-  <div class="balance-wrapper u-flex-grow-1">
-    <div class="balance-title h5-heading u-mar-bottom-24">Wallet balance</div>
-
-    <div class="balance-card">
-      <div class="u-row-middle u-space-between u-mar-bottom-24">
-        <div class="u-row-middle u-space-between">
-          <img
-            [src]="getCryptoIconUrl() | async"
-            class="u-mar-right-12 wallet-icon"
-          />
-          <div class="h4-heading h5-xs-heading">{{ getCryptoName() | async }}</div>
+          </div>
         </div>
-        <div
-          class="u-row-middle u-space-between u-g-12"
-          style="justify-self: flex-end"
-        >
-          <app-wallet-status-chip [status]="walletInfo()!.walletStatus" />
-
-          <app-wallet-item-option
-            [wallet]="walletInfo()!"
-            (block)="onBlock()"
-            (unblock)="onUnblock()"
-            (deactivate)="onDeactivate()"
-            [moreIconSize]="'s'"
-          />
-        </div>
-      </div>
-
-      <div class="u-row-middle u-space-between u-g-12 u-wrap">
-        <div class="u-row-middle h3-heading h4-xs-heading">
-          {{ walletInfo()?.availableOprBalance | number : ".0-2" }}
-          {{ walletInfo()?.cryptocurrency }}
-        </div>
-        <div class="balance-actions-wrapper"> 
-          <button class="button primary m xs-s u-flex-grow-1" (click)="topUp()">
-            <tui-icon icon="@tui.arrow-down"></tui-icon>
-            Top-up
-          </button>
-
-          <button class="button primary m xs-s u-flex-grow-1" (click)="withdraw()">
-            <tui-icon icon="@tui.arrow-up"></tui-icon>
-            Withdraw
-          </button>
-        </div>
-      </div>
-    </div>
-
-    @if (configService.isMobile()) {
-      <div class="address-mini-wrapper">
-        <div class="address-text text-m w600">{{ address() }}</div>
-        <app-copy-icon [text]="address()"></app-copy-icon>
-        <!-- <tui-icon
-          icon="@tui.clipboard-copy"
-          (click)="copyAddress()"
-          class="copy-icon"
-        ></tui-icon> -->
       </div>
     }
+
+    <div class="balance-wrapper u-flex-grow-1">
+      <div class="balance-title h5-heading u-mar-bottom-24">Wallet balance</div>
+
+      <div class="balance-card">
+        <div class="u-row-middle u-space-between u-mar-bottom-24">
+          <div class="u-row-middle u-space-between">
+            <img
+              [src]="getCryptoIconUrl() | async"
+              class="u-mar-right-12 wallet-icon"
+            />
+            <div class="h4-heading h5-xs-heading">
+              {{ getCryptoName() | async }}
+            </div>
+          </div>
+          <div
+            class="u-row-middle u-space-between u-g-12"
+            style="justify-self: flex-end"
+          >
+            <app-wallet-status-chip [status]="walletInfo()!.walletStatus" />
+
+            <app-wallet-item-option
+              [wallet]="walletInfo()!"
+              (block)="onBlock()"
+              (unblock)="onUnblock()"
+              (deactivate)="onDeactivate()"
+              [moreIconSize]="'s'"
+            />
+          </div>
+        </div>
+
+        <div class="u-row-middle u-space-between u-g-12 u-wrap">
+          <div class="u-row-middle h3-heading h4-xs-heading">
+            {{ walletInfo()?.availableOprBalance | number: ".0-2" }}
+            {{ walletInfo()?.cryptocurrency }}
+          </div>
+          <div class="balance-actions-wrapper">
+            <button
+              class="button primary m xs-s u-flex-grow-1"
+              (click)="topUp()"
+            >
+              <tui-icon icon="@tui.arrow-down"></tui-icon>
+              Top-up
+            </button>
+
+            <button
+              class="button primary m xs-s u-flex-grow-1"
+              (click)="withdraw()"
+            >
+              <tui-icon icon="@tui.arrow-up"></tui-icon>
+              Withdraw
+            </button>
+          </div>
+        </div>
+      </div>
+
+      @if (configService.isMobile()) {
+        <div class="address-mini-wrapper">
+          <div class="address-text text-m w600">{{ address() }}</div>
+          <app-copy-icon [text]="address()"></app-copy-icon>
+          <!-- <tui-icon
+          icon="@tui.clipboard-copy"
+          (click)="copyAddress()"
+          class="copy-icon"
+        ></tui-icon> -->
+        </div>
+      }
+    </div>
   </div>
-</div>
 }
 <app-transactions-page
   [trxWalletAddress]="walletInfo()?.trxAddress"

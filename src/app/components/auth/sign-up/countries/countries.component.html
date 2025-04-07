@@ -15,7 +15,7 @@
       ></tui-data-list-wrapper>
       <!-- <ng-template #countryValueContent let-item>
         {{ item.name }}
-      </ng-template>  
+      </ng-template>
 
       <!-- <ng-container *tuiDataList>
         <!--48 = 44 height + 4 margin
@@ -34,17 +34,14 @@
             </button>
           </tui-data-list>
         </cdk-virtual-scroll-viewport>
-      </ng-container> 
+      </ng-container>
     </tui-combo-box> -->
 
-    <tui-combo-box
-    [formControl]="model"
-    [stringify]="stringify"
->
-    Type a name
-    <tui-data-list-wrapper
-        *tuiDataList
-        [itemContent]="stringify | tuiStringifyContent"
-        [items]="countries | tuiFilterByInput"
-    />
+<tui-combo-box [formControl]="model" [stringify]="stringify">
+  Type a name
+  <tui-data-list-wrapper
+    *tuiDataList
+    [itemContent]="stringify | tuiStringifyContent"
+    [items]="countries | tuiFilterByInput"
+  />
 </tui-combo-box>

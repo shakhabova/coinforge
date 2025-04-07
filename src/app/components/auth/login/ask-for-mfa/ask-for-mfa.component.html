@@ -16,7 +16,13 @@
     <img src="assets/2_factor.png" alt="2FA illustration" />
   </div>
   <div class="buttons">
-    <button class="setup-button button primary m" [disabled]="loading()" (click)="enable()">Start 2FA set up</button>
+    <button
+      class="setup-button button primary m"
+      [disabled]="loading()"
+      (click)="enable()"
+    >
+      Start 2FA set up
+    </button>
     <!-- <button class="skip-button" (click)="discard()">Not now</button> -->
   </div>
 </div>

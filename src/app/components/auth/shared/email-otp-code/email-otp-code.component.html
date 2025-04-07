@@ -14,10 +14,11 @@
 ></app-otp-code-input>
 
 @if (message() || errorMessage()) {
-<div class="message" [class.error]="!!errorMessage()">
-  {{ message() || errorMessage() }}
-</div>
-} @if (!codeExpired()) {
+  <div class="message" [class.error]="!!errorMessage()">
+    {{ message() || errorMessage() }}
+  </div>
+}
+@if (!codeExpired()) {
   <tui-loader
     class="loader"
     [inheritColor]="true"
@@ -34,16 +35,17 @@
     </button>
   </tui-loader>
 } @else {
-<button
-  [disabled]="loading()"
-  class="button secondary m resend-link"
-  (click)="resendCode()"
->
-  Resend code
-</button>
-} @if (!codeExpired()) {
-<div class="expires">
-  Verification code expires in
-  <span class="time">{{ expiresTimer$ | async }}</span>
-</div>
+  <button
+    [disabled]="loading()"
+    class="button secondary m resend-link"
+    (click)="resendCode()"
+  >
+    Resend code
+  </button>
+}
+@if (!codeExpired()) {
+  <div class="expires">
+    Verification code expires in
+    <span class="time">{{ expiresTimer$ | async }}</span>
+  </div>
 }

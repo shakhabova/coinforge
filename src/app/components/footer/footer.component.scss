@@ -2,7 +2,7 @@
   background-color: var(--Primary500, #1c1c1c);
   color: #fff;
   text-align: center;
-  border-top: 1px solid #FEDD2D;
+  border-top: 1px solid #fedd2d;
   padding: 60px;
   padding-bottom: 48px;
   padding-top: 104px;
@@ -24,7 +24,6 @@
       gap: 10px;
       font-size: 1.2rem;
       font-weight: 700;
-      
 
       img {
         width: 150px;
@@ -84,7 +83,7 @@
   .footer-bottom {
     font-size: 0.9rem;
     color: #ccc;
-    
+
     max-width: 1360px;
     margin: 0 auto;
     margin-top: 48px;
@@ -117,7 +116,9 @@
     text-align: center;
   }
 
-  .footer-left, .footer-center, .footer-right {
+  .footer-left,
+  .footer-center,
+  .footer-right {
     margin-bottom: 20px;
   }
 

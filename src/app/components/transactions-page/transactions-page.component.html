@@ -7,16 +7,16 @@
     </div>
   </div>
   <div class="header-actions u-mar-bottom-24">
-    @if(!trxWalletAddress()){
+    @if (!trxWalletAddress()) {
       <app-top-up-withdraw-buttons [fullWidth]="true" />
     }
   </div>
 } @else {
   <div class="header">
     <div class="h3-heading">Transactions</div>
-  
+
     <div class="header-actions">
-      @if(!trxWalletAddress()){
+      @if (!trxWalletAddress()) {
         <app-top-up-withdraw-buttons />
       }
     </div>
@@ -24,7 +24,11 @@
 }
 
 <div class="filters-wrapper u-mar-bottom-24">
-  <tui-textfield iconStart="@tui.search" tuiTextfieldSize="m" class="search-input text-m w400">
+  <tui-textfield
+    iconStart="@tui.search"
+    tuiTextfieldSize="m"
+    class="search-input text-m w400"
+  >
     <input
       [formControl]="search"
       placeholder="Search by transaction hash..."
@@ -34,7 +38,7 @@
   </tui-textfield>
 
   @if (!configService.isMobile()) {
-    <button 
+    <button
       tuiButton
       appearance="secondary-grayscale"
       type="button"
@@ -59,48 +63,56 @@
         <th tuiTh>Type</th>
       </tr>
     </thead>
-  
+
     <tbody tuiTbody [data]="transactions()">
       @for (transaction of transactions(); track transaction.id) {
-      <tr tuiTr (click)="openDetails(transaction)">
-        <td *tuiCell="'createdAt'" tuiTd>
-          <div class="text-m w600">{{ transaction.createdAt | date : 'dd.MM.yyyy' }}</div>
-          <div class="transaction-time text-xs w400">{{ transaction.createdAt | date : 'hh:mm' }}</div>
-        </td>
-  
-        <td *tuiCell="'transactionHash'" tuiTd>
-          <div class="u-row-middle">
-            <span class="hash text-m w600">{{ transaction.transactionHash }}</span>
-            <app-copy-icon [text]="transaction.transactionHash" />
-          </div>
-        </td>
-  
-        <td *tuiCell="'address'" tuiTd>
-          <div class="u-row-middle">
-            <span class="address-wrapper text-m w600">{{ getAddress(transaction) }}</span>
-            <app-copy-icon [text]="getAddress(transaction)" />
-          </div>
-        </td>
-  
-        <td *tuiCell="'amount'" tuiTd>
-          <div class="u-row-middle u-g-12 text-m w600">
-            {{ getAmountPrefix(transaction) }}&nbsp;
-            {{ getAmount(transaction) | number : '.0-2' }} 
-            <img [src]="getCryptoIcon(transaction) | async" width="24" />
-          </div>
-        </td>
-  
-        <td *tuiCell="'status'" tuiTd>
-          <app-transaction-status-chip [status]="transaction.oprStatus" />
-        </td>
-  
-        <td *tuiCell="'type'" tuiTd>
-          <span class="u-row-middle">
-            <app-transaction-type-icon [type]="transaction.type" />
-            <span class="u-mar-left-12">{{ transaction.type }}</span>
-          </span>
-        </td>
-      </tr>
+        <tr tuiTr (click)="openDetails(transaction)">
+          <td *tuiCell="'createdAt'" tuiTd>
+            <div class="text-m w600">
+              {{ transaction.createdAt | date: "dd.MM.yyyy" }}
+            </div>
+            <div class="transaction-time text-xs w400">
+              {{ transaction.createdAt | date: "hh:mm" }}
+            </div>
+          </td>
+
+          <td *tuiCell="'transactionHash'" tuiTd>
+            <div class="u-row-middle">
+              <span class="hash text-m w600">{{
+                transaction.transactionHash
+              }}</span>
+              <app-copy-icon [text]="transaction.transactionHash" />
+            </div>
+          </td>
+
+          <td *tuiCell="'address'" tuiTd>
+            <div class="u-row-middle">
+              <span class="address-wrapper text-m w600">{{
+                getAddress(transaction)
+              }}</span>
+              <app-copy-icon [text]="getAddress(transaction)" />
+            </div>
+          </td>
+
+          <td *tuiCell="'amount'" tuiTd>
+            <div class="u-row-middle u-g-12 text-m w600">
+              {{ getAmountPrefix(transaction) }}&nbsp;
+              {{ getAmount(transaction) | number: ".0-2" }}
+              <img [src]="getCryptoIcon(transaction) | async" width="24" />
+            </div>
+          </td>
+
+          <td *tuiCell="'status'" tuiTd>
+            <app-transaction-status-chip [status]="transaction.oprStatus" />
+          </td>
+
+          <td *tuiCell="'type'" tuiTd>
+            <span class="u-row-middle">
+              <app-transaction-type-icon [type]="transaction.type" />
+              <span class="u-mar-left-12">{{ transaction.type }}</span>
+            </span>
+          </td>
+        </tr>
       }
     </tbody>
   </table>
@@ -118,7 +130,7 @@
         Back
       </span>
     </ng-template>
-  
+
     <ng-template #nextpagelinkicon>
       <span class="paginator-button">
         Next
@@ -127,9 +139,15 @@
     </ng-template>
   </p-paginator>
 } @else {
-  <cdk-virtual-scroll-viewport itemSize="74" (scrolledIndexChange)="nextBatch()">
+  <cdk-virtual-scroll-viewport
+    itemSize="74"
+    (scrolledIndexChange)="nextBatch()"
+  >
     <app-transaction-item
-      *cdkVirtualFor="let transaction of mobileTransactions | async; trackBy: trackById"
+      *cdkVirtualFor="
+        let transaction of mobileTransactions | async;
+        trackBy: trackById
+      "
       [transaction]="transaction"
       (click)="openDetails(transaction)"
     ></app-transaction-item>
