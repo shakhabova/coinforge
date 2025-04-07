@@ -9,33 +9,38 @@
 
   @if (wallets().length) {
     <div class="wallet-list">
-      @if (step() > 0) {
+      @if (showPrevBtn()) {
         <button
           class="paginator-btn fab default"
-          (click)="step.set(step() - 1)"
+          (click)="currentPage.set(currentPage() - 1)"
         >
           <tui-icon icon="@tui.chevron-left"></tui-icon>
         </button>
       }
-      @if (step() === 0) {
-        <div class="create-wallet-card" (click)="createWallet()">
-          <button class="fab">
-            <tui-icon icon="@tui.plus" [style.color]="'#FEDD2D'"></tui-icon>
-          </button>
-          <div class="create-wallet-card-text">Create wallet</div>
-          <div class="text-xs w600">Shortest way</div>
-        </div>
-      }
-      @for (
-        wallet of wallets() | slice: sliceStart() : sliceEnd();
-        track wallet.id
-      ) {
-        <app-wallet-card [wallet]="wallet"></app-wallet-card>
+      @for (wallet of wallets(); track wallet?.id ?? $index) {
+        @if (!wallet) {
+          <div
+            class="create-wallet-card"
+            (click)="createWallet()"
+            [tuiSkeleton]="isLoading()"
+          >
+            <button class="fab">
+              <tui-icon icon="@tui.plus" [style.color]="'#FEDD2D'"></tui-icon>
+            </button>
+            <div class="create-wallet-card-text">Create wallet</div>
+            <div class="text-xs w600">Shortest way</div>
+          </div>
+        } @else {
+          <app-wallet-card
+            [tuiSkeleton]="isLoading()"
+            [wallet]="wallet"
+          ></app-wallet-card>
+        }
       }
       @if (showNextStepBtn()) {
         <button
           class="paginator-btn fab default"
-          (click)="step.set(step() + 1)"
+          (click)="currentPage.set(currentPage() + 1)"
         >
           <tui-icon icon="@tui.chevron-right"></tui-icon>
         </button>
