@@ -66,7 +66,14 @@ export interface TransactionPageableParams extends PageableParams {
 	dateTo?: string;
 	cryptocurrency?: string;
 	statuses?: string;
-	trxWalletAddress?: string;
+	trxAddress?: string;
+}
+
+export interface TransactionPageableResponse {
+	data: TransactionDto[];
+	limit: number;
+	page: number;
+	total: number;
 }
 
 @Injectable({
@@ -77,66 +84,77 @@ export class TransactionsService {
 	private configService = inject(ConfigService);
 	private userService = inject(UserService);
 
-	getTransactions(params: TransactionPageableParams): Observable<PageableResponse<TransactionDto>> {
-		return this.httpClient.get<PageableResponse<TransactionDto>>(
+	getTransactions(params: TransactionPageableParams): Observable<TransactionPageableResponse> {
+		const userId = this.userService.currentUser$.value?.id;
+		if (!userId) {
+			throw new Error('no current user');
+		}
+
+		return this.httpClient.get<TransactionPageableResponse>(
 			`${this.configService.serverUrl}/v1/bff-custody/transactions`,
-			{ params: params as HttpParams, headers: { 'Customer-ID': environment.customerId } },
+			{
+				params: params as HttpParams,
+				headers: { 'Customer-ID': environment.customerId, 'Custody-User-ID': userId?.toString() ?? '' },
+			},
 		);
 	}
 
 	getSingleTransaction(id: string): Observable<TransactionDto> {
 		return this.httpClient
-			.get<PageableResponse<TransactionDto>>(`${this.configService.serverUrl}/v1/bff-custody/transactions?ids=${id}`)
+			.get<TransactionPageableResponse>(`${this.configService.serverUrl}/v1/bff-custody/transactions`)
 			.pipe(map((transactions) => transactions.data[0]));
 	}
 
 	makeTransaction(info: CreateTransactionDto): Observable<CreateTransactionResponse> {
-		return this.userService.currentUserId$.pipe(
-			switchMap((userId) => {
-				return this.httpClient.post<CreateTransactionResponse>(
-					`${this.configService.serverUrl}/v1/bff-custody/transactions`,
-					info,
-					{
-						headers: {
-							'Customer-ID': environment.customerId,
-							'User-ID': userId?.toString() ?? '',
-						},
-					},
-				);
-			}),
+		const userId = this.userService.currentUser$.value?.id;
+		if (!userId) {
+			throw new Error('no current user');
+		}
+
+		return this.httpClient.post<CreateTransactionResponse>(
+			`${this.configService.serverUrl}/v1/bff-custody/transactions`,
+			info,
+			{
+				headers: {
+					'Customer-ID': environment.customerId,
+					'User-ID': userId?.toString() ?? '',
+				},
+			},
 		);
 	}
 
 	confirmTransaction(id: string): Observable<void> {
-		return this.userService.currentUserId$.pipe(
-			switchMap((userId) => {
-				return this.httpClient.post<void>(
-					`${this.configService.serverUrl}/v1/bff-custody/transactions/confirm/${id}`,
-					{},
-					{
-						headers: {
-							'Customer-ID': environment.customerId,
-							'User-ID': userId?.toString() ?? '',
-						},
-					},
-				);
-			}),
+		const userId = this.userService.currentUser$.value?.id;
+		if (!userId) {
+			throw new Error('no current user');
+		}
+		
+		return this.httpClient.post<void>(
+			`${this.configService.serverUrl}/v1/bff-custody/transactions/confirm/${id}`,
+			{},
+			{
+				headers: {
+					'Customer-ID': environment.customerId,
+					'User-ID': userId?.toString() ?? '',
+				},
+			},
 		);
 	}
 
 	deleteTransaction(id: string): Observable<void> {
-		return this.userService.currentUserId$.pipe(
-			switchMap((userId) => {
-				return this.httpClient.delete<void>(
-					`${this.configService.serverUrl}/v1/bff-custody/transactions/remove/${id}`,
-					{
-						headers: {
-							'Customer-ID': environment.customerId,
-							'User-ID': userId?.toString() ?? '',
-						},
-					},
-				);
-			}),
+		const userId = this.userService.currentUser$.value?.id;
+		if (!userId) {
+			throw new Error('no current user');
+		}
+
+		return this.httpClient.delete<void>(
+			`${this.configService.serverUrl}/v1/bff-custody/transactions/remove/${id}`,
+			{
+				headers: {
+					'Customer-ID': environment.customerId,
+					'User-ID': userId?.toString() ?? '',
+				},
+			},
 		);
 	}
 }

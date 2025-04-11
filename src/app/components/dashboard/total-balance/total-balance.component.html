@@ -11,7 +11,7 @@
     </div>
 
     <p class="balance h3-heading">
-      {{ balance() | currency: currency() : "" }} {{ currency() }}
+      {{ balance() | currency: currency() : "" : ".0-6" }} {{ currency() }}
     </p>
     <div class="actions">
       <button class="button primary s" (click)="topUp()">

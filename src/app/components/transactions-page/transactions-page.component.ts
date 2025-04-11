@@ -1,6 +1,18 @@
-import { Component, DestroyRef, inject, Injector, input, model, signal, viewChild } from '@angular/core';
+import {
+	afterNextRender,
+	AfterViewInit,
+	Component,
+	computed,
+	DestroyRef,
+	inject,
+	Injector,
+	input,
+	OnInit,
+	signal,
+	viewChild,
+} from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
-import { TuiButton, TuiDialog, TuiDialogOptions, TuiDialogService, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { TuiButton, TuiDialogService, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TransactionStatusChipComponent } from '../shared/transaction-status-chip/transaction-status-chip.component';
 import { TransactionTypeIconComponent } from '../shared/transaction-type-icon/transaction-type-icon.component';
@@ -9,30 +21,26 @@ import {
 	type TransactionPageableParams,
 	TransactionsService,
 } from 'services/transactions.service';
-import { PaginatorModule, type PaginatorState } from 'primeng/paginator';
+import { Paginator, PaginatorModule, type PaginatorState } from 'primeng/paginator';
 import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { AsyncPipe, DatePipe, DecimalPipe } from '@angular/common';
-import { TuiDay, tuiPure } from '@taiga-ui/cdk';
+import { tuiPure } from '@taiga-ui/cdk';
 import {
 	BehaviorSubject,
-	debounce,
 	debounceTime,
 	filter,
 	finalize,
-	from,
 	map,
 	mergeMap,
 	type Observable,
 	of,
 	scan,
-	tap,
 	throttleTime,
 } from 'rxjs';
+import { linkedQueryParam } from 'ngxtension/linked-query-param';
 import { CurrenciesService } from 'services/currencies.service';
-import { PageableParams, type PageableResponse } from 'models/pageable.model';
-import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
-import { MatDialog } from '@angular/material/dialog';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
 	type TransactionFilterModel,
 	TransactionsFilterModalComponent,
@@ -43,46 +51,39 @@ import { TransactionDetailsComponent } from './transaction-details/transaction-d
 import { ConfigService } from 'services/config.service';
 import { TransactionItemComponent } from '../dashboard/transactions/transaction-item/transaction-item.component';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
-
-// const TYPE_IN_LABEL = 'IN';
-// const TYPE_OUT_LABEL = 'OUT';
-// const TYPE_WITHDRAW_LABEL = 'Withdraw';
-
-// const TYPE_LABEL_MAP: Record<TransactionDto['type'], string> = {
-//   IN: '@tui.chevron-down',
-//   F2C: '@tui.chevron-down',
-//   C2C: '@tui.chevron-down',
-//   CSTD_IN: '@tui.chevron-down',
-
-//   OUT: '@tui.chevron-up',
-//   C2F: '@tui.chevron-up',
-//   CSTD_OUT: '@tui.chevron-up',
-// };
+import { isTransactionIn } from './utils';
+import { explicitEffect } from 'ngxtension/explicit-effect';
+import { LoaderComponent } from "../shared/loader/loader.component";
+import { EmptyDisplayComponent } from "../shared/empty-display/empty-display.component";
+import { ErrorDisplayComponent } from "../shared/error-display/error-display.component";
 
 @Component({
 	selector: 'app-transactions-page',
 	imports: [
-		TopUpWithdrawButtonsComponent,
-		TuiTextfield,
-		FormsModule,
-		TuiButton,
-		TuiIcon,
-		TransactionStatusChipComponent,
-		TransactionTypeIconComponent,
-		PaginatorModule,
-		CopyIconComponent,
-		TuiTable,
-		DatePipe,
-		DecimalPipe,
-		AsyncPipe,
-		ReactiveFormsModule,
-		TransactionItemComponent,
-		ScrollingModule,
-	],
+    TopUpWithdrawButtonsComponent,
+    TuiTextfield,
+    FormsModule,
+    TuiButton,
+    TuiIcon,
+    TransactionStatusChipComponent,
+    TransactionTypeIconComponent,
+    PaginatorModule,
+    CopyIconComponent,
+    TuiTable,
+    DatePipe,
+    DecimalPipe,
+    AsyncPipe,
+    ReactiveFormsModule,
+    TransactionItemComponent,
+    ScrollingModule,
+    LoaderComponent,
+    EmptyDisplayComponent,
+    ErrorDisplayComponent
+],
 	templateUrl: './transactions-page.component.html',
 	styleUrl: './transactions-page.component.css',
 })
-export class TransactionsPageComponent {
+export class TransactionsPageComponent implements OnInit, AfterViewInit {
 	private cryptocurrenciesService = inject(CurrenciesService);
 	private transactionService = inject(TransactionsService);
 	private destroyRef = inject(DestroyRef);
@@ -90,14 +91,22 @@ export class TransactionsPageComponent {
 	private injector = inject(Injector);
 	public configService = inject(ConfigService);
 
+	paginator = viewChild(Paginator);
+
 	trxWalletAddress = input<string>();
 
 	public viewport = viewChild(CdkVirtualScrollViewport);
 
 	protected isLoading = signal(false);
-	protected page = signal(0);
-	protected pageSize = 10;
+	protected hasError = signal(false);
+	displayError = computed(() => !this.isLoading() && this.hasError());
+	displayEmpty = computed(() => !this.isLoading() && !this.transactions()?.length && !this.hasError());
+
+	protected page = linkedQueryParam('page', { defaultValue: 0 });
+	protected readonly pageSize = 10;
 	private filters?: TransactionFilterModel;
+	// private dateFrom = linkedQueryParam('dateFrom');
+	// private dateTo = linkedQueryParam('dateTo');
 
 	private loadBatch = new BehaviorSubject<boolean | void>(void 0);
 	public mobileTransactions: Observable<TransactionDto[] | undefined>;
@@ -128,7 +137,6 @@ export class TransactionsPageComponent {
 					throttleTime(500),
 					mergeMap(() => this.getTransactions()),
 					map((data) => data.data),
-					tap(console.log),
 					scan((acc, batch) => {
 						if (!acc || !batch) {
 							return [];
@@ -149,18 +157,28 @@ export class TransactionsPageComponent {
 		this.loadTransactions();
 	}
 
+	ngAfterViewInit() {
+		explicitEffect(
+			[this.page, this.paginator, this.transactions],
+			([page]) => {
+				afterNextRender({ write: () => this.paginator()?.changePage(page) }, { injector: this.injector });
+			},
+			{ injector: this.injector },
+		);
+	}
+
 	@tuiPure
 	getAddress(transaction: TransactionDto) {
-		if (this.isTransactionIn(transaction.type)) {
+		if (isTransactionIn(transaction.type)) {
 			return transaction.toTrxAddress;
-		} else {
-			return transaction.fromTrxAddress;
 		}
+
+		return transaction.fromTrxAddress;
 	}
 
 	@tuiPure
 	getAmountPrefix(transaction: TransactionDto): '+' | '-' {
-		if (this.isTransactionIn(transaction.type)) {
+		if (isTransactionIn(transaction.type)) {
 			return '+';
 		}
 
@@ -169,7 +187,7 @@ export class TransactionsPageComponent {
 
 	@tuiPure
 	getAmount(transaction: TransactionDto): string {
-		if (this.isTransactionIn(transaction.type)) {
+		if (isTransactionIn(transaction.type)) {
 			return transaction.amount;
 		}
 
@@ -178,7 +196,7 @@ export class TransactionsPageComponent {
 
 	@tuiPure
 	getCryptoIcon(transaction: TransactionDto): Observable<string> {
-		if (this.isTransactionIn(transaction.type)) {
+		if (isTransactionIn(transaction.type)) {
 			return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
 		}
 
@@ -192,7 +210,7 @@ export class TransactionsPageComponent {
 			if ((this.page() + 1) * this.pageSize >= this.totalElements()) {
 				return;
 			}
-			this.page.update((n) => (n += 1));
+			this.page.update((n) => n + 1);
 			this.loadBatch.next();
 		}
 	}
@@ -205,7 +223,7 @@ export class TransactionsPageComponent {
 		return !!this.filters && Object.keys(this.filters).length > 0;
 	}
 	onPageChange(state: PaginatorState): void {
-		if (state.page) {
+		if (state.page != null && state.page !== this.page()) {
 			this.page.set(state.page);
 			this.loadTransactions();
 		}
@@ -219,9 +237,7 @@ export class TransactionsPageComponent {
 			.pipe(filter((val) => !!val))
 			.subscribe((filters) => {
 				this.filters = filters;
-				this.page.set(0);
-				this.loadTransactions();
-				this.loadBatch.next(true);
+				this.resetTransactions();
 			});
 	}
 
@@ -233,12 +249,19 @@ export class TransactionsPageComponent {
 			.subscribe();
 	}
 
-	private isTransactionIn(type: TransactionDto['type']): boolean {
-		return ['IN', 'F2C', 'C2C', 'CSTD_IN'].includes(type);
+	onWithdrawSuccess() {
+		this.resetTransactions();
+	}
+
+	private resetTransactions() {
+		this.page.set(0);
+		this.loadTransactions();
+		this.loadBatch.next(true);
 	}
 
 	private loadTransactions() {
 		this.isLoading.set(true);
+		this.hasError.set(false);
 		this.getTransactions()
 			.pipe(
 				finalize(() => this.isLoading.set(false)),
@@ -247,32 +270,35 @@ export class TransactionsPageComponent {
 			.subscribe({
 				next: (res) => {
 					this.transactions.set(res.data);
-					this.totalElements.set(res.totalElements);
+					this.totalElements.set(res.total);
 				},
 				error: (err) => {
-					// TODO handle error
+					this.hasError.set(true);
 					console.error(err);
+					this.transactions.set([]);
 				},
 			});
 	}
 
-	private getTransactions(): Observable<PageableResponse<TransactionDto>> {
+	private getTransactions() {
 		const params: TransactionPageableParams = {
 			size: this.pageSize,
 			sort: 'id,desc',
 			page: this.page(),
-			transactionHash: this.search.value || undefined,
 		};
+		if (this.search.value) {
+			params.transactionHash = this.search.value;
+		}
 		if (this.filters?.dateFrom) params.dateFrom = this.formatDate(this.filters.dateFrom.toLocalNativeDate());
 		if (this.filters?.dateTo) params.dateTo = this.formatDate(this.filters.dateTo.toLocalNativeDate());
 		if (this.filters?.cryptocurrency) params.cryptocurrency = this.filters.cryptocurrency.cryptoCurrency;
 		if (this.filters?.statuses) params.statuses = this.filters.statuses;
-		if (this.trxWalletAddress()) params.trxWalletAddress = this.trxWalletAddress();
+		if (this.trxWalletAddress()) params.trxAddress = this.trxWalletAddress();
 
 		return this.transactionService.getTransactions(params);
 	}
 
 	private formatDate(date: Date): string {
-		return format(date, 'yyyy-MM-dd+HH:mm');
+		return format(date, 'yyyy-MM-dd HH:mm');
 	}
 }

@@ -13,10 +13,10 @@ import {
 } from '@angular/core';
 import { SelectListComponent } from '../shared/select-list/select-list.component';
 import { type WalletDto, WalletsService } from 'services/wallets.service';
-import { map, type Observable, of } from 'rxjs';
+import { finalize, map, type Observable, of } from 'rxjs';
 import { AsyncPipe } from '@angular/common';
 import { CurrenciesService } from 'services/currencies.service';
-import { tuiDialog, type TuiDialogContext, TuiDialogService, TuiError, TuiIcon } from '@taiga-ui/core';
+import { tuiDialog, type TuiDialogContext, TuiDialogService, TuiError, TuiIcon, TuiLoader } from '@taiga-ui/core';
 import { injectContext, PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 import { tuiPure } from '@taiga-ui/cdk';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
@@ -46,6 +46,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 		TuiFieldErrorPipe,
 		MaskitoDirective,
 		TuiUnmaskHandler,
+		TuiLoader,
 	],
 	templateUrl: './withdraw.component.html',
 	styleUrl: './withdraw.component.css',
@@ -69,9 +70,11 @@ export class WithdrawComponent {
 	private tuiDialogService = inject(TuiDialogService);
 	private injector = inject(INJECTOR);
 
+	public transactionCreating = signal(false);
+
 	public confirmContent = viewChild('confirmContent', { read: TemplateRef });
 
-	public context = injectContext<TuiDialogContext<void, WalletDto | undefined>>();
+	public context = injectContext<TuiDialogContext<boolean | undefined, WalletDto | undefined>>();
 
 	formGroup = new FormBuilder().nonNullable.group({
 		address: ['', [Validators.required, addressPatternValidator(/^[A-Za-z0-9]+$/), Validators.minLength(20)]],
@@ -154,6 +157,7 @@ export class WithdrawComponent {
 			return;
 		}
 
+		this.transactionCreating.set(true);
 		this.transactionsService
 			.makeTransaction({
 				amount: Number.parseFloat(formValue.amount),
@@ -161,7 +165,7 @@ export class WithdrawComponent {
 				toTrxAddress: formValue.address,
 				cryptocurrency: selectedWallet.cryptocurrency,
 			})
-			.pipe(takeUntilDestroyed(this.destroyRef))
+			.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.transactionCreating.set(false)))
 			.subscribe({
 				next: ({ id }) => {
 					this.confirm(id);
@@ -239,7 +243,7 @@ export class WithdrawComponent {
 		});
 
 		return tuiDialog(WithdrawConfirmComponent, {
-			size: 's',
+			size: 'm',
 			closeable: false,
 			dismissible: closeable,
 		});
@@ -259,7 +263,7 @@ export class WithdrawComponent {
 							title: 'Successful operation',
 							text: `Wallet address {${formValue.address}} will recieve {${formValue.amount} ${formValue.cryptocurrency}}`,
 						})
-						.subscribe(() => this.context.completeWith());
+						.subscribe(() => this.context.completeWith(true));
 				},
 				error: (err) => {
 					console.error(err.error);

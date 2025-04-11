@@ -1,5 +1,5 @@
 import { Component, computed, inject, input, signal } from '@angular/core';
-import type { TransactionDto } from 'services/transactions.service';
+import { TransactionsService, type TransactionDto } from 'services/transactions.service';
 import { TransactionTypeIconComponent } from '../../shared/transaction-type-icon/transaction-type-icon.component';
 import { TransactionStatusChipComponent } from '../../shared/transaction-status-chip/transaction-status-chip.component';
 import { CopyIconComponent } from '../../shared/copy-icon/copy-icon.component';

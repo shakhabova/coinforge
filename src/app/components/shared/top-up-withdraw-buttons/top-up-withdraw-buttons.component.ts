@@ -1,5 +1,8 @@
-import { Component, input } from '@angular/core';
-import { TuiIcon } from '@taiga-ui/core';
+import { Component, DestroyRef, inject, input, output } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { tuiDialog, TuiIcon } from '@taiga-ui/core';
+import { TopUpComponent } from 'components/top-up/top-up.component';
+import { WithdrawComponent } from 'components/withdraw/withdraw.component';
 
 @Component({
 	selector: 'app-top-up-withdraw-buttons',
@@ -11,13 +14,21 @@ import { TuiIcon } from '@taiga-ui/core';
 	},
 })
 export class TopUpWithdrawButtonsComponent {
+	private readonly destroyRef = inject(DestroyRef);
 	fullWidth = input<boolean>(false);
+	withdrawSuccess = output();
+	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
+	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
 
 	topUp() {
-		// TODO implement top up
+		this.topUpDialog(undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 
 	withdraw() {
-		// TODO implement withdraw
+		this.withdrawDialog(undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
+			if (result) {
+				this.withdrawSuccess.emit();
+			}
+		});
 	}
 }

@@ -71,16 +71,18 @@
     </label>
   </ng-container>
 
-  <button
-    class="button secondary m u-mar-bottom-16"
-    [disabled]="formGroup.invalid"
-    (click)="onNext()"
-  >
-    Next
-  </button>
+  <tui-loader [inheritColor]="true" [showLoader]="transactionCreating()">
+    <button
+      class="button secondary m u-mar-bottom-16"
+      [disabled]="formGroup.invalid || transactionCreating()"
+      (click)="onNext()"
+    >
+      Next
+    </button>
+  </tui-loader>
 
   @if (!context.data) {
-    <button class="button secondary m" (click)="backToFromPhase()">
+    <button class="button secondary m" (click)="backToFromPhase()" [disabled]="transactionCreating()">
       <tui-icon icon="@tui.arrow-left"></tui-icon>
       <span>Back</span>
     </button>

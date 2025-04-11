@@ -43,7 +43,7 @@
     }
   </div>
 </div>
-@if (!configService.isMobile() && this.wallets()?.length) {
+@if (!configService.isMobile() && wallets()?.length) {
   <table tuiTable [columns]="columns">
     <thead>
       <tr tuiThGroup>
@@ -68,7 +68,7 @@
 
           <td *tuiCell="'availableOprBalance'" tuiTd class="text-m w600">
             <div class="u-row-middle u-g-12">
-              {{ wallet.availableOprBalance | number: ".0-2" }}
+              {{ wallet.availableOprBalance }}
               <img
                 [src]="getCryptoIcon(wallet.cryptocurrency) | async"
                 width="24"

@@ -70,7 +70,7 @@
 
         <div class="u-row-middle u-space-between u-g-12 u-wrap">
           <div class="u-row-middle h3-heading h4-xs-heading">
-            {{ walletInfo()?.availableOprBalance | number: ".0-2" }}
+            {{ walletInfo()?.availableOprBalance }}
             {{ walletInfo()?.cryptocurrency }}
           </div>
           <div class="balance-actions-wrapper">
@@ -106,7 +106,7 @@
       }
     </div>
   </div>
+  <app-transactions-page
+    [trxWalletAddress]="walletInfo()?.trxAddress"
+  ></app-transactions-page>
 }
-<app-transactions-page
-  [trxWalletAddress]="walletInfo()?.trxAddress"
-></app-transactions-page>

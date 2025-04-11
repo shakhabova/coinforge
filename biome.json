@@ -27,7 +27,8 @@
         "useLiteralKeys": "off"
       },
       "suspicious": {
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+				"noConfusingVoidType": "off"
       }
 		}
 	},

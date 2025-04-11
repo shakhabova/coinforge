@@ -8,6 +8,8 @@
   align-items: center;
   gap: 8px;
   border-radius: 32px;
+  border: 1px solid var(--Primary100, #8D8B8B);
+  background: #B7B7B7;
 }
 
 .status.REJECTED {

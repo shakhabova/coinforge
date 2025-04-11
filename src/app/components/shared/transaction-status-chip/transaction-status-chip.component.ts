@@ -16,5 +16,5 @@ const STATUSES_MAP: Record<TransactionDto['oprStatus'], string> = {
 export class TransactionStatusChipComponent {
 	status = input.required<TransactionDto['oprStatus']>();
 
-	statusLabel = computed(() => STATUSES_MAP[this.status()]);
+	statusLabel = computed(() => STATUSES_MAP[this.status()] || this.status());
 }
