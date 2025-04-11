@@ -8,7 +8,10 @@
   </div>
   <div class="header-actions u-mar-bottom-24">
     @if (!trxWalletAddress()) {
-      <app-top-up-withdraw-buttons [fullWidth]="true" (withdrawSuccess)="onWithdrawSuccess()" />
+      <app-top-up-withdraw-buttons
+        [fullWidth]="true"
+        (withdrawSuccess)="onWithdrawSuccess()"
+      />
     }
   </div>
 } @else {
@@ -51,7 +54,7 @@
   }
 </div>
 
-@if (!configService.isMobile() && transactions()?.length) {
+@if (!configService.isMobile() && transactions().length) {
   <table tuiTable [columns]="columns">
     <thead>
       <tr tuiThGroup>
@@ -79,7 +82,7 @@
           <td *tuiCell="'transactionHash'" tuiTd>
             <div class="u-row-middle">
               <span class="hash text-m w600">{{
-                transaction.transactionHash || '-'
+                transaction.transactionHash || "-"
               }}</span>
               <app-copy-icon [text]="transaction.transactionHash" />
             </div>
@@ -120,7 +123,6 @@
     class="paginator"
     [totalRecords]="totalElements()"
     [rows]="pageSize"
-    
     (onPageChange)="onPageChange($event)"
     [showFirstLastIcon]="false"
     [showPageLinks]="true"
@@ -155,7 +157,6 @@
   </cdk-virtual-scroll-viewport>
 }
 
-
 @if (isLoading()) {
   <app-loader></app-loader>
 }
@@ -171,3 +172,4 @@
     text="Something went wrong while trying to load your transactions."
   />
 }
+

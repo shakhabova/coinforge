@@ -1,16 +1,4 @@
-import {
-	afterNextRender,
-	AfterViewInit,
-	Component,
-	computed,
-	DestroyRef,
-	inject,
-	Injector,
-	input,
-	OnInit,
-	signal,
-	viewChild,
-} from '@angular/core';
+import { Component, computed, DestroyRef, inject, Injector, input, OnInit, signal, viewChild } from '@angular/core';
 import { TopUpWithdrawButtonsComponent } from '../shared/top-up-withdraw-buttons/top-up-withdraw-buttons.component';
 import { TuiButton, TuiDialogService, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { FormControl, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -38,7 +26,6 @@ import {
 	scan,
 	throttleTime,
 } from 'rxjs';
-import { linkedQueryParam } from 'ngxtension/linked-query-param';
 import { CurrenciesService } from 'services/currencies.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
@@ -52,38 +39,37 @@ import { ConfigService } from 'services/config.service';
 import { TransactionItemComponent } from '../dashboard/transactions/transaction-item/transaction-item.component';
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { isTransactionIn } from './utils';
-import { explicitEffect } from 'ngxtension/explicit-effect';
-import { LoaderComponent } from "../shared/loader/loader.component";
-import { EmptyDisplayComponent } from "../shared/empty-display/empty-display.component";
-import { ErrorDisplayComponent } from "../shared/error-display/error-display.component";
+import { LoaderComponent } from '../shared/loader/loader.component';
+import { EmptyDisplayComponent } from '../shared/empty-display/empty-display.component';
+import { ErrorDisplayComponent } from '../shared/error-display/error-display.component';
 
 @Component({
 	selector: 'app-transactions-page',
 	imports: [
-    TopUpWithdrawButtonsComponent,
-    TuiTextfield,
-    FormsModule,
-    TuiButton,
-    TuiIcon,
-    TransactionStatusChipComponent,
-    TransactionTypeIconComponent,
-    PaginatorModule,
-    CopyIconComponent,
-    TuiTable,
-    DatePipe,
-    DecimalPipe,
-    AsyncPipe,
-    ReactiveFormsModule,
-    TransactionItemComponent,
-    ScrollingModule,
-    LoaderComponent,
-    EmptyDisplayComponent,
-    ErrorDisplayComponent
-],
+		TopUpWithdrawButtonsComponent,
+		TuiTextfield,
+		FormsModule,
+		TuiButton,
+		TuiIcon,
+		TransactionStatusChipComponent,
+		TransactionTypeIconComponent,
+		PaginatorModule,
+		CopyIconComponent,
+		TuiTable,
+		DatePipe,
+		DecimalPipe,
+		AsyncPipe,
+		ReactiveFormsModule,
+		TransactionItemComponent,
+		ScrollingModule,
+		LoaderComponent,
+		EmptyDisplayComponent,
+		ErrorDisplayComponent,
+	],
 	templateUrl: './transactions-page.component.html',
 	styleUrl: './transactions-page.component.css',
 })
-export class TransactionsPageComponent implements OnInit, AfterViewInit {
+export class TransactionsPageComponent implements OnInit {
 	private cryptocurrenciesService = inject(CurrenciesService);
 	private transactionService = inject(TransactionsService);
 	private destroyRef = inject(DestroyRef);
@@ -102,7 +88,7 @@ export class TransactionsPageComponent implements OnInit, AfterViewInit {
 	displayError = computed(() => !this.isLoading() && this.hasError());
 	displayEmpty = computed(() => !this.isLoading() && !this.transactions()?.length && !this.hasError());
 
-	protected page = linkedQueryParam('page', { defaultValue: 0 });
+	protected page = signal(0);
 	protected readonly pageSize = 10;
 	private filters?: TransactionFilterModel;
 	// private dateFrom = linkedQueryParam('dateFrom');
@@ -157,16 +143,6 @@ export class TransactionsPageComponent implements OnInit, AfterViewInit {
 		this.loadTransactions();
 	}
 
-	ngAfterViewInit() {
-		explicitEffect(
-			[this.page, this.paginator, this.transactions],
-			([page]) => {
-				afterNextRender({ write: () => this.paginator()?.changePage(page) }, { injector: this.injector });
-			},
-			{ injector: this.injector },
-		);
-	}
-
 	@tuiPure
 	getAddress(transaction: TransactionDto) {
 		if (isTransactionIn(transaction.type)) {
@@ -196,11 +172,12 @@ export class TransactionsPageComponent implements OnInit, AfterViewInit {
 
 	@tuiPure
 	getCryptoIcon(transaction: TransactionDto): Observable<string> {
-		if (isTransactionIn(transaction.type)) {
-			return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
-		}
-
-		return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyFrom);
+		return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.cryptocurrency);
+		// if (isTransactionIn(transaction.type)) {
+		// 	return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
+		// }
+		//
+		// return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyFrom);
 	}
 
 	nextBatch() {

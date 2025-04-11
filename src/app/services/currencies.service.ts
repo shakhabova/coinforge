@@ -9,6 +9,7 @@ export interface CurrencyDto {
 	logoUrl: string;
 	shortName: string;
 	scanUrl: string;
+	scanWalletUrl: string;
 }
 
 @Injectable({

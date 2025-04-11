@@ -1,5 +1,5 @@
 import QRCode from 'qrcode';
-import { AsyncPipe, DecimalPipe, Location } from '@angular/common';
+import { AsyncPipe, Location } from '@angular/common';
 import {
 	Component,
 	DestroyRef,
@@ -19,7 +19,6 @@ import { CurrenciesService } from 'services/currencies.service';
 import { tuiPure } from '@taiga-ui/cdk';
 import { WalletStatusChipComponent } from '../../shared/wallet-status-chip/wallet-status-chip.component';
 import { WalletItemOptionComponent } from '../wallet-item-option/wallet-item-option.component';
-import { TransactionsComponent } from '../../dashboard/transactions/transactions.component';
 import { TransactionsPageComponent } from '../../transactions-page/transactions-page.component';
 import { ConfigService } from 'services/config.service';
 import { CopyIconComponent } from 'components/shared/copy-icon/copy-icon.component';
@@ -31,10 +30,8 @@ import { WithdrawComponent } from 'components/withdraw/withdraw.component';
 	imports: [
 		TuiIcon,
 		AsyncPipe,
-		DecimalPipe,
 		WalletStatusChipComponent,
 		WalletItemOptionComponent,
-		TransactionsComponent,
 		TransactionsPageComponent,
 		CopyIconComponent,
 	],
@@ -150,11 +147,7 @@ export class WalletInfoComponent implements OnInit {
 			return;
 		}
 
-		this.topUpDialog(info)
-			.pipe(
-				takeUntilDestroyed(this.destroyRef),
-			)
-			.subscribe();
+		this.topUpDialog(info).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 
 	withdraw() {
@@ -163,11 +156,7 @@ export class WalletInfoComponent implements OnInit {
 			return;
 		}
 
-		this.withdrawDialog(info)
-			.pipe(
-				takeUntilDestroyed(this.destroyRef)
-			)
-			.subscribe();
+		this.withdrawDialog(info).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 
 	private async generateQR() {

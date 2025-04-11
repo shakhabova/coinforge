@@ -2,14 +2,13 @@ import { AsyncPipe, DecimalPipe } from '@angular/common';
 import { Component, computed, inject, input, output } from '@angular/core';
 import { CurrenciesService } from 'services/currencies.service';
 import type { WalletDto } from 'services/wallets.service';
-import { WalletStatusChipComponent } from '../../shared/wallet-status-chip/wallet-status-chip.component';
-import { TuiIcon } from '@taiga-ui/core';
 import { CopyIconComponent } from '../../shared/copy-icon/copy-icon.component';
+import { WalletStatusChipComponent } from '../../shared/wallet-status-chip/wallet-status-chip.component';
 import { WalletItemOptionComponent } from '../wallet-item-option/wallet-item-option.component';
 
 @Component({
 	selector: 'app-wallet-info-card',
-	imports: [DecimalPipe, AsyncPipe, WalletStatusChipComponent, TuiIcon, CopyIconComponent, WalletItemOptionComponent],
+	imports: [DecimalPipe, AsyncPipe, WalletStatusChipComponent, CopyIconComponent, WalletItemOptionComponent],
 	templateUrl: './wallet-info-card.component.html',
 	styleUrl: './wallet-info-card.component.css',
 })

@@ -1,13 +1,12 @@
-import { Component, DestroyRef, inject, type OnInit, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
-import { ModalCloseButtonComponent } from '../../../shared/modal-close-button/modal-close-button.component';
-import { BalanceService, type TotalBalanceCurrency } from 'services/balance.service';
-import { finalize, forkJoin } from 'rxjs';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CurrencyPipe } from '@angular/common';
-import { DialogService } from 'services/dialog.service';
+import { Component, DestroyRef, type OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { MatDialogModule } from '@angular/material/dialog';
 import type { TuiDialogContext } from '@taiga-ui/core';
 import { injectContext } from '@taiga-ui/polymorpheus';
+import { finalize } from 'rxjs';
+import { BalanceService, type TotalBalanceCurrency } from 'services/balance.service';
+import { DialogService } from 'services/dialog.service';
 
 export interface ChooseBalanceDialogResultData {
 	balance: number;
@@ -16,7 +15,7 @@ export interface ChooseBalanceDialogResultData {
 
 @Component({
 	selector: 'app-choose-balance-currency',
-	imports: [MatDialogModule, ModalCloseButtonComponent, CurrencyPipe],
+	imports: [MatDialogModule, CurrencyPipe],
 	templateUrl: './choose-balance-currency.component.html',
 	styleUrl: './choose-balance-currency.component.css',
 })
