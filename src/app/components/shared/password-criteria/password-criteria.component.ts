@@ -24,8 +24,8 @@ export class PasswordCriteriaComponent {
 			length: password ? password.length > 5 : false,
 			uppercase: password ? new RegExp(/[A-ZА-Я]+/).test(password) : false,
 			lowercase: password ? new RegExp(/[a-zа-я]+/).test(password) : false,
-			number: new RegExp(/\d/).test(password ?? ''),
-			char: new RegExp(/[#?!@$%^&*-]/).test(password ?? ''),
+			number: new RegExp(/[0-9]/).test(password ?? ''),
+			char: new RegExp(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi).test(password ?? ''),
 		};
 	});
 	passwordCriteriaIcons: Signal<{

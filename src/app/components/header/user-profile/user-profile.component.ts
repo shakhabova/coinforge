@@ -2,7 +2,7 @@ import { Component, DestroyRef, inject, model } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { type TuiDialogContext, TuiIcon, TuiTextfield } from '@taiga-ui/core';
+import { tuiDialog, type TuiDialogContext, TuiIcon, TuiTextfield } from '@taiga-ui/core';
 import { TuiSwitch } from '@taiga-ui/kit';
 import { TuiInputComponent, TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { injectContext } from '@taiga-ui/polymorpheus';
@@ -11,6 +11,7 @@ import { AuthService } from 'services/auth.service';
 import { DialogService } from 'services/dialog.service';
 import { MfaApiService } from 'services/mfa-api.service';
 import { UserService } from 'services/user.service';
+import { ChangePasswordComponent } from './change-password/change-password.component';
 
 @Component({
 	selector: 'app-user-profile',
@@ -26,6 +27,8 @@ export class UserProfileComponent {
 	private authService = inject(AuthService);
 	private dialogService = inject(DialogService);
 	private mfaService = inject(MfaApiService);
+
+	private changePasswordDialog = tuiDialog(ChangePasswordComponent, { size: 'auto' });
 
 	name = model('');
 	email = model('');
@@ -72,7 +75,7 @@ export class UserProfileComponent {
 				.subscribe({
 					next: (result) => {
 						if (result) {
-              this.usersService.updateCurrentUser();
+							this.usersService.updateCurrentUser();
 							this.dialogService
 								.showInfo({
 									type: 'success',
@@ -96,7 +99,7 @@ export class UserProfileComponent {
 				});
 		} else {
 			this.context.completeWith();
-			this.router.navigate(['/auth/two-factor-auth'], { queryParams: { email: this.email() }});
+			this.router.navigate(['/auth/two-factor-auth'], { queryParams: { email: this.email() } });
 		}
 	}
 
@@ -106,6 +109,6 @@ export class UserProfileComponent {
 	}
 
 	changePassword() {
-		//TODO change password modal
+		this.changePasswordDialog().pipe(takeUntilDestroyed(this.destroyRef)).subscribe();
 	}
 }

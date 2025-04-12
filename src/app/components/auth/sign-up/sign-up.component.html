@@ -102,6 +102,11 @@
     ></tui-error>
   </label>
 
+  <tui-error
+    [formGroup]="formGroup"
+    [error]="[] | tuiFieldError | async"
+  ></tui-error>
+
   <label tuiLabel>
     Country *
     <tui-combo-box
