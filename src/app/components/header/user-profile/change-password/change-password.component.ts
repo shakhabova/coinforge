@@ -124,10 +124,8 @@ export class ChangePasswordComponent {
 							type: 'success',
 							title: 'Congratulations!',
 							text: 'Your password reset successfully',
-							buttonText: 'Back to sign in',
 						})
 						.subscribe(() => {
-							this.authService.logout();
 							this.context.completeWith();
 						});
 				},

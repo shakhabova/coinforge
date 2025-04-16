@@ -1,16 +1,6 @@
 import QRCode from 'qrcode';
 import { AsyncPipe, Location } from '@angular/common';
-import {
-	Component,
-	DestroyRef,
-	effect,
-	inject,
-	Injector,
-	input,
-	type OnInit,
-	runInInjectionContext,
-	signal,
-} from '@angular/core';
+import { Component, DestroyRef, effect, inject, Injector, input, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { tuiDialog, TuiIcon } from '@taiga-ui/core';
 import { finalize, of, type Observable } from 'rxjs';
@@ -24,6 +14,7 @@ import { ConfigService } from 'services/config.service';
 import { CopyIconComponent } from 'components/shared/copy-icon/copy-icon.component';
 import { TopUpComponent } from 'components/top-up/top-up.component';
 import { WithdrawComponent } from 'components/withdraw/withdraw.component';
+import { DialogService } from 'services/dialog.service';
 
 @Component({
 	selector: 'app-wallet-info',
@@ -38,15 +29,16 @@ import { WithdrawComponent } from 'components/withdraw/withdraw.component';
 	templateUrl: './wallet-info.component.html',
 	styleUrl: './wallet-info.component.css',
 })
-export class WalletInfoComponent implements OnInit {
+export class WalletInfoComponent {
 	public address = input<string>();
 
-	private walletService = inject(WalletsService);
+	private walletsService = inject(WalletsService);
 	private destroyRef = inject(DestroyRef);
 	private injector = inject(Injector);
 	private location = inject(Location);
 	private cryptoService = inject(CurrenciesService);
 	public configService = inject(ConfigService);
+	private dialogService = inject(DialogService);
 
 	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
 	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
@@ -57,36 +49,17 @@ export class WalletInfoComponent implements OnInit {
 	protected walletInfo = signal<WalletDto | null>(null);
 	protected addressDataUrl = signal<string | null>(null);
 
-	ngOnInit() {
-		runInInjectionContext(this.injector, () => {
-			effect(
-				() => {
-					const address = this.address();
-					if (address) {
-						this.generateQR();
+	constructor() {
+		effect(
+			() => {
+				const address = this.address();
+				if (address) {
+					this.generateQR();
 
-						this.error.set(null);
-						this.isLoading.set(true);
-						this.walletService
-							.getWalletInfo(address)
-							.pipe(
-								finalize(() => this.isLoading.set(false)),
-								takeUntilDestroyed(this.destroyRef),
-							)
-							.subscribe({
-								next: (walletInfo) => {
-									this.walletInfo.set(walletInfo);
-								},
-								error: (err) => {
-									// TODO handle wallet info error
-									this.error.set(err);
-								},
-							});
-					}
-				},
-				{ allowSignalWrites: true },
-			);
-		});
+					this.updateWalletInfo(address);
+				}
+			},
+		);
 	}
 
 	back() {
@@ -114,31 +87,78 @@ export class WalletInfoComponent implements OnInit {
 	}
 
 	onBlock(): void {
-		// TODO use actual code
-		this.walletInfo.update((wallet) => {
-			if (wallet) {
-				return { ...wallet, walletStatus: 'CUSTOMER_BLOCKED' };
-			}
+		const wallet = this.walletInfo();
+		const address = this.address();
+		if (!wallet || !address) {
+			return;
+		}
 
-			return null;
-		});
-
-		// this.walletsService.blockWallet(wallet);
+		this.walletsService
+			.blockWallet(wallet)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe({
+				next: () => this.updateWalletInfo(address),
+				error: (err) => {
+					console.error(err);
+					this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+				},
+			});
 	}
 
 	onUnblock(): void {
-		this.walletInfo.update((wallet) => {
-			if (wallet) {
-				return { ...wallet, walletStatus: 'ACTIVE' };
-			}
+		const wallet = this.walletInfo();
+		const address = this.address();
+		if (!wallet || !address) {
+			return;
+		}
 
-			return null;
-		});
-		// this.walletsService.unblockWallet(wallet);
+		this.walletsService
+			.unblockWallet(wallet)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe({
+				next: () => this.updateWalletInfo(address),
+				error: (err) => {
+					console.error(err);
+					this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+				},
+			});
 	}
 
 	onDeactivate(): void {
-		// this.walletsService.deactivateWallet(wallet);
+		const wallet = this.walletInfo();
+		const address = this.address();
+		if (!wallet || !address) {
+			return;
+		}
+
+		this.walletsService
+			.deactivateWallet(wallet)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe({
+				next: () => this.updateWalletInfo(address),
+				error: (err) => {
+					console.error(err);
+					this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+				},
+			});
 	}
 
 	topUp() {
@@ -164,5 +184,31 @@ export class WalletInfoComponent implements OnInit {
 		if (address) {
 			this.addressDataUrl.set(await QRCode.toDataURL(address, { margin: 0, width: 84 }));
 		}
+	}
+
+	private updateWalletInfo(address: string) {
+		this.error.set(null);
+		this.isLoading.set(true);
+		this.walletsService
+			.getWalletInfo(address)
+			.pipe(
+				finalize(() => this.isLoading.set(false)),
+				takeUntilDestroyed(this.destroyRef),
+			)
+			.subscribe({
+				next: (walletInfo) => {
+					this.walletInfo.set(walletInfo);
+				},
+				error: (err) => {
+					this.error.set(err);
+					this.dialogService
+						.showInfo({
+							type: 'warning',
+							title: 'Error',
+							text: 'An unexpected error has appeared. Please try again later.',
+						})
+						.subscribe();
+				},
+			});
 	}
 }

@@ -85,7 +85,6 @@ export class WalletsPageComponent implements OnInit {
 			() => {
 				this.loadWallets(this.selectedCurrency()?.cryptoCurrency);
 			},
-			{ allowSignalWrites: true },
 		);
 
 		this.mobileWallets = this.loadBatch.pipe(

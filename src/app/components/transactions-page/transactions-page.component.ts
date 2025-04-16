@@ -172,12 +172,12 @@ export class TransactionsPageComponent implements OnInit {
 
 	@tuiPure
 	getCryptoIcon(transaction: TransactionDto): Observable<string> {
-		return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.cryptocurrency);
-		// if (isTransactionIn(transaction.type)) {
-		// 	return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
-		// }
-		//
-		// return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyFrom);
+		// return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.cryptocurrency);
+		if (isTransactionIn(transaction.type)) {
+			return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyTo);
+		}
+		
+		return this.cryptocurrenciesService.getCurrencyLinkUrl(transaction.currencyFrom);
 	}
 
 	nextBatch() {

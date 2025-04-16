@@ -7,6 +7,10 @@
   background-color: #ffffff;
 }
 
+.logo-img {
+  margin-bottom: 64px;
+}
+
 .wrapper {
   display: flex;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
@@ -27,7 +31,7 @@
   margin-bottom: 20px;
   margin-top: 120px;
 }
-.left-side img {
+.left-side .sign-in-image {
   width: 80%;
   transform: rotate(-25.759deg) translateX(-90px);
   flex-shrink: 0;

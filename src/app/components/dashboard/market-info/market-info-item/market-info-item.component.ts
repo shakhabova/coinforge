@@ -32,7 +32,6 @@ export class MarketInfoItemComponent {
 	fullName = computed(() => this.cryptoService.getCurrencyName(this.shortName()));
 	protected currentCurrency = this.currentCurrencyService.currentCurrency;
 
-	// TODO rework rate
 	protected rate = computed(
 		() => this.loading() ? '' : `1 ${this.currentCurrency()} = ${this.invertedBalance().toFixed(7)} ${this.shortName()}`,
 	);

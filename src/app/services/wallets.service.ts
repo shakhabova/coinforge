@@ -124,7 +124,6 @@ export class WalletsService {
 	}
 
 	private setWalletStatus(trxAddress: string, status: WalletStatus): Observable<void> {
-		// TODO check
 		return this.httpClient.put<void>(
 			`${this.configService.serverUrl}/v1/bff-custody/wallets/customer/update-status/${trxAddress}?status=${status}`,
 			status,

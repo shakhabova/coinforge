@@ -20,13 +20,16 @@ export class WalletItemOptionComponent {
 
 	deactivateWallet() {
 		this.deactivate.emit();
+		this.open = false;
 	}
 
 	unblockWallet() {
 		this.unblock.emit();
+		this.open = false;
 	}
 
 	blockWallet() {
 		this.block.emit();
+		this.open = false;
 	}
 }
