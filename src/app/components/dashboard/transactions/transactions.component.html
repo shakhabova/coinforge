@@ -1,17 +1,19 @@
 <div class="transactions dashboard-card">
   <div class="h5-heading title">Transactions</div>
 
-  @for (group of daysGroups; track $index) {
-    <div class="text-m w600 day-group-title">{{ group.title }}</div>
-
-    @for (item of group.items; track item.id) {
-      <app-transaction-item [transaction]="item"></app-transaction-item>
-
-      @if (!$last) {
-        <div class="line"></div>
+  <div style="overflow-y: auto;">
+    @for (group of daysGroups; track $index) {
+      <div class="text-m w600 day-group-title">{{ group.title }}</div>
+  
+      @for (item of group.items; track item.id) {
+        <app-transaction-item [transaction]="item"></app-transaction-item>
+  
+        @if (!$last) {
+          <div class="line"></div>
+        }
       }
     }
-  }
+  </div>
 
   @if (displayEmpty()) {
     <app-empty-display
