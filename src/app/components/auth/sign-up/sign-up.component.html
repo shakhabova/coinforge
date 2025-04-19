@@ -1,7 +1,7 @@
 <form class="sign-up-form" [formGroup]="formGroup" (submit)="onSubmit()">
   <h2>Sign up</h2>
   <div class="form-group">
-    <label tuiLabel>
+    <label tuiLabel class="text-sm w400">
       First name *
       <tui-input
         formControlName="firstName"
@@ -17,7 +17,7 @@
       </tui-error>
     </label>
 
-    <label tuiLabel>
+    <label tuiLabel class="text-sm w400">
       Last name *
       <tui-input
         formControlName="lastName"
@@ -32,7 +32,7 @@
       ></tui-error>
     </label>
   </div>
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Gender *
     <tui-select
       formControlName="gender"
@@ -52,7 +52,7 @@
     </tui-select>
   </label>
 
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Phone number *
     <tui-input-phone-international
       tuiTextfieldSize="m"
@@ -64,7 +64,7 @@
     </tui-input-phone-international>
   </label>
 
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Email *
     <tui-input
       formControlName="email"
@@ -80,7 +80,7 @@
     ></tui-error>
   </label>
 
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Password *
     <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
       <input formControlName="password" tuiInputPassword />
@@ -91,7 +91,7 @@
     [password]="formGroup.get('password')?.getRawValue()"
   ></app-password-criteria>
 
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Repeat password *
     <tui-textfield tuiTextfieldSize="m" [tuiTextfieldLabelOutside]="true">
       <input formControlName="repeatPassword" tuiInputPassword />
@@ -107,7 +107,7 @@
     [error]="[] | tuiFieldError | async"
   ></tui-error>
 
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Country *
     <tui-combo-box
       tuiTextfieldSize="m"
@@ -123,7 +123,7 @@
     </tui-combo-box>
   </label>
 
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     City *
     <tui-input
       formControlName="city"
@@ -138,7 +138,7 @@
       [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Postal code *
     <tui-input
       formControlName="zipCode"
@@ -153,7 +153,7 @@
       [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>
-  <label tuiLabel>
+  <label tuiLabel class="text-sm w400">
     Address
     <tui-textarea
       formControlName="address"
@@ -164,9 +164,9 @@
     </tui-textarea>
   </label>
   <button class="sign-up-btn button primary m" type="submit">Sign up</button>
-  <p>
+  <p class="footer-text text-sm w400">
     Already have an account?
-    <a router-link="/auth/login" routerLinkActive="router-link-active"
+    <a routerLink="/auth/login" routerLinkActive="router-link-active"
       >Sign in</a
     >
   </p>

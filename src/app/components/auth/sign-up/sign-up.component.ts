@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, INJECTOR, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule, NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { TuiDataList, TuiDialogService, TuiError, TuiLabel, TuiTextfield } from '@taiga-ui/core';
 import {
 	TUI_VALIDATION_ERRORS,
@@ -60,6 +60,7 @@ import { EmailOtpCodeComponent } from '../shared/email-otp-code/email-otp-code.c
 		FormsModule,
 		TuiStringifyContentPipe,
 		PasswordCriteriaComponent,
+		RouterModule,
 	],
 	templateUrl: './sign-up.component.html',
 	styleUrl: './sign-up.component.less',

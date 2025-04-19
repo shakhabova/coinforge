@@ -1,3 +1,5 @@
+@use "sass:map";
+
 :root {
   --Primary-text-color: #272828;
   --Secondary-text-color: #6f6f6f;
@@ -68,6 +70,28 @@
   font-style: normal;
 }
 
+$sizes: ("l": 18px, "m": 16px, "sm": 14px, "xs": 12px);
+$heightes: ("l": 24px, "m": 24px, "sm": 21px, "xs": 16px);
+$weightes: (600, 500, 400, 300, 200);
+
+@each $size-name, $size-px in $sizes {
+  @each $weight in $weightes {
+    .text-#{$size-name}-#{$weight} {
+      font: normal #{$weight} #{$size-px}/map.get($heightes, $size-name) "Nunito Sans" !important;
+      // --tui-font-text-s: normal #{$weight} #{$size-px}/map.get($heightes, $size-name) "Nunito Sans" !important;
+    }
+  }
+}
+
+// @mixin text-font($size, $line-height, $weight) {
+//   $font-size: 
+//   .text-#{$size}-#{$weight} {
+//     font: normal #{$weight} #{$size}/#{$line-height} "Nunito Sans";
+//   }
+// }
+
+// @include()
+
 .text {
   &-l {
     @include text;
@@ -85,6 +109,8 @@
     @include text;
     font-size: 14px;
     line-height: 21px;
+
+    --tui-font-text-s: normal 14px/21px "Nunito Sans" !important;
   }
 
   &-xs {

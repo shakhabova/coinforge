@@ -1,9 +1,12 @@
 :host {
-  width: 456px;
+  max-width: 456px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
-h2 {
-  font-size: 28px;
+.title, .mobile-title {
   margin: 0;
   margin-bottom: 48px;
 }
@@ -13,8 +16,12 @@ h2 {
   flex-direction: column;
 }
 
+label {
+  color: var(--secondary-text-color);
+}
+
 .sign-in-btn {
-  width: 456px;
+  width: 100%;
   display: flex;
   color: var(--Secondary500, #fedd2d);
   margin-top: 60px;
@@ -44,6 +51,7 @@ h2 {
 .form-footer {
   margin-top: 20px;
   text-align: center;
+  color: #6f6f6f;
 }
 
 .form-footer a {
@@ -75,4 +83,22 @@ h2 {
   margin-left: auto;
   text-decoration: none;
   color: #1c1c1c;
+}
+
+.divider {
+  flex-grow: 1;
+}
+
+.mobile-title {
+  display: none;
+}
+
+@media only screen and (max-width: 575px) {
+  .title {
+    display: none;
+  }
+
+  .mobile-title {
+    display: block;
+  }
 }
