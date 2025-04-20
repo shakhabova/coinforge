@@ -5,11 +5,13 @@
 .otp-inputs {
   display: flex;
   justify-content: space-between;
+  gap: 8px;
 }
 
 .otp-inputs input {
   text-align: center;
-  width: 49px;
+  max-width: 49px;
+  min-width: 36px;
   height: 48px;
   display: flex;
   align-items: center;
@@ -25,8 +27,8 @@
   background: var(--System-color-light-red, #fff0f0);
 }
 
-@media only screen and (max-width: 575px) {
+/* @media only screen and (max-width: 575px) {
   .otp-inputs input {
     width: 36px;
   }
-}
+} */
