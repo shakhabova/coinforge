@@ -2,19 +2,31 @@
   <div class="h4-heading">Two-Factor Authentication (2FA)</div>
 
   @if (isMobileAppsPage()) {
-    <div class="subtitle h6-heading">
-      Scan the QR code and install<br />the Google Authenticator app
-    </div>
-
-    <div class="mobile-apps-qrs-wrapper">
-      <div class="mobile-app text-m w600">
-        <img src="assets/images/android-mfa-qr.png" class="qr store" />
-        <div class="mobile-app-name">for Android</div>
+    <div class="for-mobile">
+      <div class="subtitle h6-heading tui-space_bottom-16">
+        Use the Google Authenticator app to complete the process.
       </div>
 
-      <div class="mobile-app text-m w600">
-        <img src="assets/images/ios-mfa-qr.png" class="qr store" />
-        <div class="mobile-app-name">for IOS</div>
+      <div class="illustration">
+        <img src="assets/2_factor.png" alt="2FA illustration" />
+      </div>
+    </div>
+
+    <div class="for-desktop">
+      <div class="subtitle h6-heading">
+        Scan the QR code and install<br />the Google Authenticator app
+      </div>
+  
+      <div class="mobile-apps-qrs-wrapper">
+        <div class="mobile-app text-m w600">
+          <img src="assets/images/android-mfa-qr.png" class="qr store" />
+          <div class="mobile-app-name">for Android</div>
+        </div>
+  
+        <div class="mobile-app text-m w600">
+          <img src="assets/images/ios-mfa-qr.png" class="qr store" />
+          <div class="mobile-app-name">for IOS</div>
+        </div>
       </div>
     </div>
   } @else {
@@ -52,5 +64,24 @@
 
   @if (displayBack()) {
     <button class="button secondary m" (click)="goBack()">Back</button>
+  }
+
+  @if (isMobileAppsPage()) {
+    <div class="for-mobile">
+      <div
+        class="test-m-400 mobile-links-subtitle tui-space_top-6 tui-space_bottom-4"
+      >
+        Don't you have an app?
+      </div>
+
+      <div class="links">
+        <a href="https://apps.apple.com/us/app/google-authenticator/id388497605" target="_blank">
+          <img class="store-download" src="assets/images/ios-store-download.png" />
+        </a>
+        <a href="https://play.google.com/store/apps/details?id=com.google.android.apps.authenticator2&hl=en&gl=US" target="_blank">
+          <img class="store-download" src="assets/images/android-store-download.png" />
+        </a>
+      </div>
+    </div>
   }
 </div>
