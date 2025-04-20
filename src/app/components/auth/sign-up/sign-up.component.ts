@@ -120,10 +120,6 @@ export class SignUpComponent {
 		return value as Gender;
 	}
 
-	ngOnInit() {
-		this.formGroup.statusChanges.subscribe(() => console.log(this.formGroup.get('password')?.errors));
-	}
-
 	onSubmit() {
 		if (this.userWasCreated && this.userCreationResponse) {
 			this.signUpApiService.resendOTP(this.userCreationResponse.email);
