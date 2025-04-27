@@ -79,7 +79,6 @@ export class TransactionsFilterModalComponent {
 		);
 	}
 	onApply() {
-		console.log(this.formGroup.value);
 		this.context.completeWith(this.formGroup.getRawValue());
 	}
 

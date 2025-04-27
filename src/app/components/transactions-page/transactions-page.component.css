@@ -117,6 +117,23 @@ button.active {
   color: #6f6f6f;
 }
 
+.no-height {
+  height: 0px;
+  flex-grow: 0;
+}
+
+tui-loader {
+  color: #f6d52d;
+}
+
 cdk-virtual-scroll-viewport {
-  height: calc(100vh - 68px - 66px - 112px - 72px - 48px);
+  /* height: calc(100vh - 68px - 66px - 112px - 72px - 48px); */
+  flex-grow: 1;
+  overflow: auto;
+}
+
+@media only screen and (max-width: 575px) {
+  :host {
+    height: calc(var(--tui-viewport-height) - 48px - 74px);
+  }
 }

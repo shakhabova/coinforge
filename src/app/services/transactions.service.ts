@@ -128,7 +128,7 @@ export class TransactionsService {
 		if (!userId) {
 			throw new Error('no current user');
 		}
-		
+
 		return this.httpClient.post<void>(
 			`${this.configService.serverUrl}/v1/bff-custody/transactions/confirm/${id}`,
 			{},
@@ -147,15 +147,12 @@ export class TransactionsService {
 			throw new Error('no current user');
 		}
 
-		return this.httpClient.delete<void>(
-			`${this.configService.serverUrl}/v1/bff-custody/transactions/remove/${id}`,
-			{
-				headers: {
-					'Customer-ID': environment.customerId,
-					'User-ID': userId?.toString() ?? '',
-				},
+		return this.httpClient.delete<void>(`${this.configService.serverUrl}/v1/bff-custody/transactions/remove/${id}`, {
+			headers: {
+				'Customer-ID': environment.customerId,
+				'User-ID': userId?.toString() ?? '',
 			},
-		);
+		});
 	}
 }
 

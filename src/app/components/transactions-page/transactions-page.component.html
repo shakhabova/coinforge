@@ -2,9 +2,16 @@
   <div class="header">
     <div class="h3-heading">Transactions</div>
 
-    <div class="u-row-middle">
-      <tui-icon icon="@tui.filter" (click)="openFilters()" />
-    </div>
+    <button
+      tuiButton
+      appearance="secondary-grayscale"
+      type="button"
+      size="m"
+      (click)="openFilters()"
+      [class.active]="hasFilters()"
+    >
+      <tui-icon icon="@tui.filter"></tui-icon>
+    </button>
   </div>
   <div class="header-actions u-mar-bottom-24">
     @if (!trxWalletAddress()) {
@@ -141,35 +148,52 @@
       </span>
     </ng-template>
   </p-paginator>
+
+  @if (displayEmpty()) {
+    <app-empty-display
+      text="No transactions in your history? Your transaction history can be made today."
+    ></app-empty-display>
+  }
+
+  @if (displayError()) {
+    <app-error-display
+      text="Something went wrong while trying to load your transactions."
+    />
+  }
 } @else if (configService.isMobile()) {
+  @let mobileTransactions = mobileTransactions$ | async;
   <cdk-virtual-scroll-viewport
     itemSize="74"
-    (scrolledIndexChange)="nextBatch()"
+    appendOnly
+    [class.no-height]="
+      (isMobileEmpty() && !mobileTransactions?.length) || hasMobileError()
+    "
   >
     <app-transaction-item
-      *cdkVirtualFor="
-        let transaction of mobileTransactions | async;
-        trackBy: trackById
-      "
+      *cdkVirtualFor="let transaction of mobileTransactions; trackBy: trackById"
       [transaction]="transaction"
       (click)="openDetails(transaction)"
     ></app-transaction-item>
   </cdk-virtual-scroll-viewport>
+
+  <tui-loader
+    [showLoader]="isMobileLoading() && !!mobileTransactions?.length"
+    [inheritColor]="true"
+  ></tui-loader>
+
+  @if (isMobileEmpty() && !mobileTransactions?.length) {
+    <app-empty-display
+      text="No transactions in your history? Your transaction history can be made today."
+    ></app-empty-display>
+  }
+
+  @if (hasMobileError()) {
+    <app-error-display
+      text="Something went wrong while trying to load your transactions."
+    />
+  }
 }
 
 @if (isLoading()) {
   <app-loader></app-loader>
 }
-
-@if (displayEmpty()) {
-  <app-empty-display
-    text="No transactions in your history? Your transaction history can be made today."
-  ></app-empty-display>
-}
-
-@if (displayError()) {
-  <app-error-display
-    text="Something went wrong while trying to load your transactions."
-  />
-}
-

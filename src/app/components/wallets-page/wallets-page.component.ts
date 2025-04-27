@@ -1,6 +1,6 @@
 import { CdkVirtualScrollViewport, ScrollingModule } from '@angular/cdk/scrolling';
 import { AsyncPipe } from '@angular/common';
-import { Component, DestroyRef, type OnInit, computed, effect, inject, model, signal, viewChild } from '@angular/core';
+import { Component, DestroyRef, NgZone, type OnInit, computed, inject, model, signal, viewChild } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
@@ -13,14 +13,15 @@ import { PaginatorModule, type PaginatorState } from 'primeng/paginator';
 import {
 	BehaviorSubject,
 	type Observable,
+	Subscription,
 	catchError,
+	debounceTime,
 	filter,
 	finalize,
 	map,
 	mergeMap,
 	of,
 	scan,
-	switchMap,
 	tap,
 	throttleTime,
 } from 'rxjs';
@@ -67,6 +68,7 @@ import { explicitEffect } from 'ngxtension/explicit-effect';
 	styleUrl: './wallets-page.component.css',
 })
 export class WalletsPageComponent implements OnInit {
+	private ngZone = inject(NgZone);
 	private cryptocurrenciesService = inject(CurrenciesService);
 	private walletsService = inject(WalletsService);
 	private destroyRef = inject(DestroyRef);
@@ -124,7 +126,6 @@ export class WalletsPageComponent implements OnInit {
 					return [];
 				}
 
-				console.log(toClear);
 				if (toClear) {
 					return batch;
 				}
@@ -142,8 +143,30 @@ export class WalletsPageComponent implements OnInit {
 				this.isLoading.set(false);
 				return of([]);
 			}),
-			finalize(() => this.isMobileLoading.set(false)),
 		);
+
+		explicitEffect([this.viewport], ([viewport]) => {
+			let sub: Subscription | undefined;
+			this.ngZone.runOutsideAngular(() => {
+				sub = viewport
+					?.elementScrolled()
+					.pipe(debounceTime(300))
+					.subscribe(() => {
+						const scrollingLeft =
+							viewport.measureRenderedContentSize() -
+							viewport.measureViewportSize('vertical') -
+							viewport.measureScrollOffset();
+
+						if (scrollingLeft > 0) {
+							return;
+						}
+
+						this.ngZone.run(() => this.nextBatch());
+					});
+			});
+
+			return () => sub?.unsubscribe();
+		});
 	}
 
 	ngOnInit() {
@@ -161,7 +184,6 @@ export class WalletsPageComponent implements OnInit {
 	nextBatch() {
 		const end = this.viewport()?.getRenderedRange().end;
 		const total = this.viewport()?.getDataLength();
-		console.log(end, total);
 		if (end === total) {
 			if ((this.page() + 1) * this.pageSize >= this.totalElements()) {
 				return;

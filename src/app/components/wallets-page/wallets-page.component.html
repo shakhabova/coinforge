@@ -133,7 +133,6 @@
   <cdk-virtual-scroll-viewport
     #scrollViewport
     itemSize="168"
-    (scrolledIndexChange)="nextBatch()"
     [class.no-height]="
       (isMobileEmpty() && !mobileWallets?.length) || hasMobileError()
     "
