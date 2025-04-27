@@ -104,12 +104,26 @@ tui-icon {
   width: 370px;
 }
 
+.infinite-scroll {
+  overflow-y: auto;
+}
+
+.no-height {
+  height: 0px;
+  flex-grow: 0;
+}
+
+tui-loader {
+  color: #f6d52d;
+}
+
 @media only screen and (max-width: 575px) {
   :host {
     padding: 16px;
     background-color: #fff;
     border-radius: 10px;
     margin: 24px 16px;
+    height: calc(var(--tui-viewport-height) - 48px - 74px);
   }
   .header {
     display: grid;
@@ -144,6 +158,7 @@ tui-icon {
   }
 
   cdk-virtual-scroll-viewport {
-    height: calc(100vh - 146px - 16px - 24px - 60px);
+    flex-grow: 1;
+    overflow-y: auto;
   }
 }

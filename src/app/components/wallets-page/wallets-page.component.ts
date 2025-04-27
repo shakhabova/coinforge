@@ -6,11 +6,24 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { TuiTable } from '@taiga-ui/addon-table';
 import { tuiPure } from '@taiga-ui/cdk';
-import { TuiDataList, TuiDropdown, TuiIcon, tuiDialog } from '@taiga-ui/core';
+import { TuiDataList, TuiDropdown, TuiIcon, TuiLoader, tuiDialog } from '@taiga-ui/core';
 import { TuiFilterByInputPipe } from '@taiga-ui/kit';
 import { TuiComboBoxModule, TuiSelectModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { PaginatorModule, type PaginatorState } from 'primeng/paginator';
-import { BehaviorSubject, type Observable, filter, finalize, map, mergeMap, scan, throttleTime } from 'rxjs';
+import {
+	BehaviorSubject,
+	type Observable,
+	catchError,
+	filter,
+	finalize,
+	map,
+	mergeMap,
+	of,
+	scan,
+	switchMap,
+	tap,
+	throttleTime,
+} from 'rxjs';
 import { ConfigService } from 'services/config.service';
 import { CurrenciesService, type CurrencyDto } from 'services/currencies.service';
 import { type GetWalletsParams, type WalletDto, WalletsService } from 'services/wallets.service';
@@ -23,6 +36,7 @@ import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { EmptyDisplayComponent } from '../shared/empty-display/empty-display.component';
 import { ErrorDisplayComponent } from '../shared/error-display/error-display.component';
+import { explicitEffect } from 'ngxtension/explicit-effect';
 
 @Component({
 	selector: 'app-wallets-page',
@@ -47,6 +61,7 @@ import { ErrorDisplayComponent } from '../shared/error-display/error-display.com
 		LoaderComponent,
 		EmptyDisplayComponent,
 		ErrorDisplayComponent,
+		TuiLoader,
 	],
 	templateUrl: './wallets-page.component.html',
 	styleUrl: './wallets-page.component.css',
@@ -61,6 +76,7 @@ export class WalletsPageComponent implements OnInit {
 	private dialogService = inject(DialogService);
 
 	public viewport = viewChild(CdkVirtualScrollViewport);
+	viewportScrolled = computed(() => this.viewport()?.elementScrolled?.());
 
 	protected cryptocurrencies = signal<CurrencyDto[]>([]);
 	protected selectedCurrency = model<CurrencyDto | null>(null);
@@ -73,29 +89,60 @@ export class WalletsPageComponent implements OnInit {
 	protected columns = ['trxAddress', 'availableOprBalance', 'walletStatus', 'actions'];
 	protected open = false;
 
-	private loadBatch = new BehaviorSubject<void>(void 0);
-	public mobileWallets: Observable<WalletDto[] | undefined>;
+	private loadBatch = new BehaviorSubject<boolean | void>(void 0);
+	public mobileWallets$: Observable<WalletDto[] | undefined>;
+	isMobileLoading = signal(false);
 	error = signal<unknown>(null);
 
 	isEmpty = computed(() => !this.isLoading() && !this.wallets()?.length && !this.hasError());
 	hasError = computed(() => !this.isLoading() && !!this.error());
 
-	constructor() {
-		effect(
-			() => {
-				this.loadWallets(this.selectedCurrency()?.cryptoCurrency);
-			},
-		);
+	isMobileEmpty = computed(() => !this.isMobileLoading() && !this.hasMobileError());
+	hasMobileError = computed(() => !this.isMobileLoading() && !!this.error());
 
-		this.mobileWallets = this.loadBatch.pipe(
+	constructor() {
+		explicitEffect([this.selectedCurrency], ([currency]) => {
+			this.page.set(0);
+			this.loadBatch.next(true);
+			this.loadWallets(currency?.cryptoCurrency);
+		});
+
+		let toClear: boolean | void = false;
+		this.mobileWallets$ = this.loadBatch.pipe(
+			filter(() => this.configService.isMobile()),
 			throttleTime(500),
+			tap((clear) => (toClear = clear)),
+			tap(() => {
+				this.isMobileLoading.set(true);
+				if (this.page() === 0) {
+					this.isLoading.set(true);
+				}
+			}),
 			mergeMap(() => this.getWallets()),
 			scan((acc, batch) => {
 				if (!acc || !batch) {
 					return [];
 				}
+
+				console.log(toClear);
+				if (toClear) {
+					return batch;
+				}
+
 				return [...acc, ...batch];
 			}),
+			tap(() => {
+				this.isMobileLoading.set(false);
+				this.isLoading.set(false);
+			}),
+			catchError((err) => {
+				console.error(err);
+				this.error.set(err);
+				this.isMobileLoading.set(false);
+				this.isLoading.set(false);
+				return of([]);
+			}),
+			finalize(() => this.isMobileLoading.set(false)),
 		);
 	}
 
@@ -114,6 +161,7 @@ export class WalletsPageComponent implements OnInit {
 	nextBatch() {
 		const end = this.viewport()?.getRenderedRange().end;
 		const total = this.viewport()?.getDataLength();
+		console.log(end, total);
 		if (end === total) {
 			if ((this.page() + 1) * this.pageSize >= this.totalElements()) {
 				return;
@@ -221,6 +269,10 @@ export class WalletsPageComponent implements OnInit {
 	}
 
 	private loadWallets(selectedCurrency?: string) {
+		if (this.configService.isMobile()) {
+			return;
+		}
+
 		this.error.set(null);
 		this.isLoading.set(true);
 		const params: GetWalletsParams = {

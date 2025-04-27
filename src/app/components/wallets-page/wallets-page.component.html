@@ -116,13 +116,30 @@
       </span>
     </ng-template>
   </p-paginator>
+
+  @if (isEmpty()) {
+    <app-empty-display
+      text="Simplify exchanging and transferring in the world of cryptocurrency by opening your own wallet."
+    ></app-empty-display>
+  }
+
+  @if (hasError()) {
+    <app-error-display
+      text="Something went wrong while trying to load your wallets."
+    />
+  }
 } @else if (this.configService.isMobile()) {
+  @let mobileWallets = mobileWallets$ | async;
   <cdk-virtual-scroll-viewport
+    #scrollViewport
     itemSize="168"
     (scrolledIndexChange)="nextBatch()"
+    [class.no-height]="
+      (isMobileEmpty() && !mobileWallets?.length) || hasMobileError()
+    "
   >
     <app-wallet-info-card
-      *cdkVirtualFor="let wallet of mobileWallets | async; trackBy: trackById"
+      *cdkVirtualFor="let wallet of mobileWallets; trackBy: trackById"
       [wallet]="wallet"
       (click)="navigateDetails(wallet)"
       (block)="onBlock(wallet)"
@@ -130,19 +147,24 @@
       (deactivate)="onDeactivate(wallet)"
     />
   </cdk-virtual-scroll-viewport>
+
+  <tui-loader
+    [showLoader]="isMobileLoading() && !!mobileWallets?.length"
+    [inheritColor]="true"
+  ></tui-loader>
+
+  @if (isMobileEmpty() && !mobileWallets?.length) {
+    <app-empty-display
+      text="Simplify exchanging and transferring in the world of cryptocurrency by opening your own wallet."
+    ></app-empty-display>
+  }
+
+  @if (hasMobileError()) {
+    <app-error-display
+      text="Something went wrong while trying to load your wallets."
+    />
+  }
 }
 @if (isLoading()) {
   <app-loader></app-loader>
-}
-
-@if (isEmpty()) {
-  <app-empty-display
-    text="Simplify exchanging and transferring in the world of cryptocurrency by opening your own wallet."
-  ></app-empty-display>
-}
-
-@if (hasError()) {
-  <app-error-display
-    text="Something went wrong while trying to load your wallets."
-  />
 }
