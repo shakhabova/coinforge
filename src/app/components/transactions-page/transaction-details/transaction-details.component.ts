@@ -1,11 +1,9 @@
-import { Component, computed, DestroyRef, inject, input, signal } from '@angular/core';
-import { TransactionsService, type TransactionDto } from 'services/transactions.service';
-import { TransactionTypeIconComponent } from '../../shared/transaction-type-icon/transaction-type-icon.component';
+import { Component, computed, DestroyRef, inject, signal } from '@angular/core';
+import { type TransactionDto } from 'services/transactions.service';
 import { TransactionStatusChipComponent } from '../../shared/transaction-status-chip/transaction-status-chip.component';
 import { CopyIconComponent } from '../../shared/copy-icon/copy-icon.component';
 import { CurrenciesService } from 'services/currencies.service';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
-import { map, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { injectContext } from '@taiga-ui/polymorpheus';
 import { type TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { DatePipe } from '@angular/common';
@@ -25,21 +23,23 @@ export class TransactionDetailsComponent {
 	transaction = signal<TransactionDto>({} as unknown as TransactionDto);
 	scanUrl = signal('');
 	scanWalletUrl = signal('');
+	fromScanUrl = signal('');
+	fromScanWalletUrl = signal('');
+	toScanUrl = signal('');
+	toScanWalletUrl = signal('');
 	screenshotIsTaking = signal(false);
 
 	toTrxAddressUrl = computed(() =>
-		this.scanWalletUrl()
-			? this.scanWalletUrl().replace('{address}', this.transaction().toTrxAddress)
-			: 'javascript:void(0)',
+		this.toScanWalletUrl() ? this.toScanWalletUrl().replace('{address}', this.transaction().toTrxAddress) : '#',
 	);
 	fromTrxAddressUrl = computed(() =>
-		this.scanWalletUrl() ? this.scanWalletUrl().replace('{address}', this.transaction().fromTrxAddress) : '#',
+		this.fromScanWalletUrl() ? this.fromScanWalletUrl().replace('{address}', this.transaction().fromTrxAddress) : '#',
 	);
 	transactionHashAddress = computed(() =>
-		this.scanUrl() ? this.scanUrl().replace('{hash}', this.transaction().transactionHash) : 'javascript:void(0)',
+		this.scanUrl() ? this.scanUrl().replace('{hash}', this.transaction().transactionHash) : '#',
 	);
 
-	isOutTransaction = computed(() => ['CSTD_OUT', 'C2F'].includes(this.transaction().type));
+	isOutTransaction = computed(() => ['CSTD_OUT', 'C2F', 'OUT'].includes(this.transaction().type));
 	displayToWallet = computed(() => ['CSTD_OUT', 'CSTD_IN'].includes(this.transaction().type));
 
 	ngOnInit() {
@@ -52,6 +52,26 @@ export class TransactionDetailsComponent {
 				.subscribe((info) => {
 					this.scanUrl.set(info?.scanUrl ?? '');
 					this.scanWalletUrl.set(info?.scanWalletUrl ?? '');
+				});
+		}
+
+		if (this.transaction().currencyFrom) {
+			this.cryptocurrenciesService
+				.getCryptoInfo(this.transaction().currencyFrom)
+				.pipe(takeUntilDestroyed(this.destroyRef))
+				.subscribe((info) => {
+					this.fromScanUrl.set(info?.scanUrl ?? '');
+					this.fromScanWalletUrl.set(info?.scanWalletUrl ?? '');
+				});
+		}
+
+		if (this.transaction().currencyTo) {
+			this.cryptocurrenciesService
+				.getCryptoInfo(this.transaction().currencyTo)
+				.pipe(takeUntilDestroyed(this.destroyRef))
+				.subscribe((info) => {
+					this.toScanUrl.set(info?.scanUrl ?? '');
+					this.toScanWalletUrl.set(info?.scanWalletUrl ?? '');
 				});
 		}
 	}

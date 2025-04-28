@@ -13,7 +13,7 @@ import { TransactionTypeIconComponent } from '../../../shared/transaction-type-i
 export class TransactionItemComponent {
 	transaction = input.required<TransactionDto>();
 
-	isPositiveOpr = computed(() => ['IN', 'F2C', 'C2C'].includes(this.transaction().type));
+	isPositiveOpr = computed(() => ['IN', 'F2C', 'C2C', 'CSTD_IN'].includes(this.transaction().type));
 
 	private amountSum = computed(() =>
 		this.isPositiveOpr() ? this.transaction().amount : this.transaction().amountInSenderCurrency,
