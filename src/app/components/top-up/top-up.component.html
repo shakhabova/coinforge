@@ -42,11 +42,12 @@
 
     <div class="u-row-middle u-mar-top-16">
       <div class="address-text text-l w600">{{ selected()?.trxAddress }}</div>
-      <tui-icon
+      <!-- <tui-icon
         icon="@tui.clipboard-copy"
         (click)="copyAddress()"
         class="copy-icon"
-      ></tui-icon>
+      ></tui-icon> -->
+      <app-copy-icon [text]="selected()?.trxAddress"></app-copy-icon>
     </div>
   </div>
 

@@ -116,6 +116,10 @@ tui-icon {
 tui-loader {
   color: #f6d52d;
 }
+th[tuiTh] {
+  font: var(--tui-font-h6-heading);
+  color: #272828;
+}
 
 @media only screen and (max-width: 575px) {
   :host {
@@ -161,4 +165,5 @@ tui-loader {
     flex-grow: 1;
     overflow-y: auto;
   }
+  
 }

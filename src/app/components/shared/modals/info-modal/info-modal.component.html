@@ -21,7 +21,7 @@
 <div class="title h4-heading">{{ context.data.title }}</div>
 
 @if (context.data.text) {
-  <div class="text text-sm w400 u-mar-bottom-24">{{ context.data.text }}</div>
+  <div class="text text-sm w400 u-mar-bottom-24 {{context.data.textClasses}}" [innerHTML]="context.data.text"></div>
 }
 
 <button class="button primary m" (click)="context.completeWith()">

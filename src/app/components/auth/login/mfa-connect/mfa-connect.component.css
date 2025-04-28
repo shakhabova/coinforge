@@ -1,3 +1,9 @@
+:host {
+  --tui-background-accent-1: #1c1c1c;
+  --tui-background-accent-1-hover: #1c1c1c;
+  --tui-text-primary-on-accent-1: rgba(254, 221, 45, 1);
+}
+
 .mobile-apps-qrs-wrapper {
   display: flex;
   gap: 24px;

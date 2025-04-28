@@ -7,6 +7,7 @@ export interface InfoModalConfig {
 	title: string;
 	text?: string;
 	buttonText?: string;
+	textClasses?: string;
 }
 
 @Component({

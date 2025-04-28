@@ -8,7 +8,7 @@ import { TuiIcon } from '@taiga-ui/core';
 	styleUrl: './copy-icon.component.css',
 })
 export class CopyIconComponent {
-	text = input<string>();
+	text = input<string | undefined>();
 	width = input(20);
 	height = input(20);
 	displaySuccess = signal(false);
