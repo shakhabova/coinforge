@@ -22,7 +22,7 @@ export class MarketInfoItemComponent {
 
 	protected shortName = computed(() => this.info().shortName);
 	// protected fullName = computed(() => this.info().fullName);
-	protected balance = computed(() => this.loading() ? '' : this.info().balance);
+	protected balance = computed(() => (this.loading() ? '' : this.info().balance));
 	protected invertedBalance = computed(() => this.info().invertedBalance);
 
 	private currentCurrencyService = inject(CurrentCurrencyService);
@@ -32,7 +32,7 @@ export class MarketInfoItemComponent {
 	fullName = computed(() => this.cryptoService.getCurrencyName(this.shortName()));
 	protected currentCurrency = this.currentCurrencyService.currentCurrency;
 
-	protected rate = computed(
-		() => this.loading() ? '' : `1 ${this.currentCurrency()} = ${this.invertedBalance().toFixed(7)} ${this.shortName()}`,
+	protected rate = computed(() =>
+		this.loading() ? '' : `1 ${this.currentCurrency()} = ${this.invertedBalance().toFixed(7)} ${this.shortName()}`,
 	);
 }

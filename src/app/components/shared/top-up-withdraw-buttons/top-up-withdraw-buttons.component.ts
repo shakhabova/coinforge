@@ -25,10 +25,12 @@ export class TopUpWithdrawButtonsComponent {
 	}
 
 	withdraw() {
-		this.withdrawDialog(undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe(result => {
-			if (result) {
-				this.withdrawSuccess.emit();
-			}
-		});
+		this.withdrawDialog(undefined)
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe((result) => {
+				if (result) {
+					this.withdrawSuccess.emit();
+				}
+			});
 	}
 }

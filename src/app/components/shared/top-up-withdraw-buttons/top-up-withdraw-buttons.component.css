@@ -1,8 +1,8 @@
 :host {
-  display: flex;
-  align-items: center;
+	display: flex;
+	align-items: center;
 }
 
 :host(.full-width) .button {
-  flex-grow: 1;
+	flex-grow: 1;
 }

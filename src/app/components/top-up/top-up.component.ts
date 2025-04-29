@@ -8,8 +8,7 @@ import { CurrenciesService } from 'services/currencies.service';
 import { type WalletDto, WalletsService } from 'services/wallets.service';
 import QRCode from 'qrcode';
 import { injectContext } from '@taiga-ui/polymorpheus';
-import { CopyIconComponent } from "../shared/copy-icon/copy-icon.component";
-
+import { CopyIconComponent } from '../shared/copy-icon/copy-icon.component';
 
 @Component({
 	selector: 'app-top-up',

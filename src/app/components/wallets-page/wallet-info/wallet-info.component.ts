@@ -50,16 +50,14 @@ export class WalletInfoComponent {
 	protected addressDataUrl = signal<string | null>(null);
 
 	constructor() {
-		effect(
-			() => {
-				const address = this.address();
-				if (address) {
-					this.generateQR();
+		effect(() => {
+			const address = this.address();
+			if (address) {
+				this.generateQR();
 
-					this.updateWalletInfo(address);
-				}
-			},
-		);
+				this.updateWalletInfo(address);
+			}
+		});
 	}
 
 	back() {

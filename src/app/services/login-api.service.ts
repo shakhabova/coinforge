@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { ConfigService } from './config.service';
-import { from, type Observable, switchMap } from 'rxjs';
-import { hexStringToBigInt } from 'utils/functions';
+import { type Observable, switchMap } from 'rxjs';
 import { SrpClientService } from './srp-client.service';
 
 export interface LoginChallengeResponse {

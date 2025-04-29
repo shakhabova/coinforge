@@ -165,7 +165,10 @@ export class WithdrawComponent {
 				toTrxAddress: formValue.address,
 				cryptocurrency: selectedWallet.cryptocurrency,
 			})
-			.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.transactionCreating.set(false)))
+			.pipe(
+				takeUntilDestroyed(this.destroyRef),
+				finalize(() => this.transactionCreating.set(false)),
+			)
 			.subscribe({
 				next: ({ id }) => {
 					this.confirm(id);
@@ -296,7 +299,7 @@ export class WithdrawComponent {
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe({
 				error: (err) => {
-          console.error(err.error);
+					console.error(err.error);
 					this.dialogService
 						.showInfo({
 							type: 'warning',

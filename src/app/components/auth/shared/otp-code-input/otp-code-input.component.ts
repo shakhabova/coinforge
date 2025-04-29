@@ -43,7 +43,7 @@ export class OtpCodeInputComponent {
 		if (event.key === 'Backspace') {
 			return;
 		}
-    
+
 		const currentInput = this.getInputByIndex(index);
 		if (!currentInput?.value) {
 			return;

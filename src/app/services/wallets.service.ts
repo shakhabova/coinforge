@@ -1,8 +1,7 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { map, type Observable, of } from 'rxjs';
-import { CurrenciesService } from './currencies.service';
+import { map, type Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
 import { UserInfoDto } from './user.service';
 
@@ -47,7 +46,6 @@ export const DASHBOARD_WALLETS_COUNT = 7;
 export class WalletsService {
 	private httpClient = inject(HttpClient);
 	private configService = inject(ConfigService);
-	private currenciesService = inject(CurrenciesService);
 
 	getWallets(params: GetWalletsParams): Observable<WalletsPageableDto> {
 		//return of(mockWallets(params.page));
@@ -130,146 +128,3 @@ export class WalletsService {
 		);
 	}
 }
-
-function mockWallets(page: number): typeof MOCK_WALLETS {
-	return {
-		...MOCK_WALLETS,
-		data: MOCK_WALLETS.data.map((d, i) => {
-			if (i === 0) {
-				return {
-					...d,
-					availableOprBalance: d.availableOprBalance * (page + 1),
-				};
-			}
-			return d;
-		}),
-	};
-}
-
-const MOCK_WALLETS = {
-	data: [
-		{
-			id: 215,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'CUSTOMER_BLOCKED' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 0,
-			availableOprBalance: 5709.23094234,
-			trxBalance: 0,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 2156,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'DEACTIVATED' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 3,
-			availableOprBalance: 0,
-			trxBalance: 0,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 2135,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'ACTIVE' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 4,
-			availableOprBalance: 0,
-			trxBalance: 0,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 2154,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'ACTIVE' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 5,
-			availableOprBalance: 0,
-			trxBalance: 0,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 2155,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'ACTIVE' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 6,
-			availableOprBalance: 0,
-			trxBalance: 0,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 2156,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'ACTIVE' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 7,
-			availableOprBalance: 7,
-			trxBalance: 7,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 21534,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'ACTIVE' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 8,
-			availableOprBalance: 7,
-			trxBalance: 7,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-		{
-			id: 2158,
-			oprAddress: 'GUA_BTC_30b652cd-ca24-4cc0-873a-ff4ddb1ccba2',
-			trxAddress: 'tb1qevz7vtsq5e9ert5qp0za9fzgwt7pksys66guq9',
-			walletName: "Custody user's 1 wallet",
-			walletStatus: 'ACTIVE' as WalletStatus, // ACTIVE / CUSTOMER_BLOCKED / DEACTIVATED
-			cryptocurrency: 'BTC',
-			oprBalance: 9,
-			availableOprBalance: 7,
-			trxBalance: 7,
-			nativeTokenBalance: null,
-			createdAt: '2024-09-26T11:29:23.366437',
-			updatedAt: '2024-09-26T11:29:23.366484',
-			status: null,
-		},
-	],
-	pageNumber: 0,
-	pageSize: 10,
-	totalElements: 28,
-};

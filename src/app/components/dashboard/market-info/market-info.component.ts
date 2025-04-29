@@ -3,7 +3,6 @@ import { MarketInfoItemComponent, type MarketInfoItemModel } from './market-info
 import { RatesService } from 'services/rates.service';
 import { CurrentCurrencyService } from 'services/current-currency.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { DialogService } from 'services/dialog.service';
 import { finalize } from 'rxjs';
 
 const MARKET_INFO_COINS = ['BTC', 'ETH', 'USDC', 'USDT'];
@@ -35,17 +34,20 @@ export class MarketInfoComponent {
 		this.error.set(null);
 		this.ratesService
 			.ratesBulk()
-			.pipe(takeUntilDestroyed(this.destroyRef), finalize(() => this.loading.set(false)))
+			.pipe(
+				takeUntilDestroyed(this.destroyRef),
+				finalize(() => this.loading.set(false)),
+			)
 			.subscribe({
 				next: (ratesDto) => {
 					this.infos = [];
-					MARKET_INFO_COINS.forEach((coin) => {
+					for (const coin of MARKET_INFO_COINS) {
 						this.infos.push({
 							shortName: coin,
 							balance: ratesDto[coin][currentCurrency].rate,
 							invertedBalance: ratesDto[currentCurrency][coin].rate,
 						});
-					});
+					}
 				},
 				error: (err) => {
 					this.error.set(err);

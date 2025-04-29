@@ -12,20 +12,20 @@ import { authInterceptor } from 'interceptors/auth-interceptor.service';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
 
 export const appConfig: ApplicationConfig = {
-  providers: [
-    provideAnimations(),
-    provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
-    provideAnimationsAsync('noop'),
-    NG_EVENT_PLUGINS,
-    provideHttpClient(withInterceptors([authInterceptor])),
-    providePrimeNG({
-      theme: {
-        preset: Aura,
-        options: {
-          darkModeSelector: false
-        }
-      },
-    }),
-    importProvidersFrom(RxReactiveFormsModule),
-  ],
+	providers: [
+		provideAnimations(),
+		provideRouter(routes, withComponentInputBinding(), withInMemoryScrolling({ scrollPositionRestoration: 'top' })),
+		provideAnimationsAsync('noop'),
+		NG_EVENT_PLUGINS,
+		provideHttpClient(withInterceptors([authInterceptor])),
+		providePrimeNG({
+			theme: {
+				preset: Aura,
+				options: {
+					darkModeSelector: false,
+				},
+			},
+		}),
+		importProvidersFrom(RxReactiveFormsModule),
+	],
 };

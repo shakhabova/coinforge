@@ -57,14 +57,14 @@ export class AskForMfaComponent implements OnInit {
 						this.showOTPModal();
 					},
 					error: (err) => {
-            this.dialogService
-                .showInfo({
-                  type: 'warning',
-                  title: 'Error',
-                  text: 'An unexpected error has appeared. Please try again later.',
-                })
-                .subscribe();
-          },
+						this.dialogService
+							.showInfo({
+								type: 'warning',
+								title: 'Error',
+								text: 'An unexpected error has appeared. Please try again later.',
+							})
+							.subscribe();
+					},
 				});
 		}
 	}

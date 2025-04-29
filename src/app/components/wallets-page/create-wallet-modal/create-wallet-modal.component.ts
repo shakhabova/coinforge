@@ -37,15 +37,15 @@ export class CreateWalletModalComponent {
 			if (!eligibles?.length) {
 				return of([]);
 			}
-			
+
 			return forkJoin(
 				eligibles.map((eligibleCrypto) =>
 					this.currenciesService.getCurrenciesRequest.pipe(
 						map((cryptoInfos) => cryptoInfos.find((info) => info.cryptoCurrency === eligibleCrypto.cryptoCurrency)),
 					),
 				),
-			)}
-		),
+			);
+		}),
 		map((cryptos) => cryptos.filter((crypto) => !!crypto)),
 		tap((cryptos) => {
 			if (!cryptos?.length) {
