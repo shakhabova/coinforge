@@ -207,7 +207,7 @@ export class SignUpComponent {
 						text: `Your account has been successfully created and is now under KYC review. <br>
 					A verification link will be sent to your email address.<br> Once your identity is confirmed and verification is complete, your account will be activated.`,
 						title: 'Congratulations',
-						buttonText: 'Get started',
+						buttonText: 'Back home',
 						textClasses: 'u-text-align-center',
 					})
 					.subscribe(() => this.router.navigateByUrl('/home-page'));
