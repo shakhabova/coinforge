@@ -116,18 +116,6 @@ export class SignUpComponent {
 	private userWasCreated = false;
 	private userCreationResponse?: CreateUserResponse;
 
-	ngOnInit() {
-		this.dialogService
-			.showInfo({
-				type: 'success',
-				text: `Your account has been successfully created and is now under KYC review. <br>
-			A verification link will be sent to your email address.<br> Once your identity is confirmed and verification is complete, your account will be activated.`,
-				title: 'Congratulations',
-				buttonText: 'Get started',
-				textClasses: 'u-text-align-center',
-			})
-			.subscribe(() => this.router.navigateByUrl('/home-page'));
-	}
 	toGender(value: unknown): Gender {
 		return value as Gender;
 	}
