@@ -1,15 +1,16 @@
 :host {
-	width: 504px;
-	display: block;
+  max-width: 504px;
+  width: 100%;
+  display: block;
 }
 
 label {
-	color: var(--Secondary-text-color, #6f6f6f);
+  color: var(--Secondary-text-color, #6f6f6f);
 }
 
 [tuiSwitch] {
-	--t-bg: black !important;
+  --t-bg: black !important;
 }
 .button {
-	width: 100%;
+  width: 100%;
 }

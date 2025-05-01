@@ -146,3 +146,7 @@
   filter: invert(8%) sepia(3%) saturate(14%) hue-rotate(350deg) brightness(104%)
     contrast(93%);
 }
+
+.button.s {
+  padding: 8px 18px;
+}
