@@ -108,6 +108,10 @@ h5 {
   }
 }
 
+[tuiSkeleton]._skeleton {
+  border-radius: 8px;
+}
+
 @media only screen and (max-width: 575px) {
   .wallets {
     width: 100%;

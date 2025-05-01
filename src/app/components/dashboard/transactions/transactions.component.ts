@@ -9,6 +9,7 @@ import { finalize } from 'rxjs';
 import { EmptyDisplayComponent } from 'components/shared/empty-display/empty-display.component';
 import { ErrorDisplayComponent } from 'components/shared/error-display/error-display.component';
 import { LoaderComponent } from 'components/shared/loader/loader.component';
+import { RouterModule } from '@angular/router';
 
 interface DayTransactionsModel {
 	title: string;
@@ -18,7 +19,7 @@ interface DayTransactionsModel {
 
 @Component({
 	selector: 'app-transactions',
-	imports: [TransactionItemComponent, EmptyDisplayComponent, ErrorDisplayComponent, LoaderComponent],
+	imports: [TransactionItemComponent, EmptyDisplayComponent, ErrorDisplayComponent, LoaderComponent, RouterModule],
 	templateUrl: './transactions.component.html',
 	styleUrl: './transactions.component.scss',
 })

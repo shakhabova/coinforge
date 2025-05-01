@@ -10,6 +10,17 @@
   margin-bottom: 24px;
 }
 
+.see-all {
+  color: var(--Primary500, #1c1c1c);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px; /* 150% */
+  letter-spacing: 0.16px;
+  cursor: pointer;
+}
+
 .day-group-title {
   color: #6f6f6f;
   margin-bottom: 8px;

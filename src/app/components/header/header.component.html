@@ -50,7 +50,9 @@
           </button>
         }
       } @else {
-        <button class="profile-icon" (click)="openUserProfile()">MS</button>
+        <button class="profile-icon" (click)="openUserProfile()">
+          {{ abbreviate$ | async }}
+        </button>
       }
     </div>
   </div>

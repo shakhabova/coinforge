@@ -6,6 +6,8 @@ import { UserProfileComponent } from './user-profile/user-profile.component';
 import { AuthService } from 'services/auth.service';
 import { DASHBOARD_LINKS, HOME_PAGE_LINKS } from './constants';
 import { AsyncPipe } from '@angular/common';
+import { UserService } from 'services/user.service';
+import { map } from 'rxjs';
 
 export interface HeaderLink {
 	routerLink: string;
@@ -22,6 +24,11 @@ export interface HeaderLink {
 export class HeaderComponent {
 	public configService = inject(ConfigService);
 	public isHomePage = input(true);
+	private userService = inject(UserService);
+
+	abbreviate$ = this.userService.currentUser$.pipe(
+		map((user) => `${user?.firstName[0]}${user?.lastName[0]}`.toUpperCase()),
+	);
 
 	private dialog = tuiDialog(UserProfileComponent, { size: 'auto' });
 	public authService = inject(AuthService);
