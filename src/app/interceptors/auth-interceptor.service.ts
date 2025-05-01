@@ -10,7 +10,7 @@ export function authInterceptor(req: HttpRequest<unknown>, next: HttpHandlerFn):
 	const accessToken = localStorage.getItem(ACCESS_TOKEN_KEY);
 	const injector = inject(Injector);
 
-	if (req.url.includes('auth/srp/authenticate') || req.url.includes('auth/srp/refresh')) {
+	if (req.url.includes('auth/srp/authenticate') || req.url.includes('auth/srp/refresh') || req.url.includes('users/registration')) {
 		return next(req);
 	}
 
