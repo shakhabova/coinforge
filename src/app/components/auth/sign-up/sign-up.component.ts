@@ -155,22 +155,26 @@ export class SignUpComponent {
 					});
 				},
 				error: (err) => {
-					switch (err.error.status) {
+					switch (err.error.code) {
 						case 'user_already_exists':
-							this.dialogService.showInfo({
-								type: 'error',
-								text: 'Email already exists. Please log in with your existing account or use a different email to sign up',
-								title: 'Error',
-								buttonText: 'Back to sign up',
-							});
+							this.dialogService
+								.showInfo({
+									type: 'error',
+									text: 'Email already exists. Please log in with your existing account or use a different email to sign up',
+									title: 'Error',
+									buttonText: 'Back to sign up',
+								})
+								.subscribe();
 							break;
 						default:
-							this.dialogService.showInfo({
-								type: 'error',
-								text: 'An unexpected error has appeared. Please try again later',
-								title: 'Error',
-								buttonText: 'Back to sign up',
-							});
+							this.dialogService
+								.showInfo({
+									type: 'error',
+									text: 'An unexpected error has appeared. Please try again later',
+									title: 'Error',
+									buttonText: 'Back to sign up',
+								})
+								.subscribe();
 					}
 				},
 			});

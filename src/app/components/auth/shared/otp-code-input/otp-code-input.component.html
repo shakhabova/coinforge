@@ -12,6 +12,7 @@
         (paste)="onInputPaste(toClipboardEvent($event), $index)"
         [class.input-error]="error()"
         [disabled]="disabled()"
+        inputmode="number"
       />
     } @else {
       <input
@@ -24,6 +25,7 @@
         (paste)="onInputPaste(toClipboardEvent($event), $index)"
         [disabled]="disabled()"
         [class.input-error]="error()"
+        inputmode="number"
       />
     }
   }

@@ -1,6 +1,5 @@
 :host {
-  max-width: 504px;
-  width: 100%;
+  width: 504px;
   display: block;
 }
 
@@ -13,4 +12,10 @@ label {
 }
 .button {
   width: 100%;
+}
+
+@media only screen and (max-width: 575px) {
+  :host {
+    width: 100%;
+  }
 }
