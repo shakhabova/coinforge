@@ -134,6 +134,15 @@ export class ChangePasswordComponent {
 						case 'invalid_confirmation_code':
 							this.errorMessage.set('Invalid verification code');
 							break;
+						case 'invalid_new_password':
+							this.dialogService
+								.showInfo({
+									type: 'warning',
+									title: 'Error',
+									text: 'The password you have entered is the same as your old one. Please consider another password.',
+								})
+								.subscribe();
+								break;
 						default:
 							this.dialogService
 								.showInfo({

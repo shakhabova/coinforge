@@ -27,7 +27,17 @@
 		0px 1.127px 3.13px 0px rgba(0, 0, 0, 0.04),
 		0px 0.408px 1.132px 0px rgba(0, 0, 0, 0.02);
 }
+.qr-code-text-wrapper {
+	display: none;
+}
 
+.address-text {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: block;
+	max-width: 264px;
+}
 .mfa-qr {
 	padding: 16px;
 }
@@ -84,5 +94,9 @@
 
 	.subtitle {
 		text-align: left;
+	}
+
+	.qr-code-text-wrapper {
+		display: flex;
 	}
 }

@@ -58,11 +58,15 @@ export class LoginComponent {
 			return;
 		}
 
-		const email = this.formGroup.getRawValue().email;
+		const email = this.formGroup.getRawValue().email.toLowerCase();
+		const formValue = {
+			...this.formGroup.getRawValue(),
+			email
+		}
 
 		this.loading.set(true);
 		this.loginService
-			.login(this.formGroup.getRawValue())
+			.login(formValue)
 			.pipe(
 				takeUntilDestroyed(this.destroyRef),
 				finalize(() => this.loading.set(false)),

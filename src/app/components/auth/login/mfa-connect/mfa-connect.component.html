@@ -36,6 +36,9 @@
     </div>
 
     <img class="qr mfa-qr" [src]="mfaQR" />
+    <div class="u-row-middle u-mar-top-16 qr-code-text-wrapper">
+      <button class="button secondary s" (click)="copySecret()">Copy secret key</button>
+    </div>
 
     <label tuiLabel class="u-mar-top-32 u-mar-bottom-48">
       <input [(ngModel)]="mfaAdded" tuiCheckbox type="checkbox" />

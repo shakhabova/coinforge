@@ -185,6 +185,15 @@ export class WithdrawComponent {
 								other: 'Selected amount should be equal or more than 1 EUR',
 							});
 							break;
+						case 'resource_missing':
+							this.dialogService
+								.showInfo({
+									type: 'warning',
+									title: 'Error',
+									text: 'Wallet address does not correspond to given cryptocurrency.',
+								})
+								.subscribe();
+								break;
 						default:
 							this.dialogService
 								.showInfo({

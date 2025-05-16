@@ -12,3 +12,9 @@
 	margin: 0 auto;
 	margin-bottom: 32px;
 }
+
+@media only screen and (max-width: 575px) {
+	:host {
+		width: 100%;
+	}
+}

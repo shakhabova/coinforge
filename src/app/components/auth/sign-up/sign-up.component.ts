@@ -132,7 +132,10 @@ export class SignUpComponent {
 			return;
 		}
 
-		const formValue = this.formGroup.getRawValue();
+		const formValue = {
+			...this.formGroup.getRawValue(),
+			email: this.formGroup.getRawValue().email.toLowerCase(),
+		};
 		this.signUpApiService
 			.createUser({
 				...formValue,
