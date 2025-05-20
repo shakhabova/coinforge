@@ -1,3 +1,4 @@
+import * as R from 'remeda';
 import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, INJECTOR, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -28,7 +29,7 @@ import { getCountries } from 'libphonenumber-js';
 import { defer, take } from 'rxjs';
 import { DialogService } from 'services/dialog.service';
 import { type CreateUserResponse, type Gender, SignUpApiService } from 'services/sign-up-api.service';
-import { COUNTRIES } from 'utils/countries';
+import countries from './countries.json';
 import {
 	confirmPasswordValidator,
 	firstNameValidator,
@@ -111,13 +112,18 @@ export class SignUpComponent {
 
 	protected readonly phoneCountries = getCountries();
 
-	countries = COUNTRIES.map((country) => country.countryCodeAlpha3);
+	countries = countries.data.map((country) => country.iso3);
 
 	private userWasCreated = false;
 	private userCreationResponse?: CreateUserResponse;
 
 	toGender(value: unknown): Gender {
 		return value as Gender;
+	}
+
+	get cities() {
+		const code = this.formGroup.value.country;
+		return code ? (countries.data.find((country) => country.iso3 === code)?.cities ?? []) : [];
 	}
 
 	onSubmit() {
@@ -184,7 +190,7 @@ export class SignUpComponent {
 	}
 
 	protected readonly stringify = (code: string): string =>
-		!code ? '' : (COUNTRIES.find((country) => country.countryCodeAlpha3 === code)?.name ?? '');
+		!code ? '' : (countries.data.find((country) => country.iso3 === code)?.country ?? '');
 
 	private showOTPModal(user: CreateUserResponse | null): void {
 		if (!user?.email || !user?.id) {

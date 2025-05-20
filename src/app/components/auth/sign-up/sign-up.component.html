@@ -130,7 +130,7 @@
       tuiTextfieldSize="m"
       [tuiTextfieldLabelOutside]="true"
     >
-      <input tuiTextfieldLegacy />
+      <tui-data-list-wrapper *tuiDataList [items]="cities | tuiFilterByInput" />
     </tui-input>
 
     <tui-error
@@ -138,6 +138,7 @@
       [error]="[] | tuiFieldError | async"
     ></tui-error>
   </label>
+
   <label tuiLabel class="text-sm w400">
     Postal code *
     <tui-input
