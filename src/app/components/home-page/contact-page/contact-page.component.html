@@ -16,8 +16,10 @@
         placeholder="Enter your comment"
         maxlength="200"
         id="comment"
+        [(ngModel)]="comment"
+        name="comment"
       ></textarea>
-      <div class="char-count"><span id="charCount">0</span>/200</div>
+      <div class="char-count">{{ comment.length }}/200</div>
       <button class="button primary s" type="submit">Submit request</button>
     </form>
   </div>
