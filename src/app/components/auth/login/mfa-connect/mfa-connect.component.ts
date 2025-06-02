@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TuiLabel } from '@taiga-ui/core';
 import { TuiCheckbox } from '@taiga-ui/kit';
-import QrcodeDecoder from 'qrcode-decoder';
 import { from, Observable, of } from 'rxjs';
 
 @Component({
@@ -21,23 +20,11 @@ export class MfaConnectComponent implements OnInit {
 	protected displayNext = computed(() => this.isMobileAppsPage());
 
 	mfaQR = this.router.getCurrentNavigation()?.extras.state?.['mfaQR'];
-
-	private qrDecoder = new QrcodeDecoder();
-	mfaQrCode?: Observable<string>;
+	secret = this.router.getCurrentNavigation()?.extras.state?.['secret'];
 
 	ngOnInit(): void {
 		if (!this.mfaQR) {
 			this.goToLogin();
-		} else {
-			this.mfaQrCode = from(
-				this.qrDecoder.decodeFromImage(this.mfaQR).then((result) => {
-					const url = result?.data ?? '';
-					if (!url) {
-						return '';
-					}
-					return new URL(url).searchParams.get('secret') ?? '';
-				}),
-			);
 		}
 	}
 
@@ -54,11 +41,7 @@ export class MfaConnectComponent implements OnInit {
 	}
 
 	async copySecret() {
-		this.mfaQrCode?.subscribe(async (code) => {
-			if (code) {
-				await navigator.clipboard.writeText(code);
-			}
-		});
+		await navigator.clipboard.writeText(this.secret);
 	}
 
 	private goToLogin() {

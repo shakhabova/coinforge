@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { TuiDialogService } from '@taiga-ui/core';
 import { PolymorpheusComponent } from '@taiga-ui/polymorpheus';
 import { DialogService } from 'services/dialog.service';
-import { MfaApiService } from 'services/mfa-api.service';
+import { MfaApiService, SubmitResetMfaDto } from 'services/mfa-api.service';
 import { UserService } from 'services/user.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
 import { EmailOtpCodeComponent } from 'components/auth/shared/email-otp-code/email-otp-code.component';
@@ -27,7 +27,6 @@ export class AskForMfaComponent implements OnInit {
 
 	protected readonly loading = signal(false);
 	public email = input<string>();
-	public mfaQR = input<string>();
 
 	ngOnInit(): void {
 		if (!this.email()) {
@@ -37,12 +36,6 @@ export class AskForMfaComponent implements OnInit {
 	}
 
 	enable() {
-		const qr = this.mfaQR();
-		if (qr) {
-			this.goToMfaConnect(qr);
-			return;
-		}
-
 		this.loading.set(true);
 		const email = this.email();
 		if (email) {
@@ -77,14 +70,17 @@ export class AskForMfaComponent implements OnInit {
 
 		const getRequest = (otp: string) => this.mfaApiService.submitResetMfa({ email, otp });
 
-		const otpDialog = this.tuiDialogs.open<string>(new PolymorpheusComponent(EmailOtpCodeComponent, this.injector), {
-			data: {
-				email,
-				requestGetter: getRequest,
-				codeLength: 8,
-				errorButtonText: 'Back to sign in',
+		const otpDialog = this.tuiDialogs.open<SubmitResetMfaDto>(
+			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
+			{
+				data: {
+					email,
+					requestGetter: getRequest,
+					codeLength: 8,
+					errorButtonText: 'Back to sign in',
+				},
 			},
-		});
+		);
 
 		otpDialog.subscribe((result) => {
 			if (!result) {
@@ -95,7 +91,7 @@ export class AskForMfaComponent implements OnInit {
 		});
 	}
 
-	private goToMfaConnect(mfaQR: string) {
-		this.router.navigateByUrl('/auth/mfa-connect', { state: { mfaQR } });
+	private goToMfaConnect(result: SubmitResetMfaDto) {
+		this.router.navigateByUrl('/auth/mfa-connect', { state: { mfaQR: result.qr, secret: result.secret } });
 	}
 }
