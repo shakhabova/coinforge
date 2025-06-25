@@ -3,11 +3,11 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TuiLabel } from '@taiga-ui/core';
 import { TuiCheckbox } from '@taiga-ui/kit';
-import { from, Observable, of } from 'rxjs';
+import { CopyIconComponent } from '../../../shared/copy-icon/copy-icon.component';
 
 @Component({
 	selector: 'app-mfa-connect',
-	imports: [FormsModule, TuiLabel, TuiCheckbox],
+	imports: [FormsModule, TuiLabel, TuiCheckbox, CopyIconComponent],
 	templateUrl: './mfa-connect.component.html',
 	styleUrl: './mfa-connect.component.css',
 })
