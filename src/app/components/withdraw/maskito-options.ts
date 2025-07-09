@@ -5,6 +5,7 @@ export const customMaskitoPostprocessor: MaskitoPostprocessor = ({ value, select
 	const [from, to] = selection;
 	const initValue = initialElementState.value;
 	let newValue = value;
+	console.log(value);
 	if (value.startsWith('0')) {
 		if (value.includes('.') && /[1-9]+0*\./.test(value)) {
 			newValue = value.replace(/^0+/, '');
@@ -20,10 +21,10 @@ export const customMaskitoPostprocessor: MaskitoPostprocessor = ({ value, select
 	};
 };
 
-export const maskitoMask = (postfix: string): MaskitoMask => {
+export const maskitoMask = (): MaskitoMask => {
 	return ({ value }) => {
 		let isDotUsed = false;
-		const digitsMask = Array.from(value.replaceAll(postfix, '')).map((char) => {
+		const digitsMask = Array.from(value).map((char) => {
 			if (char === DECIMAL_POINT_CHAR) {
 				if (!isDotUsed) {
 					isDotUsed = true;
@@ -37,14 +38,14 @@ export const maskitoMask = (postfix: string): MaskitoMask => {
 			return [/[\d\.]/];
 		}
 
-		return [...digitsMask, postfix];
+		return [...digitsMask];
 	};
 };
 
-export const onBlurMaskitoPlugin = (postfix: string) => {
+export const onBlurMaskitoPlugin = () => {
 	return (element: MaskitoElement) => {
 		const blurHandler = () => {
-			const valueWithoutPostfix = element.value.substring(0, element.value.length - postfix.length);
+			const value = element.value;
 
 			if (element.value.startsWith(DECIMAL_POINT_CHAR)) {
 				maskitoUpdateElement(element, `0${element.value}`);
@@ -56,8 +57,8 @@ export const onBlurMaskitoPlugin = (postfix: string) => {
 				maskitoUpdateElement(element, `0.${element.value}`);
 			}
 
-			if (valueWithoutPostfix.endsWith(DECIMAL_POINT_CHAR)) {
-				maskitoUpdateElement(element, `${valueWithoutPostfix.substring(0, valueWithoutPostfix.length - 1)}${postfix}`);
+			if (value.endsWith(DECIMAL_POINT_CHAR)) {
+				maskitoUpdateElement(element, `${value.substring(0, value.length - 1)}`);
 			}
 		};
 

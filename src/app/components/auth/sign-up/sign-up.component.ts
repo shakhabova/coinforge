@@ -36,7 +36,7 @@ import {
 	getPasswordValidator,
 	lastNameValidator,
 } from 'utils/validators';
-import { EmailOtpCodeComponent } from '../shared/email-otp-code/email-otp-code.component';
+import { EmailOtpCodeComponent, EmailOtpModalData } from '../shared/email-otp-code/email-otp-code.component';
 
 @Component({
 	selector: 'app-sign-up',
@@ -128,8 +128,11 @@ export class SignUpComponent {
 
 	onSubmit() {
 		if (this.userWasCreated && this.userCreationResponse) {
-			this.signUpApiService.resendOTP(this.userCreationResponse.email);
-			this.showOTPModal(this.userCreationResponse);
+			this.signUpApiService
+				.resendOTP(this.userCreationResponse.email)
+				.pipe(takeUntilDestroyed(this.destroyRef))
+				// biome-ignore lint/style/noNonNullAssertion: i am smarter than biome
+				.subscribe(() => this.showOTPModal(this.userCreationResponse!));
 			return;
 		}
 
@@ -175,6 +178,16 @@ export class SignUpComponent {
 								})
 								.subscribe();
 							break;
+						case 'email_confirmation_pending':
+							this.dialogService
+								.showInfo({
+									type: 'pending',
+									title: 'Error',
+									textClasses: 'u-text-align-center',
+									text: 'User with this email already exists but has not been verified yet.<br>Please contact administrator for your user to be reset.',
+								})
+								.subscribe();
+							return;
 						default:
 							this.dialogService
 								.showInfo({
@@ -204,12 +217,14 @@ export class SignUpComponent {
 				otp,
 			});
 
+		const dialogData: EmailOtpModalData<void> = {
+			email: user?.email,
+			requestGetter,
+			errorButtonText: 'Back to sign up',
+			source: 'register',
+		};
 		const otpDialog = this.dialogs.open<unknown>(new PolymorpheusComponent(EmailOtpCodeComponent, this.injector), {
-			data: {
-				email: user?.email,
-				requestGetter,
-				errorButtonText: 'Back to sign up',
-			},
+			data: dialogData,
 		});
 
 		otpDialog.subscribe((value) => {

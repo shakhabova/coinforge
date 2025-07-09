@@ -1,3 +1,8 @@
+::ng-deep .t-postfix {
+	position: absolute;
+	top: 1px;
+}
+
 :host {
 	width: 440px;
 	display: block;

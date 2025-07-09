@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { DestroyRef, inject, Injectable } from '@angular/core';
-import { BehaviorSubject, finalize, map, type Observable, of, tap } from 'rxjs';
+import { BehaviorSubject, finalize, interval, map, type Observable, of, tap } from 'rxjs';
 import type { MfaStatus } from './login-api.service';
 import { ConfigService } from './config.service';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -35,6 +35,7 @@ export class UserService {
 
 	constructor() {
 		this.updateCurrentUser();
+		this.runTokenChecker();
 	}
 
 	getInfo(): Observable<UserInfoDto> {
@@ -63,5 +64,13 @@ export class UserService {
 
 	clearCurrentUser(): void {
 		this.currentUser$.next(null);
+	}
+
+	private runTokenChecker(): void {
+		interval(30_000)
+			.pipe(
+				takeUntilDestroyed(this.destroyRef)
+			)
+			.subscribe(() => this.updateCurrentUser());
 	}
 }

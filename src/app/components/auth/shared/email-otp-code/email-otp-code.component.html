@@ -11,6 +11,7 @@
   [length]="codeLength"
   [error]="!!errorMessage()"
   [disabled]="loading()"
+  (submit)="onSubmit()"
 ></app-otp-code-input>
 
 @if (message() || errorMessage()) {

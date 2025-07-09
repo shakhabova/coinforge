@@ -171,6 +171,7 @@ export class LoginComponent {
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe((response) => {
 				if (response) {
+					this.loading.set(true);
 					this.authorize(response);
 					this.goToDashboard();
 				}

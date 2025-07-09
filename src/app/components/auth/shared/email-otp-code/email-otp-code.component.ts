@@ -10,12 +10,14 @@ import { HttpClient } from '@angular/common/http';
 import { ConfigService } from 'services/config.service';
 import { DialogService } from 'services/dialog.service';
 import { explicitEffect } from 'ngxtension/explicit-effect';
+import { MfaApiService } from 'services/mfa-api.service';
 
 export interface EmailOtpModalData<T> {
 	email: string;
 	requestGetter: (otp: string) => Observable<T>;
 	errorButtonText: string;
 	codeLength?: number;
+	source: 'login' | 'register';
 }
 
 @Component({
@@ -30,6 +32,7 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 	private configService = inject(ConfigService);
 	private dialogService = inject(DialogService);
 	private signUpApiService = inject(SignUpApiService);
+	private mfaApiService = inject(MfaApiService);
 
 	otpCode = model('');
 	codeLength = 6;
@@ -41,6 +44,7 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 	expiresTimer$!: Observable<string>;
 	expiresTimerSub?: Subscription;
 	isConfirmDisabled = computed(() => this.otpCode().length < this.codeLength || this.loading());
+	displayResend = signal(false);
 
 	private readonly context = injectContext<TuiDialogContext<unknown, EmailOtpModalData<T>>>();
 	private expiresSeconds = 90;
@@ -63,6 +67,14 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 		}
 	}
 
+	onSubmit() {
+		if (this.otpCode().length !== this.codeLength) {
+			return;
+		}
+
+		this.confirm();
+	}
+
 	private runTimer(): void {
 		if (this.expiresTimerSub) {
 			this.expiresTimerSub.unsubscribe();
@@ -77,6 +89,7 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 			tap(() => {
 				currentSecond -= 1;
 			}),
+			tap(() => this.displayResend.set(this.expiresSeconds - currentSecond > 3)),
 			take(this.expiresSeconds + 1),
 			share(),
 		);
@@ -100,7 +113,7 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 			.subscribe({
 				next: (res) => this.context.completeWith(res || true),
 				error: (err) => {
-					if (err.error?.code === 'invalid_confirmation_code') {
+					if (['invalid_confirmation_code', 'invalid_otp'].includes(err.error?.code)) {
 						this.errorMessage.set('Invalid OTP code');
 						return;
 					}
@@ -119,8 +132,8 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 	resendCode() {
 		this.loading.set(true);
 		this.otpCode.set('');
-		this.signUpApiService
-			.resendOTP(this.contextEmail)
+		this.displayResend.set(false);
+		this.resendRequest()
 			.pipe(
 				takeUntilDestroyed(this.destroyRef),
 				finalize(() => this.loading.set(false)),
@@ -140,6 +153,15 @@ export class EmailOtpCodeComponent<T> implements OnInit {
 				text: 'An unexpected error has appeared. Please try again later.',
 				buttonText: this.context.data.errorButtonText,
 			})
-			.subscribe(() => this.context.completeWith(null));
+			.subscribe();
+	}
+
+	private resendRequest(): Observable<void> {
+		switch (this.context.data.source) {
+			case 'register':
+				return this.signUpApiService.resendOTP(this.contextEmail);
+			case 'login':
+				return this.mfaApiService.resetMfa(this.contextEmail);
+		}
 	}
 }

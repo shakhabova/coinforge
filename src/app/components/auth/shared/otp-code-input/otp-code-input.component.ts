@@ -1,4 +1,4 @@
-import { Component, model, input, viewChild, ElementRef, afterNextRender, INJECTOR, inject } from '@angular/core';
+import { Component, model, input, viewChild, ElementRef, afterNextRender, INJECTOR, inject, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { explicitEffect } from 'ngxtension/explicit-effect';
@@ -14,6 +14,7 @@ export class OtpCodeInputComponent {
 	length = input(6);
 	error = input(false);
 	disabled = input(false);
+	submit = output();
 
 	inputsWrapper = viewChild<ElementRef<HTMLDivElement>>('inputsWrapper');
 
@@ -42,6 +43,10 @@ export class OtpCodeInputComponent {
 	onFieldInput(event: KeyboardEvent, index: number): void {
 		if (event.key === 'Backspace') {
 			return;
+		}
+
+		if (event.key === 'Enter') {
+			this.submit.emit();
 		}
 
 		const currentInput = this.getInputByIndex(index);

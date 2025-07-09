@@ -24,7 +24,6 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TUI_VALIDATION_ERRORS, TuiConfirmService, TuiFieldErrorPipe, TuiUnmaskHandler } from '@taiga-ui/kit';
 import { MaskitoDirective } from '@maskito/angular';
 import { type MaskitoOptions } from '@maskito/core';
-import { maskitoCaretGuard, maskitoPostfixPostprocessorGenerator } from '@maskito/kit';
 import { TransactionsService } from 'services/transactions.service';
 import { DialogService } from 'services/dialog.service';
 import { WithdrawConfirmComponent } from './withdraw-confirm/withdraw-confirm.component';
@@ -45,7 +44,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 		TuiError,
 		TuiFieldErrorPipe,
 		MaskitoDirective,
-		TuiUnmaskHandler,
 		TuiLoader,
 	],
 	templateUrl: './withdraw.component.html',
@@ -83,18 +81,13 @@ export class WithdrawComponent {
 	});
 
 	amountMaskOptions: Signal<MaskitoOptions> = computed(() => {
-		const postfix = this.amountPostfix();
 		return {
-			mask: maskitoMask(postfix),
-			postprocessors: [
-				// customMaskitoPostprocessor,
-				maskitoPostfixPostprocessorGenerator(postfix),
-			],
-			plugins: [maskitoCaretGuard((value) => [0, value.length - postfix.length]), onBlurMaskitoPlugin(postfix)],
+			mask: maskitoMask(),
+			plugins: [onBlurMaskitoPlugin()],
 		};
 	});
 
-	amountPostfix = computed(() => ` ${this.selected()?.cryptocurrency ?? ''}`);
+	amountPostfix = computed(() => `${this.selected()?.cryptocurrency ?? ''}`);
 
 	selected = model<WalletDto | null>(null);
 	phase = signal<'from' | 'to'>('from');
@@ -107,8 +100,6 @@ export class WithdrawComponent {
 			page: 0,
 		})
 		.pipe(map((data) => data.data));
-
-	amountUnmask = (value: string) => value.substring(0, value.length - this.amountPostfix().length);
 
 	ngOnInit() {
 		if (this.context.data) {

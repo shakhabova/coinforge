@@ -5,9 +5,8 @@ import {
 	INJECTOR,
 	type WritableSignal,
 	afterNextRender,
-	computed,
-	inject,
-	signal,
+	computed, inject,
+	signal
 } from '@angular/core';
 import { takeUntilDestroyed, toObservable } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
@@ -16,11 +15,11 @@ import { TuiSkeleton } from '@taiga-ui/kit';
 import { EmptyDisplayComponent } from 'components/shared/empty-display/empty-display.component';
 import { ErrorDisplayComponent } from 'components/shared/error-display/error-display.component';
 import { CreateWalletModalComponent } from 'components/wallets-page/create-wallet-modal/create-wallet-modal.component';
-import { explicitEffect } from 'ngxtension/explicit-effect';
 import { filter } from 'rxjs';
 import { ConfigService } from 'services/config.service';
 import { GetWalletsParams, type WalletDto, WalletsService } from 'services/wallets.service';
 import { WalletCardComponent } from './wallet-card/wallet-card.component';
+import slice from 'lodash-es/slice';
 
 @Component({
 	selector: 'app-wallets',
@@ -38,32 +37,29 @@ export class WalletsComponent {
 
 	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto' });
 
-	wallets: WritableSignal<(WalletDto | null)[]> = signal([]);
+	wallets: WritableSignal<WalletDto[]> = signal([]);
 
 	isLoading = signal(false);
 	hasError = signal(false);
 	showEmpty = computed(() => !this.isLoading() && !this.hasError() && !this.wallets()?.length);
 	showError = computed(() => !this.isLoading() && this.hasError());
 
-	pageSize = computed(() => (this.configService.isMobile() ? 1 : 3));
+	pageSize = computed(() => (this.configService.isMobile() ? 2 : 4));
 	currentPage = signal(0);
-	maxPages = signal(1);
-	showPrevBtn = computed(() => this.currentPage() > 0 && !this.isLoading());
-	showNextStepBtn = computed(() => this.maxPages() > this.currentPage() + 1 && !this.isLoading());
+	showPrevBtn = computed(() => this.offset() > 0);
+	showNextStepBtn = computed(() => this.offset() + this.pageSize() < this.wallets().length);
+	offset = computed(() => (this.currentPage() === 0 ? 0 : this.currentPage() * this.pageSize() - 1));
+	currentWalletsSlice = computed(() =>
+		this.currentPage() === 0 ? slice(this.wallets(), 0, this.pageSize() - 1) : slice(this.wallets(), this.offset(), this.offset() + this.pageSize()),
+	);
 
 	constructor() {
 		toObservable(this.configService.isMobile)
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe(() => this.currentPage.set(0));
 
-		explicitEffect([this.currentPage], () => {
-			this.loadWallets();
-		});
+		this.loadWallets();
 	}
-
-	// ngOnInit(): void {
-	// 	this.loadWallets();
-	// }
 
 	createWallet() {
 		this.createWalletDialog()
@@ -83,10 +79,11 @@ export class WalletsComponent {
 	private loadWallets() {
 		this.hasError.set(false);
 		this.isLoading.set(true);
+		this.currentPage.set(0);
 
 		const params: GetWalletsParams = {
-			page: this.currentPage(),
-			size: this.pageSize(),
+			page: 0,
+			size: 42,
 			statusIn: ['ACTIVE', 'CUSTOMER_BLOCKED', 'DEACTIVATED'],
 			sort: 'id,desc',
 		};
@@ -96,16 +93,7 @@ export class WalletsComponent {
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe({
 				next: (res) => {
-					this.maxPages.set(Math.ceil(res.totalElements / this.pageSize()));
-
-					if (params.page === 0) {
-						this.wallets.set([null, ...res.data]);
-					} else {
-						const prevLastWallet = this.wallets().at(-1);
-						if (prevLastWallet) {
-							this.wallets.set([prevLastWallet, ...res.data]);
-						}
-					}
+					this.wallets.set(res.data);
 
 					afterNextRender(
 						{

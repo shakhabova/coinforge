@@ -7,7 +7,10 @@ import { DialogService } from 'services/dialog.service';
 import { MfaApiService, SubmitResetMfaDto } from 'services/mfa-api.service';
 import { UserService } from 'services/user.service';
 import { LoaderComponent } from '../../../shared/loader/loader.component';
-import { EmailOtpCodeComponent } from 'components/auth/shared/email-otp-code/email-otp-code.component';
+import {
+	EmailOtpCodeComponent,
+	EmailOtpModalData,
+} from 'components/auth/shared/email-otp-code/email-otp-code.component';
 import { finalize } from 'rxjs';
 
 @Component({
@@ -69,16 +72,17 @@ export class AskForMfaComponent implements OnInit {
 		}
 
 		const getRequest = (otp: string) => this.mfaApiService.submitResetMfa({ email, otp });
-
+		const dialogData: EmailOtpModalData<SubmitResetMfaDto> = {
+			email,
+			requestGetter: getRequest,
+			codeLength: 8,
+			errorButtonText: 'Back to sign in',
+			source: 'login',
+		};
 		const otpDialog = this.tuiDialogs.open<SubmitResetMfaDto>(
 			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
 			{
-				data: {
-					email,
-					requestGetter: getRequest,
-					codeLength: 8,
-					errorButtonText: 'Back to sign in',
-				},
+				data: dialogData,
 			},
 		);
 

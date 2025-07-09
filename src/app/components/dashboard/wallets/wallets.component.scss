@@ -22,6 +22,7 @@ h5 {
 .wallets {
   width: 744px;
   height: 304px;
+  position: relative;
 
   .wallet-list {
     display: flex;
@@ -96,15 +97,15 @@ h5 {
 .paginator-btn {
   position: absolute;
   box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.2);
-  bottom: 78px;
+  bottom: 110px;
   z-index: 1;
 
-  &:first-child {
-    left: -18px;
+  &.prev-btn {
+    left: 3px;
   }
 
-  &:last-child {
-    right: -8px;
+  &.next-btn {
+    right: 3px;
   }
 }
 

@@ -1,5 +1,7 @@
-import { Component, input, output } from '@angular/core';
+import { Component, DestroyRef, inject, input, output, OutputEmitterRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TuiButton, TuiDataList, TuiDropdown, TuiIcon } from '@taiga-ui/core';
+import { DialogService } from 'services/dialog.service';
 import { type WalletDto, WalletStatus } from 'services/wallets.service';
 
 @Component({
@@ -9,6 +11,9 @@ import { type WalletDto, WalletStatus } from 'services/wallets.service';
 	styleUrl: './wallet-item-option.component.css',
 })
 export class WalletItemOptionComponent {
+	private dialogService = inject(DialogService);
+	private destroyRef = inject(DestroyRef);
+
 	wallet = input.required<WalletDto>();
 	moreIconSize = input<'m' | 'l' | 'xl' | 's' | 'xs'>('m');
 
@@ -19,8 +24,7 @@ export class WalletItemOptionComponent {
 	protected open = false;
 
 	deactivateWallet() {
-		this.deactivate.emit();
-		this.open = false;
+		this.doAction(this.deactivate, 'deactivate');
 	}
 
 	unblockWallet() {
@@ -29,7 +33,20 @@ export class WalletItemOptionComponent {
 	}
 
 	blockWallet() {
-		this.block.emit();
-		this.open = false;
+		this.doAction(this.block, 'block');
+	}
+
+	private doAction(emitter: OutputEmitterRef<void>, actionText: 'block' | 'deactivate'): void {
+		this.dialogService
+			.confirm({
+				text: `Are you sure you want to ${actionText} this wallet?`,
+			})
+			.pipe(takeUntilDestroyed(this.destroyRef))
+			.subscribe((confirm) => {
+				if (confirm) {
+					emitter.emit();
+					this.open = false;
+				}
+			});
 	}
 }

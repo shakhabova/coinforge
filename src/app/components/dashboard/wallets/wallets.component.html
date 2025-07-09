@@ -8,44 +8,45 @@
   </div>
 
   @if (wallets().length) {
+    @if (showPrevBtn()) {
+      <button
+        class="paginator-btn fab default prev-btn"
+        (click)="currentPage.set(currentPage() - 1)"
+      >
+        <tui-icon icon="@tui.chevron-left"></tui-icon>
+      </button>
+    }
+
     <div class="wallet-list">
-      @if (showPrevBtn()) {
-        <button
-          class="paginator-btn fab default"
-          (click)="currentPage.set(currentPage() - 1)"
+      @if (this.currentPage() === 0) {
+        <div
+          class="create-wallet-card"
+          (click)="createWallet()"
+          [tuiSkeleton]="isLoading()"
         >
-          <tui-icon icon="@tui.chevron-left"></tui-icon>
-        </button>
+          <button class="fab">
+            <tui-icon icon="@tui.plus" [style.color]="'#FEDD2D'"></tui-icon>
+          </button>
+          <div class="create-wallet-card-text">Create wallet</div>
+          <div class="text-xs w600">Shortest way</div>
+        </div>
       }
-      @for (wallet of wallets(); track wallet?.id ?? $index) {
-        @if (!wallet) {
-          <div
-            class="create-wallet-card"
-            (click)="createWallet()"
-            [tuiSkeleton]="isLoading()"
-          >
-            <button class="fab">
-              <tui-icon icon="@tui.plus" [style.color]="'#FEDD2D'"></tui-icon>
-            </button>
-            <div class="create-wallet-card-text">Create wallet</div>
-            <div class="text-xs w600">Shortest way</div>
-          </div>
-        } @else {
-          <app-wallet-card
-            [tuiSkeleton]="isLoading()"
-            [wallet]="wallet"
-          ></app-wallet-card>
-        }
-      }
-      @if (showNextStepBtn()) {
-        <button
-          class="paginator-btn fab default"
-          (click)="currentPage.set(currentPage() + 1)"
-        >
-          <tui-icon icon="@tui.chevron-right"></tui-icon>
-        </button>
+
+      @for (wallet of currentWalletsSlice(); track wallet?.id ?? $index) {
+        <app-wallet-card
+          [tuiSkeleton]="isLoading()"
+          [wallet]="wallet"
+        ></app-wallet-card>
       }
     </div>
+    @if (showNextStepBtn()) {
+      <button
+        class="paginator-btn fab default next-btn"
+        (click)="currentPage.set(currentPage() + 1)"
+      >
+        <tui-icon icon="@tui.chevron-right"></tui-icon>
+      </button>
+    }
   }
 
   @if (showEmpty()) {
