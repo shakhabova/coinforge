@@ -1,6 +1,6 @@
 <div
   class="wallet-container"
-  [class.is-blocked]="wallet().walletStatus === 'CUSTOMER_BLOCKED'"
+  [class.is-blocked]="isBlocked()"
 >
   <div class="title-wrapper">
     <img [src]="cryptoIcon() | async" class="crypto-icon" />

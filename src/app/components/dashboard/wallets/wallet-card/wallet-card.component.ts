@@ -17,4 +17,6 @@ export class WalletCardComponent {
 
 	cryptoIcon = computed(() => this.cryptoService.getCurrencyLinkUrl(this.wallet().cryptocurrency));
 	cryptoName = computed(() => this.cryptoService.getCurrencyName(this.wallet().cryptocurrency));
+
+	isBlocked = computed(() => ['CUSTOMER_BLOCKED', 'DEACTIVATED'].includes(this.wallet().walletStatus));
 }

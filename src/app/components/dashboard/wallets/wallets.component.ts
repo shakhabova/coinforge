@@ -76,6 +76,10 @@ export class WalletsComponent {
 		this.router.navigateByUrl('/wallets');
 	}
 
+	goToWallet(wallet: WalletDto) {
+		this.router.navigate(['/wallets', wallet.trxAddress]);
+	}
+
 	private loadWallets() {
 		this.hasError.set(false);
 		this.isLoading.set(true);

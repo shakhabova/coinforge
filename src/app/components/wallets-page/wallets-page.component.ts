@@ -202,7 +202,7 @@ export class WalletsPageComponent implements OnInit {
 				takeUntilDestroyed(this.destroyRef),
 			)
 			.subscribe(() => {
-				this.loadWallets();
+				this.updateWallets();
 			});
 	}
 
@@ -288,6 +288,15 @@ export class WalletsPageComponent implements OnInit {
 			item.cryptoCurrency.toLowerCase().includes(search.toLowerCase()) ||
 			item.cryptoCurrencyName.toLowerCase().includes(search.toLowerCase())
 		);
+	}
+
+	private updateWallets(): void {
+		if (this.configService.isMobile()) {
+			this.page.set(0);
+			this.loadBatch.next(true);
+		} else {
+			this.loadWallets();
+		}
 	}
 
 	private loadWallets(selectedCurrency?: string) {

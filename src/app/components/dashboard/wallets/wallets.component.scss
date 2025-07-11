@@ -113,6 +113,10 @@ h5 {
   border-radius: 8px;
 }
 
+app-wallet-card {
+  cursor: pointer;
+}
+
 @media only screen and (max-width: 575px) {
   .wallets {
     width: 100%;

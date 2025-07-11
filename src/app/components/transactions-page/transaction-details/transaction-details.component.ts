@@ -8,6 +8,7 @@ import { injectContext } from '@taiga-ui/polymorpheus';
 import { type TuiDialogContext, TuiIcon } from '@taiga-ui/core';
 import { DatePipe } from '@angular/common';
 import html2canvas from 'html2canvas';
+import {TuiAlertService} from '@taiga-ui/core';
 
 @Component({
 	selector: 'app-transaction-details',
@@ -18,6 +19,7 @@ import html2canvas from 'html2canvas';
 export class TransactionDetailsComponent {
 	private destroyRef = inject(DestroyRef);
 	private cryptocurrenciesService = inject(CurrenciesService);
+	private readonly alerts = inject(TuiAlertService);
 	public readonly context = injectContext<TuiDialogContext<void, TransactionDto>>();
 
 	transaction = signal<TransactionDto>({} as unknown as TransactionDto);
@@ -89,6 +91,7 @@ export class TransactionDetailsComponent {
 			a.download = 'transaction.png';
 			a.click();
 			this.screenshotIsTaking.set(false);
+			this.alerts.open('Download started! Check your Files or Downloads folder.', { label: 'Info' }).subscribe();
 		}, 0);
 	}
 }

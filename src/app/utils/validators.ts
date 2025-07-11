@@ -2,6 +2,7 @@ import type { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/fo
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 export const PASSWORDS_NOT_EQUAL = 'passwordsNotEqual';
+const NAME_REGEX = /^(?=.{1,15}$)[\p{L}]+(?:['\-][\p{L}]+)*$/u;
 
 export function firstNameValidator(
 	minLength: number,
@@ -12,9 +13,9 @@ export function firstNameValidator(
 			return null;
 		}
 
-		return control?.value?.length < minLength || control?.value?.length > maxLength
-			? { firstName: 'Please enter a valid first name' }
-			: null;
+		return new RegExp(NAME_REGEX).test(control?.value)
+		? null
+		: { firstName: 'Please enter a valid first name' };
 	};
 }
 
@@ -27,9 +28,9 @@ export function lastNameValidator(
 			return null;
 		}
 
-		return control?.value?.length < minLength || control?.value?.length > maxLength
-			? { lastName: 'Please enter a valid last name' }
-			: null;
+		return new RegExp(NAME_REGEX).test(control?.value)
+		? null
+		: { lastName: 'Please enter a valid last name' };
 	};
 }
 

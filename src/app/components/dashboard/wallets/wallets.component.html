@@ -36,6 +36,7 @@
         <app-wallet-card
           [tuiSkeleton]="isLoading()"
           [wallet]="wallet"
+          (click)="goToWallet(wallet)"
         ></app-wallet-card>
       }
     </div>

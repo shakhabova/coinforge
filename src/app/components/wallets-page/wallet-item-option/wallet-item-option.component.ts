@@ -28,15 +28,14 @@ export class WalletItemOptionComponent {
 	}
 
 	unblockWallet() {
-		this.unblock.emit();
-		this.open = false;
+		this.doAction(this.unblock, 'unblock');
 	}
 
 	blockWallet() {
 		this.doAction(this.block, 'block');
 	}
 
-	private doAction(emitter: OutputEmitterRef<void>, actionText: 'block' | 'deactivate'): void {
+	private doAction(emitter: OutputEmitterRef<void>, actionText: 'block' | 'deactivate' | 'unblock'): void {
 		this.dialogService
 			.confirm({
 				text: `Are you sure you want to ${actionText} this wallet?`,
