@@ -1,3 +1,4 @@
+@use "tailwindcss";
 @use "assets/styles/colors.scss";
 @use "assets/fonts/fonts";
 @use "assets/styles/typography";
@@ -57,4 +58,21 @@ body {
 
 .mt-32 {
   margin-top: 32px;
+}
+
+@theme {
+  --color-secondary-500: var(--secondary500);
+
+  --animate-caret-blink: caret-blink 1.2s ease-out infinite;
+  @keyframes caret-blink {
+    0%,
+    70%,
+    100% {
+      opacity: 1;
+    }
+    20%,
+    50% {
+      opacity: 0;
+    }
+  }
 }

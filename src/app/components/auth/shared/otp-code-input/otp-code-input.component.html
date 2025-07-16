@@ -1,34 +1,43 @@
-<div class="otp-inputs" #inputsWrapper>
-  @for (val of otpCodeArray; track $index) {
-    @if ($index === 0) {
-      <input
-        tuiAutoFocus
-        [(ngModel)]="otpCodeArray[$index]"
-        (ngModelChange)="onCodeChange()"
-        maxlength="1"
-        (keydown)="onKeydown($event, $index)"
-        (keyup)="onFieldInput($event, $index)"
-        id="otp-code-input-{{ $index }}"
-        (paste)="onInputPaste(toClipboardEvent($event), $index)"
-        [class.input-error]="error()"
-        [disabled]="disabled()"
-        inputmode="numeric"
-        autocomplete="one-time-code" 
-      />
-    } @else {
-      <input
-        [(ngModel)]="otpCodeArray[$index]"
-        (ngModelChange)="onCodeChange()"
-        maxlength="1"
-        (keydown)="onKeydown($event, $index)"
-        (keyup)="onFieldInput($event, $index)"
-        id="otp-code-input-{{ $index }}"
-        (paste)="onInputPaste(toClipboardEvent($event), $index)"
-        [disabled]="disabled()"
-        [class.input-error]="error()"
-        inputmode="numeric"
-        autocomplete="one-time-code" 
-      />
+<input-otp
+  [maxLength]="length()"
+  containerClass="group flex items-center has-[:disabled]:opacity-30"
+  [(ngModel)]="otpCode"
+  #otp="inputOtp"
+>
+  <div class="flex justify-between w-full">
+    @for (
+      slot of otp.slots();
+      track $index;
+      let last = $last;
+      let first = $first
+    ) {
+      <div
+        [class]="
+          cn(
+            'relative w-10 h-14 text-[2rem]',
+            'flex items-center justify-center',
+            'transition-all duration-300',
+            'border rounded-md',
+            'group-hover:border-accent-foreground/20 group-focus-within:border-accent-foreground/20',
+            'outline outline-0 outline-yellow-foreground/20',
+            { 'outline-4 outline-secondary-500 border-none': slot.isActive }
+          )
+        "
+      >
+        @if (slot.char) {
+          <div>{{ slot.char }}</div>
+        } @else {
+          {{ " " }}
+        }
+
+        @if (slot.hasFakeCaret) {
+          <div
+            class="absolute pointer-events-none inset-0 flex items-center justify-center animate-caret-blink"
+          >
+            <div class="w-[2px] h-8 bg-black/75"></div>
+          </div>
+        }
+      </div>
     }
-  }
-</div>
+  </div>
+</input-otp>

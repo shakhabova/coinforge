@@ -1,11 +1,12 @@
-import { Component, model, input, viewChild, ElementRef, afterNextRender, INJECTOR, inject, output } from '@angular/core';
+import { Component, model, input, viewChild, ElementRef, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { explicitEffect } from 'ngxtension/explicit-effect';
+import { InputOTPComponent } from '@ngxpert/input-otp';
+import { cn } from 'utils/styles';
 
 @Component({
 	selector: 'app-otp-code-input',
-	imports: [FormsModule, TuiAutoFocus],
+	imports: [FormsModule, InputOTPComponent],
 	templateUrl: './otp-code-input.component.html',
 	styleUrl: './otp-code-input.component.css',
 })
@@ -15,6 +16,8 @@ export class OtpCodeInputComponent {
 	error = input(false);
 	disabled = input(false);
 	submit = output();
+
+	cn = cn;
 
 	inputsWrapper = viewChild<ElementRef<HTMLDivElement>>('inputsWrapper');
 

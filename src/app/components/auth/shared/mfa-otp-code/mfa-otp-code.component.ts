@@ -36,15 +36,15 @@ export class MfaOtpCodeComponent {
 	protected errorMessage = signal('');
 	protected loading = signal(false);
 
-	constructor() {
-		explicitEffect([this.otpCode], ([otpCode]) => {
-			if (otpCode.length === 6) {
-				this.sendOtpCode();
-			} else {
-				this.errorMessage.set('');
-			}
-		});
-	}
+	// constructor() {
+	// 	// explicitEffect([this.otpCode], ([otpCode]) => {
+	// 	// 	if (otpCode.length === 6) {
+	// 	// 		this.sendOtpCode();
+	// 	// 	} else {
+	// 	// 		this.errorMessage.set('');
+	// 	// 	}
+	// 	// });
+	// }
 
 	get email() {
 		return this.context.data.email;
@@ -73,14 +73,17 @@ export class MfaOtpCodeComponent {
 	private showEmailOTPModal(): void {
 		const getRequest = (otp: string) => this.mfaService.submitResetMfa({ email: this.email, otp });
 
-		const otpDialog = this.tuiDialogs.open<SubmitResetMfaDto>(new PolymorpheusComponent(EmailOtpCodeComponent, this.injector), {
-			data: {
-				email: this.email,
-				requestGetter: getRequest,
-				codeLength: 8,
-				errorButtonText: 'Back to sign in',
+		const otpDialog = this.tuiDialogs.open<SubmitResetMfaDto>(
+			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
+			{
+				data: {
+					email: this.email,
+					requestGetter: getRequest,
+					codeLength: 8,
+					errorButtonText: 'Back to sign in',
+				},
 			},
-		});
+		);
 
 		otpDialog.subscribe((result) => {
 			if (!result) {
