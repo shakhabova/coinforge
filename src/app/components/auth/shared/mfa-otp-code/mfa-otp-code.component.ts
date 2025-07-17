@@ -36,15 +36,16 @@ export class MfaOtpCodeComponent {
 	protected errorMessage = signal('');
 	protected loading = signal(false);
 
-	// constructor() {
-	// 	// explicitEffect([this.otpCode], ([otpCode]) => {
-	// 	// 	if (otpCode.length === 6) {
-	// 	// 		this.sendOtpCode();
-	// 	// 	} else {
-	// 	// 		this.errorMessage.set('');
-	// 	// 	}
-	// 	// });
-	// }
+	constructor() {
+		explicitEffect([this.otpCode], ([otpCode]) => {
+			// if (otpCode.length === 6) {
+			// 	this.sendOtpCode();
+			// } else {
+			// 	this.errorMessage.set('');
+			// }
+			console.log(otpCode)
+		});
+	}
 
 	get email() {
 		return this.context.data.email;

@@ -10,6 +10,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import Aura from '@primeng/themes/aura';
 import { authInterceptor } from 'interceptors/auth-interceptor.service';
 import { RxReactiveFormsModule } from '@rxweb/reactive-form-validators';
+import { provideUserIdleConfig } from 'angular-user-idle';
 
 export const appConfig: ApplicationConfig = {
 	providers: [
@@ -27,5 +28,6 @@ export const appConfig: ApplicationConfig = {
 			},
 		}),
 		importProvidersFrom(RxReactiveFormsModule),
+		provideUserIdleConfig({ idle: 600 }),
 	],
 };

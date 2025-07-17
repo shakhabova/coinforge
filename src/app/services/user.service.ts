@@ -35,7 +35,7 @@ export class UserService {
 
 	constructor() {
 		this.updateCurrentUser();
-		this.runTokenChecker();
+		// this.runTokenChecker();
 	}
 
 	getInfo(): Observable<UserInfoDto> {
@@ -66,11 +66,11 @@ export class UserService {
 		this.currentUser$.next(null);
 	}
 
-	private runTokenChecker(): void {
-		interval(30_000)
-			.pipe(
-				takeUntilDestroyed(this.destroyRef)
-			)
-			.subscribe(() => this.updateCurrentUser());
-	}
+	// private runTokenChecker(): void {
+	// 	interval(30_000)
+	// 		.pipe(
+	// 			takeUntilDestroyed(this.destroyRef)
+	// 		)
+	// 		.subscribe(() => this.updateCurrentUser());
+	// }
 }

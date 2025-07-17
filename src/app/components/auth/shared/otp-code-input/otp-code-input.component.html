@@ -14,13 +14,12 @@
       <div
         [class]="
           cn(
-            'relative w-10 h-14 text-[2rem]',
+            'relative w-[48px] h-[48px] text-[16px]',
             'flex items-center justify-center',
             'transition-all duration-300',
-            'border rounded-md',
-            'group-hover:border-accent-foreground/20 group-focus-within:border-accent-foreground/20',
-            'outline outline-0 outline-yellow-foreground/20',
-            { 'outline-4 outline-secondary-500 border-none': slot.isActive }
+            'border border-light-purple bg-neutral-100',
+            'rounded-[10px]',
+            { 'border-black': slot.isActive }
           )
         "
       >
@@ -34,7 +33,7 @@
           <div
             class="absolute pointer-events-none inset-0 flex items-center justify-center animate-caret-blink"
           >
-            <div class="w-[2px] h-8 bg-black/75"></div>
+            <div class="w-[2px] h-[24px] bg-black/75"></div>
           </div>
         }
       </div>
