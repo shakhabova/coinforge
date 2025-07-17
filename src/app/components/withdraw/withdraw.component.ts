@@ -184,7 +184,7 @@ export class WithdrawComponent {
 									text: 'Wallet address does not correspond to given cryptocurrency.',
 								})
 								.subscribe();
-								break;
+							break;
 						default:
 							this.dialogService
 								.showInfo({
@@ -266,7 +266,8 @@ export class WithdrawComponent {
 							title: 'Successful operation',
 							text: `Wallet address {${formValue.address}} will recieve {${formValue.amount} ${formValue.cryptocurrency}}`,
 						})
-						.subscribe(() => this.context.completeWith(true));
+						.subscribe();
+					this.context.completeWith(true);
 				},
 				error: (err) => {
 					console.error(err.error);

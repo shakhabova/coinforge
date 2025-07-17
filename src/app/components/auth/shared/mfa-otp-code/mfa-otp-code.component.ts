@@ -38,12 +38,11 @@ export class MfaOtpCodeComponent {
 
 	constructor() {
 		explicitEffect([this.otpCode], ([otpCode]) => {
-			// if (otpCode.length === 6) {
-			// 	this.sendOtpCode();
-			// } else {
-			// 	this.errorMessage.set('');
-			// }
-			console.log(otpCode)
+			if (otpCode.length === 6) {
+				this.sendOtpCode();
+			} else {
+				this.errorMessage.set('');
+			}
 		});
 	}
 

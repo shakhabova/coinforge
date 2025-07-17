@@ -1,9 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { catchError, combineLatest, delayWhen, filter, map, type Observable, of, tap, throwError } from 'rxjs';
+import { catchError, combineLatest, filter, map, type Observable, of, tap, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
+import { IdleTracker } from 'utils/idle-user-activity';
+import { MAX_MS_IN_MINUTE } from 'utils/time';
 
 export interface RefreshTokenDto {
 	accessToken: string;
@@ -23,6 +25,15 @@ export class AuthService {
 	private userService = inject(UserService);
 
 	private refreshTokenEndpoint = '/v1/auth/srp/refresh';
+	private idleTracker: IdleTracker;
+
+	constructor() {
+		this.idleTracker = new IdleTracker({
+			timeout: MAX_MS_IN_MINUTE * 15,
+			onIdleCallback: () => this.isAuthenticated$.subscribe((isAuth) => isAuth && this.logout()),
+		});
+		this.idleTracker.start();
+	}
 
 	public get isAuthenticated$() {
 		return combineLatest([this.userService.currentUser$, this.userService.currentUserUpdating$]).pipe(

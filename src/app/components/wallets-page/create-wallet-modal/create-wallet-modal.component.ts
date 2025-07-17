@@ -55,7 +55,8 @@ export class CreateWalletModalComponent {
 						title: 'Unsuccessful operation',
 						text: 'No available cryptocurrency to create a wallet.',
 					})
-					.subscribe(() => this.context.completeWith(false));
+					.subscribe();
+				this.context.completeWith(false);
 			}
 		}),
 	);
@@ -88,14 +89,16 @@ export class CreateWalletModalComponent {
 			.createWallet(selected, currentUser)
 			.pipe(takeUntilDestroyed(this.destroyRef))
 			.subscribe({
-				next: () =>
+				next: () => {
 					this.dialogService
 						.showInfo({
 							type: 'success',
 							title: 'Successfull operation!',
 							text: 'Your order for a new wallet has been completed successfully.',
 						})
-						.subscribe(() => this.context.completeWith(true)),
+						.subscribe();
+					this.context.completeWith(true);
+				},
 				error: (err) => {
 					console.error(err);
 					this.dialogService

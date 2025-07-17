@@ -64,6 +64,8 @@ body {
   --color-secondary-500: var(--secondary500);
   --color-neutral-100: var(--neutral100);
   --color-light-purple: var(--system-color-light-purple);
+  --color-system-red: var(--system-color-red);
+  --color-system-light-red: var(--system-color-light-red);
 
   --animate-caret-blink: caret-blink 1.2s ease-out infinite;
   @keyframes caret-blink {

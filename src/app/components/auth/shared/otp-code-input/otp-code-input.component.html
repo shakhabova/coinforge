@@ -1,8 +1,9 @@
 <input-otp
   [maxLength]="length()"
-  containerClass="group flex items-center has-[:disabled]:opacity-30"
+  containerClass="group flex items-center has-[:disabled]:opacity-60"
   [(ngModel)]="otpCode"
   #otp="inputOtp"
+  [disabled]="disabled()"
 >
   <div class="flex justify-between w-full">
     @for (
@@ -19,7 +20,8 @@
             'transition-all duration-300',
             'border border-light-purple bg-neutral-100',
             'rounded-[10px]',
-            { 'border-black': slot.isActive }
+            { 'border-black': slot.isActive },
+            { 'border-system-red bg-system-light-red': error() }
           )
         "
       >

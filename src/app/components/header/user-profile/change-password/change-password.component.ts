@@ -125,9 +125,8 @@ export class ChangePasswordComponent {
 							title: 'Congratulations!',
 							text: 'Your password reset successfully',
 						})
-						.subscribe(() => {
-							this.context.completeWith();
-						});
+						.subscribe();
+					this.context.completeWith();
 				},
 				error: (err) => {
 					switch (err.error?.code) {
@@ -142,7 +141,7 @@ export class ChangePasswordComponent {
 									text: 'The password you have entered is the same as your old one. Please consider another password.',
 								})
 								.subscribe();
-								break;
+							break;
 						default:
 							this.dialogService
 								.showInfo({

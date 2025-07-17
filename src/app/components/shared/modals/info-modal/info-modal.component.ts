@@ -8,6 +8,7 @@ export interface InfoModalConfig {
 	text?: string;
 	buttonText?: string;
 	textClasses?: string;
+	backdropClose?: boolean;
 }
 
 @Component({

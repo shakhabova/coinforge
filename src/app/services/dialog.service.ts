@@ -20,6 +20,7 @@ export class DialogService {
 	private infoDialog = tuiDialog(InfoModalComponent, {
 		size: 'auto',
 		closeable: false,
+		dismissible: false,
 	});
 
 	showMessage(message: string, title: string, buttonText = 'Ok'): void {

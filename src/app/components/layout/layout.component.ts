@@ -17,6 +17,7 @@ export class LayoutComponent {
 	public configService = inject(ConfigService);
 
 	public isHomePage = signal(true);
+
 	ngOnInit() {
 		this.router.events.pipe(filter((event) => event instanceof NavigationEnd)).subscribe(() => {
 			this.updateIsHomePage();
