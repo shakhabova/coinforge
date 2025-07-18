@@ -151,7 +151,7 @@ export class WithdrawComponent {
 		this.transactionCreating.set(true);
 		this.transactionsService
 			.makeTransaction({
-				amount: Number.parseFloat(formValue.amount),
+				amount: formValue.amount,
 				fromTrxAddress: selectedWallet.trxAddress,
 				toTrxAddress: formValue.address,
 				cryptocurrency: selectedWallet.cryptocurrency,

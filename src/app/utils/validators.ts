@@ -2,7 +2,7 @@ import type { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/fo
 import { RxwebValidators } from '@rxweb/reactive-form-validators';
 
 export const PASSWORDS_NOT_EQUAL = 'passwordsNotEqual';
-const NAME_REGEX = /^(?=.{1,15}$)[\p{L}]+(?:['\-][\p{L}]+)*$/u;
+const NAME_REGEX = /^(?=.{1,15}$)[\p{L}]+(?:[ '\-][\p{L}]+)*$/u
 
 export function firstNameValidator(
 	minLength: number,

@@ -47,7 +47,7 @@ export interface TransactionDto {
 
 export interface CreateTransactionDto {
 	cryptocurrency: string;
-	amount: number;
+	amount: string;
 	fromTrxAddress: string;
 	toTrxAddress: string;
 }
