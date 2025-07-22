@@ -57,6 +57,19 @@ import { EmptyDisplayComponent } from '../shared/empty-display/empty-display.com
 import { ErrorDisplayComponent } from '../shared/error-display/error-display.component';
 import { explicitEffect } from 'ngxtension/explicit-effect';
 
+
+export const TYPES_MAP: Record<TransactionDto['type'], string> = {
+	CSTD_IN: 'Deposit',
+	CSTD_OUT: 'Withdrawal',
+	WITHIN: 'Internal Transfer',
+	CST_F2C : 'Exchange',
+	CST_C2F : 'Exchange',
+	CST_C2C : 'Exchange',
+	IN: 'Deposit',
+	OUT: 'Withdrawal',
+
+
+};
 @Component({
 	selector: 'app-transactions-page',
 	imports: [
@@ -196,6 +209,11 @@ export class TransactionsPageComponent implements OnInit {
 
 	ngOnInit() {
 		this.loadTransactions();
+	}
+
+	@tuiPure
+	getTypeLabel(transaction: TransactionDto){
+		return TYPES_MAP[transaction.type] || transaction.type;
 	}
 
 	@tuiPure

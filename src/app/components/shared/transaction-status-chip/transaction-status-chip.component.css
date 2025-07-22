@@ -12,20 +12,30 @@
 	background: #b7b7b7;
 }
 
-.status.REJECTED {
+.status.Rejected {
 	border: 1px solid #fddcda;
 	background: var(--System-color-light-red, #fff0f0);
 	color: #e7170b;
 }
 
-.status.CONFIRMED {
+.status.Confirmed {
 	border: 1px solid #cffcc7;
 	background: var(--System-color-light-red, #e9fff4);
 	color: #048d09;
 }
 
-.status.REFUNDED {
+.status.Refunded {
 	border: 1px solid rgba(65, 102, 230, 0.12);
 	background: rgba(65, 102, 230, 0.12);
 	color: #4166e6;
+}
+.status.Accepted {
+	border: 1px solid #cffcc7;
+	background: var(--System-color-light-red, #e9fff4);
+	color: #048d09;
+}
+.status.Pending {
+  border: 1px solid #ffe29a;
+  background: var(--System-color-light-yellow, #fffbe6);
+  color: #d89c00;
 }

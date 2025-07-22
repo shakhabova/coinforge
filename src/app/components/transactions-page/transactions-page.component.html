@@ -119,7 +119,7 @@
           <td *tuiCell="'type'" tuiTd>
             <span class="u-row-middle">
               <app-transaction-type-icon [type]="transaction.type" />
-              <span class="u-mar-left-12">{{ transaction.type }}</span>
+              <span class="u-mar-left-12">{{ getTypeLabel(transaction) }}</span>
             </span>
           </td>
         </tr>

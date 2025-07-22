@@ -3,6 +3,7 @@ import { Component, computed, input } from '@angular/core';
 import type { TransactionDto } from 'services/transactions.service';
 import { TransactionStatusChipComponent } from '../../../shared/transaction-status-chip/transaction-status-chip.component';
 import { TransactionTypeIconComponent } from '../../../shared/transaction-type-icon/transaction-type-icon.component';
+import { TYPES_MAP } from 'components/transactions-page/transactions-page.component';
 
 @Component({
 	selector: 'app-transaction-item',
@@ -12,8 +13,8 @@ import { TransactionTypeIconComponent } from '../../../shared/transaction-type-i
 })
 export class TransactionItemComponent {
 	transaction = input.required<TransactionDto>();
-
-	isPositiveOpr = computed(() => ['IN', 'F2C', 'C2C', 'CSTD_IN'].includes(this.transaction().type));
+  typeLabel = computed(() => TYPES_MAP[this.transaction().type] || this.transaction().type);
+	isPositiveOpr = computed(() => ['IN', 'CST_F2C', 'CST_C2C', 'CSTD_IN'].includes(this.transaction().type));
 
 	private amountSum = computed(() =>
 		this.isPositiveOpr() ? this.transaction().amount : this.transaction().amountInSenderCurrency,
@@ -23,3 +24,4 @@ export class TransactionItemComponent {
 	);
 	amount = computed(() => `${this.isPositiveOpr() ? '+' : '-'} ${this.amountSum()} ${this.amountCurr()}`);
 }
+

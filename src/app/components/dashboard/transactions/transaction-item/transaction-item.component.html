@@ -2,7 +2,7 @@
   <app-transaction-type-icon [type]="transaction().type" />
 
   <div class="info-wrapper">
-    <div class="h5-heading">{{ transaction().type }}</div>
+    <div class="h5-heading">{{ typeLabel() }}</div>
     <div class="text-m w600 time">
       {{ transaction().createdAt | date: "hh:mm" }}
     </div>
