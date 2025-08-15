@@ -23,10 +23,10 @@ export const HOME_PAGE_LINKS: HeaderLink[] = [
 		label: 'Home',
 		routerLink: '/home-page',
 	},
-	{
-		label: 'Contact',
-		routerLink: '/contact-page',
-	},
+	// {
+	// 	label: 'Contact',
+	// 	routerLink: '/contact-page',
+	// },
 	{
 		label: 'About us',
 		routerLink: '/about-us',

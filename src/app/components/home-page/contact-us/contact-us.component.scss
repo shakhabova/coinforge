@@ -27,6 +27,15 @@
     color: #ccc;
   }
 }
+.email {
+  color: #fff !important;
+  text-decoration: none;
+  margin-top: 20px;
+
+  &:hover {
+    color: #fedd2d;
+  }
+}
 
 .contact-form {
   display: flex;
