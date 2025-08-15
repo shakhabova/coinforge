@@ -161,6 +161,7 @@ export class ForgetPasswordComponent {
 				},
 				error: (err) => {
 					switch (err.error?.code) {
+						case 'invalid_otp':
 						case 'invalid_confirmation_code':
 							this.errorMessage.set('Invalid verification code');
 							break;

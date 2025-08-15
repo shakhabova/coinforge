@@ -216,7 +216,7 @@ export class WalletsPageComponent implements OnInit {
 	}
 
 	onPageChange(state: PaginatorState) {
-		if (state.page != null) {
+		if (state.page != null && this.page() !== state.page) {
 			this.page.set(state.page);
 			this.loadWallets();
 		}
