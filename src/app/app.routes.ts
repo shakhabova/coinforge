@@ -45,6 +45,12 @@ export const routes: Routes = [
 				title: 'About Us',
 			},
 			{
+				path: 'terms-and-conditions',
+				loadComponent: () =>
+					import('./components/home-page/terms-and-conditions/terms-and-conditions.component').then((m) => m.TermsAndConditionsComponent),
+				title: 'Terms and Conditions',
+			},
+			{
 				path: '',
 				pathMatch: 'full',
 				redirectTo: '/home-page',

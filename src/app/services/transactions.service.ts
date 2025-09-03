@@ -91,7 +91,7 @@ export class TransactionsService {
 		}
 
 		return this.httpClient.get<TransactionPageableResponse>(
-			`${this.configService.serverUrl}/v1/bff-custody/transactions`,
+			`${this.configService.serverUrl}/v1/bff-custody/transactions?type=CSTD_IN&type=CSTD_OUT`,
 			{
 				params: params as HttpParams,
 				headers: { 'Customer-ID': environment.customerId, 'Custody-User-ID': userId?.toString() ?? '' },

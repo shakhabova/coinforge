@@ -1,11 +1,12 @@
 import { Component, model, input, output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { InputOTPComponent } from '@ngxpert/input-otp';
+import { TuiAutoFocus } from '@taiga-ui/cdk';
 import { cn } from 'utils/styles';
 
 @Component({
 	selector: 'app-otp-code-input',
-	imports: [FormsModule, InputOTPComponent],
+	imports: [FormsModule, InputOTPComponent, TuiAutoFocus],
 	templateUrl: './otp-code-input.component.html',
 	styleUrl: './otp-code-input.component.css',
 })

@@ -339,7 +339,7 @@ export class TransactionsPageComponent implements OnInit {
 	private getTransactions() {
 		const params: TransactionPageableParams = {
 			size: this.pageSize,
-			sort: 'id,desc',
+			sort: 'created_at,desc',
 			page: this.page(),
 		};
 		if (this.search.value) {

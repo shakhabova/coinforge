@@ -6,6 +6,8 @@ import { ConfigService } from 'services/config.service';
 import { filter } from 'rxjs';
 import { HOME_PAGE_LINKS } from 'components/header/constants';
 
+const homePageLinks = [...HOME_PAGE_LINKS.map((link) => link.routerLink), '/terms-and-conditions'];
+
 @Component({
 	selector: 'app-layout',
 	imports: [RouterModule, HeaderComponent, FooterComponent],
@@ -27,6 +29,6 @@ export class LayoutComponent {
 	}
 
 	private updateIsHomePage(): void {
-		this.isHomePage.set(HOME_PAGE_LINKS.some((link) => this.router.url.endsWith(link.routerLink)));
+		this.isHomePage.set(homePageLinks.some((link) => this.router.url.endsWith(link)));
 	}
 }

@@ -148,19 +148,9 @@
       </span>
     </ng-template>
   </p-paginator>
+}
 
-  @if (displayEmpty()) {
-    <app-empty-display
-      text="No transactions in your history? Your transaction history can be made today."
-    ></app-empty-display>
-  }
-
-  @if (displayError()) {
-    <app-error-display
-      text="Something went wrong while trying to load your transactions."
-    />
-  }
-} @else if (configService.isMobile()) {
+@if (configService.isMobile()) {
   @let mobileTransactions = mobileTransactions$ | async;
   <cdk-virtual-scroll-viewport
     itemSize="74"
@@ -181,18 +171,30 @@
     [inheritColor]="true"
   ></tui-loader>
 
-  @if (isMobileEmpty() && !mobileTransactions?.length) {
+  @if (isMobileEmpty() && !(mobileTransactions$ | async)?.length) {
     <app-empty-display
       text="No transactions in your history? Your transaction history can be made today."
     ></app-empty-display>
   }
-
+  
   @if (hasMobileError()) {
     <app-error-display
       text="Something went wrong while trying to load your transactions."
     />
   }
 }
+@if (displayEmpty()) {
+  <app-empty-display
+    text="No transactions in your history? Your transaction history can be made today."
+  ></app-empty-display>
+}
+
+@if (displayError()) {
+  <app-error-display
+    text="Something went wrong while trying to load your transactions."
+  />
+}
+
 
 @if (isLoading()) {
   <app-loader></app-loader>
