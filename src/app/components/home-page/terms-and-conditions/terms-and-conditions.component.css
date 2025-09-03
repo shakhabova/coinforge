@@ -12,6 +12,10 @@ ol {
   list-style-type: lower-alpha;
 }
 
+ul {
+  list-style-type: disc;
+}
+
 /* Center the content area on the page */
 .terms-and-conditions {
   max-width: 960px;
