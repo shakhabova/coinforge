@@ -37,7 +37,7 @@ export class TransactionDetailsComponent {
 		this.fromScanWalletUrl() ? this.fromScanWalletUrl().replace('{address}', this.transaction().fromTrxAddress) : '#',
 	);
 	transactionHashAddress = computed(() =>
-		this.scanUrl() ? this.scanUrl().replace('{hash}', this.transaction().transactionHash) : '#',
+		this.toScanUrl() ? this.toScanUrl().replace('{hash}', this.transaction().transactionHash) : '#',
 	);
 
 	isOutTransaction = computed(() => ['CSTD_OUT', 'C2F', 'OUT'].includes(this.transaction().type));
