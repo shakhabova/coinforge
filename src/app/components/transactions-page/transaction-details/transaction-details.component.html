@@ -68,7 +68,7 @@
   <div class="details-row">
     <div class="text-m w600">Transaction hash</div>
     <div class="u-row-middle text-m w600">
-      @if (scanUrl()) {
+      @if (toScanUrl()) {
         <a
           class="address text-m w600"
           [href]="transactionHashAddress()"
