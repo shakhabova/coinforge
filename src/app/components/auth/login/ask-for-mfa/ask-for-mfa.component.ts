@@ -83,6 +83,7 @@ export class AskForMfaComponent implements OnInit {
 			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
 			{
 				data: dialogData,
+				dismissible: false
 			},
 		);
 

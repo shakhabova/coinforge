@@ -28,7 +28,7 @@ export class UserProfileComponent {
 	private dialogService = inject(DialogService);
 	private mfaService = inject(MfaApiService);
 
-	private changePasswordDialog = tuiDialog(ChangePasswordComponent, { size: 'auto' });
+	private changePasswordDialog = tuiDialog(ChangePasswordComponent, { size: 'auto', dismissible: false });
 
 	name = model('');
 	email = model('');

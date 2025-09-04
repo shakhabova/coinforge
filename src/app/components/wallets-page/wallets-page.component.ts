@@ -72,7 +72,7 @@ export class WalletsPageComponent implements OnInit {
 	private cryptocurrenciesService = inject(CurrenciesService);
 	private walletsService = inject(WalletsService);
 	private destroyRef = inject(DestroyRef);
-	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto' });
+	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto', dismissible: false });
 	public configService = inject(ConfigService);
 	private router = inject(Router);
 	private dialogService = inject(DialogService);

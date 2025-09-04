@@ -44,7 +44,7 @@ export class LoginComponent {
 	private userService = inject(UserService);
 	protected readonly loading = signal(false);
 
-	private mfaOptDialog = tuiDialog(MfaOtpCodeComponent, { size: 'auto' });
+	private mfaOptDialog = tuiDialog(MfaOtpCodeComponent, { size: 'auto', dismissible: false });
 
 	protected formGroup = this.fb.group({
 		email: ['', [Validators.required, Validators.email]],

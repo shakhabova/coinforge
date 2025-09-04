@@ -16,7 +16,7 @@ export interface DialogMessageModel {
 export class DialogService {
 	private readonly dialogs = inject(TuiDialogService);
 	private readonly materialDialog = inject(MatDialog);
-	private confirmDialog = tuiDialog(ConfirmModalComponent, { size: 'auto' });
+	private confirmDialog = tuiDialog(ConfirmModalComponent, { size: 'auto', dismissible: false });
 	private infoDialog = tuiDialog(InfoModalComponent, {
 		size: 'auto',
 		closeable: false,
@@ -29,6 +29,7 @@ export class DialogService {
 				label: title,
 				size: 's',
 				data: { button: buttonText },
+				dismissible: false,
 			})
 			.subscribe();
 	}

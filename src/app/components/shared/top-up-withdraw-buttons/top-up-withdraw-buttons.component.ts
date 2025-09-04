@@ -17,8 +17,8 @@ export class TopUpWithdrawButtonsComponent {
 	private readonly destroyRef = inject(DestroyRef);
 	fullWidth = input<boolean>(false);
 	withdrawSuccess = output();
-	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
-	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
+	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto', dismissible: false });
+	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto', dismissible: false });
 
 	topUp() {
 		this.topUpDialog(undefined).pipe(takeUntilDestroyed(this.destroyRef)).subscribe();

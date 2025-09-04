@@ -76,6 +76,7 @@ export class MfaOtpCodeComponent {
 		const otpDialog = this.tuiDialogs.open<SubmitResetMfaDto>(
 			new PolymorpheusComponent(EmailOtpCodeComponent, this.injector),
 			{
+				dismissible: false,
 				data: {
 					email: this.email,
 					requestGetter: getRequest,

@@ -40,8 +40,8 @@ export class WalletInfoComponent {
 	public configService = inject(ConfigService);
 	private dialogService = inject(DialogService);
 
-	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
-	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
+	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto', dismissible: false });
+	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto', dismissible: false });
 
 	protected isLoading = signal(false);
 	protected error = signal<unknown | null>(null);

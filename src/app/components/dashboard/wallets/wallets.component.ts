@@ -20,6 +20,7 @@ import { ConfigService } from 'services/config.service';
 import { GetWalletsParams, type WalletDto, WalletsService } from 'services/wallets.service';
 import { WalletCardComponent } from './wallet-card/wallet-card.component';
 import slice from 'lodash-es/slice';
+import { UserService } from 'services/user.service';
 
 @Component({
 	selector: 'app-wallets',
@@ -34,8 +35,9 @@ export class WalletsComponent {
 	private configService = inject(ConfigService);
 	private router = inject(Router);
 	private injector = inject(INJECTOR);
+	private userService = inject(UserService);
 
-	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto' });
+	private createWalletDialog = tuiDialog(CreateWalletModalComponent, { size: 'auto', dismissible: false });
 
 	wallets: WritableSignal<WalletDto[]> = signal([]);
 

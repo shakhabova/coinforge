@@ -4,7 +4,7 @@
   <div class="info-wrapper">
     <div class="h5-heading">{{ typeLabel() }}</div>
     <div class="text-m w600 time">
-      {{ transaction().createdAt | date: "hh:mm" }}
+      {{ transaction().createdAt | date: "hh:mm a" }}
     </div>
     <app-transaction-status-chip [status]="transaction().oprStatus" />
   </div>

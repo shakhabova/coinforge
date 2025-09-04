@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ConfigService } from './config.service';
-import { map, type Observable } from 'rxjs';
+import { map, switchMap, type Observable } from 'rxjs';
 import { environment } from '../../environment/environment';
-import { UserInfoDto } from './user.service';
+import { UserInfoDto, UserService } from './user.service';
 
 export interface GetWalletsParams {
 	statusIn: WalletStatus[];
@@ -46,6 +46,7 @@ export const DASHBOARD_WALLETS_COUNT = 7;
 export class WalletsService {
 	private httpClient = inject(HttpClient);
 	private configService = inject(ConfigService);
+	private userService = inject(UserService);
 
 	getWallets(params: GetWalletsParams): Observable<WalletsPageableDto> {
 		//return of(mockWallets(params.page));
@@ -61,9 +62,18 @@ export class WalletsService {
 			queryParams.cryptocurrency = params.cryptocurrency;
 		}
 
-		return this.httpClient.get<WalletsPageableDto>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer`, {
-			params: queryParams as Required<GetWalletsParams>,
-		});
+		return this.userService.currentUser$.pipe(
+			switchMap((user) =>
+				this.httpClient.get<WalletsPageableDto>(`${this.configService.serverUrl}/v1/bff-custody/wallets/customer`, {
+					params: queryParams as Required<GetWalletsParams>,
+					headers: {
+						'Custody-User-ID': user!.id.toString(),
+						'Customer-ID': environment.customerId,
+						'Institution-ID': user!.institutionId,
+					},
+				}),
+			),
+		);
 	}
 
 	createWallet(cryptocurrency: string, user: UserInfoDto) {
@@ -89,12 +99,14 @@ export class WalletsService {
 	}
 
 	getWalletsForDashboard(): Observable<WalletDto[]> {
-		return this.getWallets({
-			statusIn: ['ACTIVE', 'CUSTOMER_BLOCKED', 'DEACTIVATED'],
-			page: 0,
-			size: DASHBOARD_WALLETS_COUNT,
-			sort: 'id,desc',
-		}).pipe(map((pageable) => pageable.data));
+		return this.getWallets(
+			{
+				statusIn: ['ACTIVE', 'CUSTOMER_BLOCKED', 'DEACTIVATED'],
+				page: 0,
+				size: DASHBOARD_WALLETS_COUNT,
+				sort: 'id,desc',
+			},
+		).pipe(map((pageable) => pageable.data));
 	}
 
 	blockWallet(wallet: WalletDto): Observable<void> {
@@ -109,14 +121,14 @@ export class WalletsService {
 		return this.setWalletStatus(wallet.trxAddress, 'DEACTIVATED');
 	}
 
-	getEligibleCryptos(): Observable<{ cryptoCurrency: string }[]> {
+	getEligibleCryptos(userId?: number): Observable<{ cryptoCurrency: string }[]> {
 		// return this.currenciesService.getCurrenciesRequest.pipe(
 		// 	map((infos) => infos.map((info) => ({ cryptocurrency: info.cryptoCurrency }))),
 		// );
 		return this.httpClient.get<{ cryptoCurrency: string }[]>(
 			`${this.configService.serverUrl}/v1/bff-custody/wallets/eligible-cryptocurrencies`,
 			{
-				headers: { 'Customer-ID': environment.customerId },
+				headers: { 'Customer-ID': environment.customerId, 'Custody-User-ID': userId?.toString() ?? '' },
 			},
 		);
 	}

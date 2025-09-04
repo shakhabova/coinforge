@@ -225,6 +225,7 @@ export class SignUpComponent {
 		};
 		const otpDialog = this.dialogs.open<unknown>(new PolymorpheusComponent(EmailOtpCodeComponent, this.injector), {
 			data: dialogData,
+			dismissible: false,
 		});
 
 		otpDialog.subscribe((value) => {

@@ -27,10 +27,10 @@ export class TotalBalanceComponent implements OnInit {
 	private destroyRef = inject(DestroyRef);
 	private dialogService = inject(DialogService);
 
-	private chooseBalanceDialog = tuiDialog(ChooseBalanceCurrencyComponent, { size: 'auto' });
+	private chooseBalanceDialog = tuiDialog(ChooseBalanceCurrencyComponent, { size: 'auto', dismissible: false });
 
-	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto' });
-	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto' });
+	private topUpDialog = tuiDialog(TopUpComponent, { size: 'auto', dismissible: false });
+	private withdrawDialog = tuiDialog(WithdrawComponent, { size: 'auto', dismissible: false });
 
 	balance = signal(0);
 	currency = this.currentCurrencyService.currentCurrency;

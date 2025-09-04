@@ -21,7 +21,7 @@ import { injectContext, PolymorpheusTemplate } from '@taiga-ui/polymorpheus';
 import { tuiPure } from '@taiga-ui/cdk';
 import { TuiInputModule, TuiTextfieldControllerModule } from '@taiga-ui/legacy';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { TUI_VALIDATION_ERRORS, TuiConfirmService, TuiFieldErrorPipe, TuiUnmaskHandler } from '@taiga-ui/kit';
+import { TUI_VALIDATION_ERRORS, TuiConfirmService, TuiFieldErrorPipe } from '@taiga-ui/kit';
 import { MaskitoDirective } from '@maskito/angular';
 import { type MaskitoOptions } from '@maskito/core';
 import { TransactionsService } from 'services/transactions.service';
@@ -242,7 +242,8 @@ export class WithdrawComponent {
 	private getConfirmDialog() {
 		const closeable = this.tuiDialogService.open<boolean>(new PolymorpheusTemplate(this.confirmContent()), {
 			size: 's',
-			closeable: false,
+			closeable: false, 
+			dismissible: false
 		});
 
 		return tuiDialog(WithdrawConfirmComponent, {
@@ -268,6 +269,7 @@ export class WithdrawComponent {
 						})
 						.subscribe();
 					this.context.completeWith(true);
+					window.location.reload();
 				},
 				error: (err) => {
 					console.error(err.error);

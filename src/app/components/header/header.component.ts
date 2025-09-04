@@ -30,7 +30,7 @@ export class HeaderComponent {
 		map((user) => `${user?.firstName[0]}${user?.lastName[0]}`.toUpperCase()),
 	);
 
-	private dialog = tuiDialog(UserProfileComponent, { size: 'auto' });
+	private dialog = tuiDialog(UserProfileComponent, { size: 'auto', dismissible: false });
 	public authService = inject(AuthService);
 
 	public activeLinks = computed(() => (this.isHomePage() ? HOME_PAGE_LINKS : DASHBOARD_LINKS));

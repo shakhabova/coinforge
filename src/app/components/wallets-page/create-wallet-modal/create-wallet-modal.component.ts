@@ -32,7 +32,8 @@ export class CreateWalletModalComponent {
 		[false, 'assets/icons/radio-inactive.svg'],
 	]);
 
-	cryptos$ = this.walletService.getEligibleCryptos().pipe(
+	cryptos$ = this.userService.currentUserId$.pipe(
+		switchMap((id) => this.walletService.getEligibleCryptos(id)),
 		switchMap((eligibles) => {
 			if (!eligibles?.length) {
 				return of([]);
